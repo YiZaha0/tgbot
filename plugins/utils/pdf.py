@@ -3,7 +3,7 @@ from io import BytesIO
 from typing import List, BinaryIO
 from pathlib import Path
 from fpdf import FPDF
-from plugins import logger
+from plugins import logger, Config
 import re
 
 from PIL import Image
@@ -58,9 +58,8 @@ def img2pdf(files: List[Path], out: Path):
         img_bytes.close()
 
     pdf.set_title(out.stem)
-    pdf.set_author("t.me/Adult_Mangas")
+    pdf.set_author(Config.PDF_AUTHOR or "t.me/Adult_Mangas")
     pdf.output(out, "F")
-    pdf.close()
 
 
 def make_thumb(folder, files):
