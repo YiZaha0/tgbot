@@ -13,6 +13,7 @@ logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s'
                     level=logging.INFO, handlers=[logging.FileHandler(LOG_FILE), logging.StreamHandler()])
 logging.getLogger("telethon").setLevel(logging.WARNING)
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
+logging.getLogger("apscheduler").setLevel(logging.WARNING)
 
 #LOADING
 path = "./plugins/*py"
