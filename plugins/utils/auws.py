@@ -135,7 +135,7 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 			continue
 		url = url.strip()
 		image_path = os.path.join(dir_name, f"{n}.jpg")
-		Process.append(fast_download(url, filename=image_path, headers=headers))
+		Process.append(req_download(url, filename=image_path, headers=headers))
 		images.append(image_path)
 		n += 1
 	
@@ -168,7 +168,7 @@ async def dl_chapter(url, title, mode):
 		link = link.get("src") or link.get("data-src") # for manganelo
 		filename = f"{dir}/{n}.jpg"
 		headers = dict(Referer=url)
-		process.append(fast_download(link, filename=filename, headers=headers))
+		process.append(req_download(link, filename=filename, headers=headers))
 		images.append(filename)
 		n += 1
 	await asyncio.gather(*process)
