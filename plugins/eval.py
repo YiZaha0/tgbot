@@ -6,8 +6,8 @@ import sys
 import io
 from . import *
 
-
-@bot.on(events.NewMessage(pattern="exec ?(.*)", from_users=SUDOS))
+from_users = tuple(SUDOS)
+@bot.on(events.NewMessage(pattern="exec ?(.*)", from_users=from_users))
 async def _(event):
     try:
         cmd = event.text.split(" ", maxsplit=1)[1]
