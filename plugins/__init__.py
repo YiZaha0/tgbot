@@ -13,6 +13,8 @@ from telethon import TelegramClient
 from pyrogram import Client 
 from telethon import events 
 from telethon.tl.custom import Message
+from telethon.tl.types import MessageService
+from telethon.errors import MessageDeleteForbiddenError, MessageNotModifiedError
 
 #CLIENTS
 bot = TelegramClient("TestBot", Config.API_ID, Config.API_HASH).start(bot_token=Config.BOT_TOKEN)
