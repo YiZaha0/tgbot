@@ -245,7 +245,7 @@ async def update_manhwas():
 					break 
 				new_chapters.append(i)
 			new_chapters.reverse()
-
+			chat_invite_link = await get_chat_invite_link(chat)
 			for ch_link in new_chapters:
 				logger.info(f"\n»{title} ({ps}) Feed: Updating {ch_link}")
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).replace("chapter-", "").replace("-", ".").strip()
