@@ -248,7 +248,7 @@ async def setthumb(bot, event):
 async def update_thumbnail():
 	url = get_db("THUMBNAIL")
 	if url:
-		await fast_download(url, filename="thumb.jpg")
+		await req_download(url, filename="thumb.jpg")
 
 @app.on_message(filters.private & filters.forwarded)
 async def forwardedChatID(bot, event):
