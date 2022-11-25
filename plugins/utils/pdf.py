@@ -3,7 +3,7 @@ from io import BytesIO
 from typing import List, BinaryIO
 from pathlib import Path
 from fpdf import FPDF
-from config import Config
+from plugins import logger
 import re
 
 from PIL import Image
@@ -16,7 +16,7 @@ def fld2pdf(files: list,  out: str):
     try:
         img2pdf(files, pdf)
     except BaseException as e:
-        print(f'Image to pdf failed with exception: {e}')
+        logger.info(f'Image to pdf failed with exception: {e}')
         old_img2pdf(files, pdf)
     return pdf
 
