@@ -7,7 +7,7 @@ import aiohttp
 
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup 
-from plugins import agents, bash, req_content
+from plugins import agents, run_cmd, req_content
 
 class Entry:
 	def __init__(self, name=None, title=None, link=None, summary=None):
@@ -58,7 +58,7 @@ class Entry:
 		url_id = xstream_url.split("/")[-1]
 		xtream_url = f"https://fembed9hd.com/f/{url_id}"
 		code = f'''curl -A "uwu" -s -X POST "https://fembed9hd.com/api/source/{url_id}" -H "x-requested-with:XMLHttpRequest"'''
-		result = (await bash(code))[0]
+		result = (await run_cmd(code))[0]
 		result = json.loads(result)["data"]
 		
 		urls = dict()
