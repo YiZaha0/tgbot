@@ -214,7 +214,8 @@ async def iter_chapters(link, ps=None):
 		raise ValueError 
 chapter_log_msg = """
 <strong><i>#New_Chapter</strong></i>
-<i>{} - {}</i>
+<i>→{}
+→Chapter {}</i>
 """
 async def update_manhwas():
 	ps_dict = dict()
