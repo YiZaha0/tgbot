@@ -101,7 +101,7 @@ async def download_hentai(bot, update):
 		if url == "":
 			url_dl = result["data"][1]["url"]
 		file = f"{query}.mp4"
-		await bash(f"downloadm3u8 -o {file} {url_dl}")
+		await run_cmd(f"downloadm3u8 -o {file} {url_dl}")
 		await message.edit("<code>Now Uploading File...</code>")
 		K = await message.reply_document(file, caption=f"`{file}`")
 		D = await bot.send_document(cache_chat, K.document.file_id, caption=K.caption.markdown)
