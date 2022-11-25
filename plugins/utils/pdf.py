@@ -58,7 +58,7 @@ def img2pdf(files: List[Path], out: Path):
         img_bytes.close()
 
     pdf.set_title(out.stem)
-    pdf.set_author(Config.PDF_AUTHOR or "t.me/Adult_Mangas")
+    pdf.set_author("t.me/Adult_Mangas")
     pdf.output(out, "F")
     pdf.close()
 
