@@ -251,7 +251,7 @@ async def update_manhwas():
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).replace("chapter-", "").replace("-", ".").strip()
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
 				try:
-					file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)))
+					file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), use_fpdf=True)
 					msg = await app.send_document(chat, file)
 					os.remove(file)
 					sub["last_chapter"] = ch_link
