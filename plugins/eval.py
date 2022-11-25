@@ -99,7 +99,7 @@ async def aexec(code, event):
     exec(
         (
             "async def __aexec(e, client): "
-            + "\n print = p"
+            + "\n p = print "
             + "\n message = event = e"
             + "\n reply = await event.get_reply_message()"
             + "\n chat = event.chat_id"
