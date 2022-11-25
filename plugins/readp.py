@@ -244,8 +244,14 @@ async def update_manhwas():
 				if i == last_chapter: 
 					break 
 				new_chapters.append(i)
-			new_chapters.reverse()
-			chat_invite_link = await get_chat_invite_link(chat)
+			new_chapters.reverse() 
+			
+			chat_invite = await get_chat_invite_link(chat)
+			reply_markup = []
+			if chat_invite:
+				reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_invite)])
+				reply_markup = types.InlineKeyboardMarkup(reply_markup)
+				
 			for ch_link in new_chapters:
 				logger.info(f"\n»{title} ({ps}) Feed: Updating {ch_link}")
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).replace("chapter-", "").replace("-", ".").strip()
@@ -256,7 +262,7 @@ async def update_manhwas():
 					os.remove(file)
 					sub["last_chapter"] = ch_link
 					db.update_one({"msub": ps, "link": link}, {"$set": sub})
-					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch))
+					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
 				except Exception as e:
 					logger.info(f"\n{title} ({ps}) Feed: {ch_link}: Error: {e}")
 					await app.send_message(LOG_CHAT, f"<b>{title} ({ps}) Feed:</b> {ch_link}\n\n**Something Went Wrong❗**\n\n`{type(e).__name__}: {e}`")
