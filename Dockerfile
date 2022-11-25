@@ -1,9 +1,12 @@
-FROM python:latest
+FROM python:3.10.8
 
-WORKDIR /root/tgbot
+ENV TZ=Asia/Kolkata
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY . .
+RUN git clone https://github.com/YiZaha0/tgbot /root/tgbot-rep
 
-RUN pip install -U -r requirements.txt
+WORKDIR /root/tgbot-rep
+
+RUN pip install -r requirements.txt
 
 CMD ["python", "main.py"]
