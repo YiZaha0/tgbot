@@ -7,7 +7,7 @@ import io
 from . import *
 
 
-@bot.on(events.NewMessage(pattern="exec ?(.*)", allow_sudo=True))
+@bot.on(events.NewMessage(pattern="exec ?(.*)", from_users=tuple(SUDOS)))
 async def _(event):
     try:
         cmd = event.text.split(" ", maxsplit=1)[1]
@@ -43,7 +43,7 @@ async def _(event):
     else:
         await eor(xx, OUT, link_preview=False)
 
-@bot.on(admin_cmd("eval ?(.*)", allow_sudo=True))
+@bot.on(admin_cmd("eval ?(.*)", from_users=tuple(SUDOS)))
 async def _(event):
     if event.fwd_from:
         return
