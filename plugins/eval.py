@@ -5,27 +5,9 @@ import asyncio
 import sys
 import io
 from . import *
-def _parse_eval(value=None):
-    if not value:
-        return value
-    if hasattr(value, "stringify"):
-        try:
-            return value.stringify()
-        except TypeError:
-            pass
-    elif isinstance(value, dict):
-        try:
-            return json_parser(value, indent=1)
-        except BaseException:
-            pass
-    return str(value)
 
-def _stringify(text=None, *args, **kwargs):
-    if text:
-        text = _parse_eval(text)
-    return print(text, *args, **kwargs)
 
-@bot.on(admin_cmd(pattern="exec ?(.*)", allow_sudo=True))
+@bot.on(events.NewMessage(pattern="exec ?(.*)", allow_sudo=True))
 async def _(event):
     try:
         cmd = event.text.split(" ", maxsplit=1)[1]
@@ -33,7 +15,7 @@ async def _(event):
         return await eod(event, "`Give Something To Execute...`")
     xx = await eor(event, "`Processing...`")
     reply_to_id = event.reply_to_msg_id or event.id
-    stdout, stderr = await bash(cmd, run_code=1)
+    stdout, stderr = await run_cmd(cmd, run_code=1)
     OUT = f"**✦ COMMAND:**\n`{cmd}` \n\n"
     err, out = "", ""
     if stderr:
@@ -46,7 +28,7 @@ async def _(event):
     if len(OUT) > 4096:
         ultd = err + out
         with io.BytesIO(str.encode(ultd)) as out_file:
-            out_file.name = "bash.txt"
+            out_file.name = "exec.txt"
             await event.client.send_file(
                 event.chat_id,
                 out_file,
@@ -118,7 +100,7 @@ async def aexec(code, event):
     exec(
         (
             "async def __aexec(e, client): "
-            + "\n print = p = _stringify"
+            + "\n print = p"
             + "\n message = event = e"
             + "\n reply = await event.get_reply_message()"
             + "\n chat = event.chat_id"
