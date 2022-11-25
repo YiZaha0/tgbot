@@ -43,7 +43,7 @@ async def _(event):
     else:
         await eor(xx, OUT, link_preview=False)
 
-@bot.on(events.NewMessage("eval ?(.*)", from_users=tuple(SUDOS)))
+@bot.on(events.NewMessage(pattern="eval ?(.*)", from_users=tuple(SUDOS)))
 async def _(event):
     if event.fwd_from:
         return
