@@ -71,7 +71,7 @@ async def manga_data(client, event):
 	try:
 		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False)
 	except:
-		image = (await fast_download(image, filename=manga_id+".jpg"))[0]
+		image = (await req_download(image, filename=manga_id+".jpg"))[0]
 		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False) 
 		os.remove(image)
 	await message.delete()
@@ -93,7 +93,7 @@ async def anime_data(client, event):
 	try:
 		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False)
 	except:
-		image = (await fast_download(image, filename=anime_id+".jpg"))[0]
+		image = (await req_download(image, filename=anime_id+".jpg"))[0]
 		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False) 
 		os.remove(image)
 	await message.delete()
