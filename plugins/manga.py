@@ -104,7 +104,7 @@ async def bulkmanga(bot, update):
 		return await update.reply("`Invalid Manga ID`")
 	m = await update.reply("`Processing...`")
 	if is_thumb:
-		args["thumb"] = (await fast_download(manga.poster_url))[0]
+		args["thumb"] = (await req_download(manga.poster_url))[0]
 	for ch in manga.chapters:
 		try:
 			url = manga.chapters[ch]
