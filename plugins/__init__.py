@@ -12,9 +12,7 @@ from pymongo import MongoClient
 from telethon import TelegramClient
 from pyrogram import Client 
 from telethon import events 
-from telethon.errors import MessageDeleteForbiddenError, MessageNotModifiedError
 from telethon.tl.custom import Message
-from telethon.tl.types import MessageService
 
 #CLIENTS
 bot = TelegramClient("TestBot", Config.API_ID, Config.API_HASH).start(bot_token=Config.BOT_TOKEN)
@@ -92,79 +90,17 @@ def readable_time(seconds: int) -> str:
         + str((check(seconds)) if seconds else "00")
     )
 
-async def bash(cmd, run_code=0):
-    """
-    run any command in subprocess and get output or error."""
+async def run_cmd(cmd, run_code=0):
     process = await asyncio.create_subprocess_shell(
         cmd,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
     stdout, stderr = await process.communicate()
-    err = stderr.decode().strip() or None
-    out = stdout.decode().strip()
-    if not run_code and err:
-        split = cmd.split()[0]
-        if f"{split}: not found" in err:
-            return out, f"{split.upper()}_NOT_FOUND"
-    return out, err
-
-def admin_cmd(pattern=None, command=None, **args):
-    args["func"] = lambda e: e.via_bot_id is None
-    stack = inspect.stack()
-    previous_stack_frame = stack[1]
-    file_test = Path(previous_stack_frame.filename)
-    file_test = file_test.stem.replace(".py", "")
-    allow_sudo = args.get("allow_sudo", False)
-    # get the pattern from the decorator
-    if pattern is not None:
-        if pattern.startswith(r"\#"):
-            # special fix for snip.py
-            args["pattern"] = re.compile(pattern)
-        elif pattern.startswith(r"^"):
-            args["pattern"] = re.compile(pattern)
-            cmd = pattern.replace("$", "").replace("^", "").replace("\\", "")
-        else:
-            if len(Config.get("HANDLER")) == 2:
-                darkreg = "^" + Config.get("HANDLER")
-                reg = Config.get("HANDLER").split(" ")[1]
-            elif len(Config.get("HANDLER")) == 1:
-                darkreg = "^\\" + Config.get("HANDLER")
-                reg = Config.get("HANDLER")
-            args["pattern"] = re.compile(darkreg + pattern)
-            if command is not None:
-                cmd = reg + command
-            else:
-                cmd = (
-                    (reg + pattern).replace("$", "").replace("\\", "").replace("^", "")
-                )
-
-    args["outgoing"] = True
-    # should this command be available for other users?
-    if allow_sudo:
-        args["from_users"] = SUDOS + [5591954930]
-        # Mutually exclusive with outgoing (can only set one of either).
-        args["incoming"] = True
-        del args["allow_sudo"]
-
-    # error handling condition check
-    elif "incoming" in args and not args["incoming"]:
-        args["outgoing"] = True
-
-    # add blacklist chats, UB should not respond in these chats
-    args["blacklist_chats"] = True
-    black_list_chats = list(Config.get("BLACKLIST_CHATS") or "")
-    if len(black_list_chats) > 0:
-        args["chats"] = black_list_chats
-
-    # add blacklist chats, UB should not respond in these chats
-    if "allow_edited_updates" in args and args["allow_edited_updates"]:
-        del args["allow_edited_updates"]
-
-    # check if the plugin should listen for outgoing 'messages'
-
-    return events.NewMessage(**args)
-
+    error = stderr.decode().strip() or None
+    output = stdout.decode().strip()
+    return output, error
+   
 async def eor(event, text=None, **args):
     time = args.get("time", None)
     edit_time = args.get("edit_time", None)
@@ -212,14 +148,6 @@ def post_telegraph(title, content, author, author_url=None):
         text=content)
     return post_page["url"]
 
-def download(url, filename, headers):
-	r = requests.get(url, headers=headers, stream=True)
-	r.raise_for_status()
-	with open(filename, "wb") as file:
-		shutil.copyfileobj(r.raw, file)
-		file.close()
-	return file.name
-
 async def req_content(url, method="GET", data=None, *args, **kwargs):
 	async with aiohttp.ClientSession() as session:
 		if method.lower() == "get":
@@ -241,7 +169,7 @@ async def req_url(url, method="GET", data=None, *args, **kwargs):
 			raise ValueError
 		return response
 
-async def fast_download(download_url, filename=None, progress_callback=None, headers=None):
+async def req_download(download_url, filename=None, progress_callback=None, headers=None):
     async with aiohttp.ClientSession() as session:
         async with session.get(download_url, headers=headers, timeout=None) as response:
             if not filename:
