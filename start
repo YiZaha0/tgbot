@@ -1,4 +1,4 @@
 git clone https://github.com/YiZaha0/tgbot
 cd tgbot
-pip install -U -r requirements.txt
+pip install --quiet -U -r requirements.txt
 python main.py
