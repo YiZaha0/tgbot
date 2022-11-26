@@ -33,5 +33,5 @@ bot.loop.run_until_complete(update_thumbnail())
 if __name__ == "__main__":
 	print("»Successfully Deployed Bot!")
 	bot.send_message(LOG_CHAT, "**Bot is alive now❗**")
-	scheduler.star()
+	scheduler.start()
 	app.run()
