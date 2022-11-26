@@ -9,4 +9,4 @@ WORKDIR /root/tgbot-rep
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "main.py"]
+CMD ["bash", "start"]
