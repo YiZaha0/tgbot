@@ -5,7 +5,6 @@ import cloudscraper
 from search_engine_parser import GoogleSearch
 from pyrogram import filters, types
 from telethon import functions
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from .utils.auws import *
 from . import *
 
