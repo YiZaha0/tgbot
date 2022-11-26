@@ -240,6 +240,8 @@ async def update_manhwas():
 				continue
 
 			logger.info(f"\n»{ps} Feed: Updating {title}")
+			await asyncio.sleep(5)
+
 			new_chapters = list()
 			async for i in iter_chapters(link, ps):
 				if i == last_chapter: 
@@ -255,6 +257,7 @@ async def update_manhwas():
 				
 			for ch_link in new_chapters:
 				logger.info(f"\n»{title} ({ps}) Feed: Updating {ch_link}")
+				await asyncio.sleep(5)
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).replace("chapter-", "").replace("-", ".").strip()
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
 				try:
@@ -262,11 +265,14 @@ async def update_manhwas():
 					msg = await app.send_document(chat, file)
 					os.remove(file)
 					sub["last_chapter"] = ch_link
-					db.update_one({"msub": ps, "link": link}, {"$set": sub})
 					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
+					await asyncio.sleep(2)
 				except Exception as e:
 					logger.info(f"\n{title} ({ps}) Feed: {ch_link}: Error: {e}")
-					await app.send_message(LOG_CHAT, f"<b>{title} ({ps}) Feed:</b> {ch_link}\n\n**Something Went Wrong❗**\n\n`{type(e).__name__}: {e}`")
+
+			if new_chapters:
+				db.update_one({"msub": ps, "link": link}, {"$set": sub})
+
 		logger.info(f"\n»Completed Run For {ps}")
 
 scheduler = AsyncIOScheduler()
