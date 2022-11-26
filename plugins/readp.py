@@ -271,7 +271,7 @@ async def update_manhwas():
 				reply_markup = types.InlineKeyboardMarkup(reply_markup)
 			
 			for ch_link in new_chapters:
-				ch = ch_link.split("/")[-1] or ch_link.split("/")[-2]
+				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).split("-")[-1]
 				ch = ch.replace("-", ".", 1).replace("-", "", 1).replace("-", " ")
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
 				try:
@@ -289,6 +289,6 @@ async def update_manhwas():
 				except Exception as e:
 					logger.info(f"{ps} Feed: Got Error while updating {ch_url}\n→{e}") 
 
-		logger.info(f"Completed Updates Run for {ps}")
+		logger.info(f"»Completed Updates Run for {ps}")
 
 scheduler.add_job(update_manhwas, "interval", minutes=5)
