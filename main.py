@@ -3,7 +3,7 @@ import glob
 import logging
 
 from pathlib import Path 
-from plugins import app, bot, load_plugin, LOG_CHAT
+from plugins import app, bot, load_plugin, scheduler, LOG_CHAT
 from plugins.tools import update_thumbnail
 
 #LOGGING
@@ -33,4 +33,5 @@ bot.loop.run_until_complete(update_thumbnail())
 if __name__ == "__main__":
 	print("»Successfully Deployed Bot!")
 	bot.send_message(LOG_CHAT, "**Bot is alive now❗**")
+	scheduler.star()
 	app.run()
