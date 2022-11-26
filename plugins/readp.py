@@ -254,7 +254,7 @@ async def update_manhwas():
 			if chat_invite:
 				reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_invite)])
 				reply_markup = types.InlineKeyboardMarkup(reply_markup)
-				
+
 			for ch_link in new_chapters:
 				logger.info(f"\n»{title} ({ps}) Feed: Updating {ch_link}")
 				await asyncio.sleep(5)
@@ -267,11 +267,9 @@ async def update_manhwas():
 					sub["last_chapter"] = ch_link
 					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
 					await asyncio.sleep(2)
+					db.update_one({"msub": ps, "link": link}, {"$set": sub})
 				except Exception as e:
 					logger.info(f"\n{title} ({ps}) Feed: {ch_link}: Error: {e}")
-
-			if new_chapters:
-				db.update_one({"msub": ps, "link": link}, {"$set": sub})
 
 		logger.info(f"\n»Completed Run For {ps}")
 
