@@ -257,12 +257,11 @@ async def update_manhwas():
 		await asyncio.sleep(1)
 		
 		for link, new_chapters in update.items():
-			og_sub = db.find_one({"msub": ps, "link": link})
-			sub = dict(og_sub)
+			sub = db.find_one({"msub": ps, "link": link})
 			title = sub["title"]
 			chat = sub["chat"]
 			logger.info(f"»{ps} Feed: Updates for {title}\n→{new_chapters}") 
-			
+			Errors = dict()
 			#to get manhwa channel link
 			reply_markup = list()
 			chat_invite = await get_chat_invite_link(chat)
@@ -271,6 +270,8 @@ async def update_manhwas():
 				reply_markup = types.InlineKeyboardMarkup(reply_markup)
 			
 			for ch_link in new_chapters:
+				if link in Errors:
+					break
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).split("-")[-1]
 				ch = ch.replace("-", ".", 1).replace("-", "", 1).replace("-", " ")
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
@@ -279,14 +280,15 @@ async def update_manhwas():
 				except Exception as e:
 					not os.path.exists(pdfname) or os.remove(pdfname)
 					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
-					break
+					Errors[link] = 1
+					continue 
 				await asyncio.sleep(1)
 				try:
 					sub["last_chapter"] = ch_link
 					chapter_msg = await app.send_document(chat, chapter_file, protect_content=True)
 					os.remove(chapter_file)
 					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
-					db.update_one(og_sub, {"$set": sub})
+					db.update_one({"msub": ps, "link": link}, {"$set": sub})
 					await asyncio.sleep(2.5)
 				except Exception as e:
 					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}") 
@@ -294,3 +296,4 @@ async def update_manhwas():
 		logger.info(f"»Completed Updates Run for {ps}")
 
 scheduler.add_job(update_manhwas, "interval", minutes=5)
+
