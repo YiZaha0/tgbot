@@ -1,4 +1,5 @@
 import requests
+import datetime
 import asyncio
 import cloudscraper
 
@@ -295,5 +296,15 @@ async def update_manhwas():
 
 		logger.info(f"»Completed Updates Run for {ps}")
 
-scheduler.add_job(update_manhwas, "interval", minutes=5)
-
+async def manhwa_updater():
+    while True:
+        sleep_time = 300
+        try:
+            start = datetime.datetime.now()
+            await update_manhwas()
+            end = datetime.datetime.now() - start
+            wait_time = max((dt.timedelta(seconds=sleep_time) - elapsed).total_seconds(), 0)
+            print(f'Time elapsed updating manhwas: {elapsed}, waiting for {wait_time}')
+        except BaseException as e:
+            print(f'»Got Error While Updating Manhwas: {e}')
+        await asyncio.sleep(wait_time)
