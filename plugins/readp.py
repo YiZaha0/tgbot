@@ -254,14 +254,14 @@ async def update_manhwas():
 	await asyncio.sleep(5)
 	
 	for ps, update in updates.items():
-		print(f"»Starting Updates Run for {ps}")
+		logger.info(f"»Starting Updates Run for {ps}")
 		await asyncio.sleep(1)
 		
 		for link, new_chapters in update.items():
 			sub = db.find_one({"msub": ps, "link": link})
 			title = sub["title"]
 			chat = sub["chat"]
-			print(f"»{ps} Feed: Updates for {title}\n→{new_chapters}")
+			logger.info(f"»{ps} Feed: Updates for {title}\n→{new_chapters}")
 			#to get manhwa channel link
 			reply_markup = list()
 			chat_invite = await get_chat_invite_link(chat)
@@ -279,7 +279,7 @@ async def update_manhwas():
 					chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), fpdf=True)
 				except Exception as e:
 					not os.path.exists(pdfname) or os.remove(pdfname)
-					print(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
+					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
 					break
 				await asyncio.sleep(1)
 				try:
@@ -290,9 +290,9 @@ async def update_manhwas():
 					db.update_one({"msub": ps, "link": link}, {"$set": sub})
 					await asyncio.sleep(2.5)
 				except Exception as e:
-					print(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}") 
+					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}") 
 
-		print(f"»Completed Updates Run for {ps}")
+		logger.info(f"»Completed Updates Run for {ps}")
 
 async def manhwa_updater():
     while True:
@@ -302,8 +302,8 @@ async def manhwa_updater():
             await update_manhwas()
             end = datetime.datetime.now() - start
             wait_time = max((dt.timedelta(seconds=sleep_time) - elapsed).total_seconds(), 0)
-            print(f'Time elapsed updating manhwas: {elapsed}, waiting for {wait_time}')
+            logger.info(f'Time elapsed updating manhwas: {elapsed}, waiting for {wait_time}')
         except BaseException as e:
-            print(f'»Got Error While Updating Manhwas: {e}')
+            logger.info(f'»Got Error While Updating Manhwas: {e}')
         if wait_time:
             await asyncio.sleep(wait_time) 
