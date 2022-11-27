@@ -261,8 +261,7 @@ async def update_manhwas():
 			sub = db.find_one({"msub": ps, "link": link})
 			title = sub["title"]
 			chat = sub["chat"]
-			logger.info(f"»{ps} Feed: Updates for {title}\n→{new_chapters}") 
-			Errors = dict()
+			print(f"»{ps} Feed: Updates for {title}\n→{new_chapters}")
 			#to get manhwa channel link
 			reply_markup = list()
 			chat_invite = await get_chat_invite_link(chat)
@@ -280,9 +279,8 @@ async def update_manhwas():
 					chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), fpdf=True)
 				except Exception as e:
 					not os.path.exists(pdfname) or os.remove(pdfname)
-					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
-					Errors[link] = 1
-					continue 
+					print(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
+					break
 				await asyncio.sleep(1)
 				try:
 					sub["last_chapter"] = ch_link
@@ -298,7 +296,7 @@ async def update_manhwas():
 
 async def manhwa_updater():
     while True:
-        sleep_time = 300
+        wait_time = 300
         try:
             start = datetime.datetime.now()
             await update_manhwas()
@@ -307,4 +305,5 @@ async def manhwa_updater():
             print(f'Time elapsed updating manhwas: {elapsed}, waiting for {wait_time}')
         except BaseException as e:
             print(f'»Got Error While Updating Manhwas: {e}')
-        await asyncio.sleep(wait_time)
+        if wait_time:
+            await asyncio.sleep(wait_time) 
