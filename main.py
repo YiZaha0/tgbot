@@ -7,6 +7,13 @@ from pathlib import Path
 from plugins import app, bot, load_plugin, scheduler, LOG_CHAT
 from plugins.tools import update_thumbnail
 from plugins.readp import manhwa_updater
+from fastapi import FastAPI, Request
+
+#For Koyeb
+fast = FastAPI()
+@app.get("/")
+def root(request: Request):
+	return {"status": "ok", "root": request.url.hostname}
 
 #LOGGING
 LOG_FILE = "LOGS.txt"
