@@ -301,7 +301,7 @@ async def manhwa_updater():
             start = datetime.datetime.now()
             await update_manhwas()
             end = datetime.datetime.now() - start
-            wait_time = max((datetime.timedelta(seconds=wait_time) - elapsed).total_seconds(), 0)
+            wait_time = max((datetime.timedelta(seconds=wait_time) - end).total_seconds(), 0)
             logger.info(f'Time elapsed updating manhwas: {elapsed}, waiting for {wait_time}')
         except BaseException as e:
             logger.info(f'»Got Error While Updating Manhwas: {e}')
