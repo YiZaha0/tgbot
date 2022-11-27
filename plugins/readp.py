@@ -269,9 +269,7 @@ async def update_manhwas():
 				reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_invite)])
 				reply_markup = types.InlineKeyboardMarkup(reply_markup)
 			
-			for ch_link in new_chapters:
-				if link in Errors:
-					break
+			for ch_link in new_chapter:
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).split("-")[-1]
 				ch = ch.replace("-", ".", 1).replace("-", "", 1).replace("-", " ")
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
