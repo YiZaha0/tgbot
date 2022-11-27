@@ -26,4 +26,4 @@ search-engine-parser
 telegraph
 telethon
 tgcrypto
-uvicorn
+uvicorn[standard]
