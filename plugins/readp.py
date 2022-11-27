@@ -279,13 +279,15 @@ async def update_manhwas():
 				except Exception as e:
 					not os.path.exists(pdfname) or os.remove(pdfname)
 					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
-					break 
+					break
+				await asyncio.sleep(1)
 				try:
 					sub["last_chapter"] = ch_link
 					chapter_msg = await app.send_document(chat, chapter_file, protect_content=True)
 					os.remove(chapter_file)
 					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
 					db.update_one(og_sub, {"$set": sub})
+					await asyncio.sleep(2.5)
 				except Exception as e:
 					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}") 
 
