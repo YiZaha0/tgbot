@@ -36,6 +36,6 @@ loop.run_until_complete(update_thumbnail())
 
 #STARTING
 bot.send_message(LOG_CHAT, "**Bot is alive now❗**")
-print("»Successfully Deployed Bot!")
+logging.info("»Successfully Deployed Bot!")
 loop.create_task(manhwa_updater())
 app.run()
