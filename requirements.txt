@@ -5,6 +5,7 @@ aiofiles
 bs4
 cloudscraper
 cryptg
+fastapi
 ffmpeg-python 
 fpdf2
 html-telegraph-poster
