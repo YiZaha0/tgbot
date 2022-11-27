@@ -44,12 +44,12 @@ async def images_to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 	path = os.path.join(os.getcwd(), pdfname)
 	with open(path, "wb") as pdf:
 		try:
-			fld2pdf(image_list, path.replace(".pdf", ""))	
+			pdf.write(img2pdf.convert(image_list))	
 		except BaseException:
 			pdf.close()
 			os.remove(pdf.name)
-			shutil.rmtree(dir)
-			return create_pdf(pdfname, image_list)
+			create_pdf(pdfname, image_list)
+
 	shutil.rmtree(dir)
 	return path 
 
