@@ -254,7 +254,7 @@ async def update_manhwas():
 	await asyncio.sleep(5)
 	
 	for ps, update in updates.items():
-		logger.info(f"»Starting Updates Run for {ps}")
+		print(f"»Starting Updates Run for {ps}")
 		await asyncio.sleep(1)
 		
 		for link, new_chapters in update.items():
@@ -292,9 +292,9 @@ async def update_manhwas():
 					db.update_one({"msub": ps, "link": link}, {"$set": sub})
 					await asyncio.sleep(2.5)
 				except Exception as e:
-					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}") 
+					print(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}") 
 
-		logger.info(f"»Completed Updates Run for {ps}")
+		print(f"»Completed Updates Run for {ps}")
 
 async def manhwa_updater():
     while True:
