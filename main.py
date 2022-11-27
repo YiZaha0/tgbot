@@ -11,7 +11,7 @@ from fastapi import FastAPI, Request
 
 #For Koyeb
 fast = FastAPI()
-@app.get("/")
+@fast.get("/")
 def root(request: Request):
 	return {"status": "ok", "root": request.url.hostname}
 
