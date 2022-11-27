@@ -6,7 +6,7 @@ import logging
 from pathlib import Path 
 from plugins import app, bot, load_plugin, scheduler, LOG_CHAT
 from plugins.tools import update_thumbnail
-from plugins.readp import manhwas_updater
+from plugins.readp import manhwa_updater
 
 #LOGGING
 LOG_FILE = "LOGS.txt"
@@ -37,5 +37,5 @@ loop.run_until_complete(update_thumbnail())
 #STARTING
 bot.send_message(LOG_CHAT, "**Bot is alive now❗**")
 print("»Successfully Deployed Bot!")
-loop.create_task(manhwas_updater())
+loop.create_task(manhwa_updater())
 app.run()
