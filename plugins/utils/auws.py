@@ -21,7 +21,7 @@ from natsort import natsorted
 from pathlib import Path 
 from urllib.parse import urljoin
 from plugins import *
-from .pdf import fld2pdf
+from .pdf import fld2pdf, img2pdf as makefpdf
 
 session = requests.Session()
 session.headers["User-Agent"] = random.choice(agents)
@@ -104,6 +104,18 @@ def merge_pdfs(pdflist: list, pdfname):
 	result.save(pdfname)
 	return pdfname
 
+def images_to_pdf(path: Path, images):
+	if not isinstance(path, Path):
+		path = Path(path)
+	full_path = path.absolute().as_posix()
+	with path.open("wb") as pdf:
+		try:
+			pdf.write(img2pdf.convert(images, producer="t.me/Adult_Mangas", creator="t.me/Adult_Mangas", title=path.stem))
+		except:
+			create_pdf(full_path, images)
+	
+	return full_path
+
 async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=False):
 	req = await req_url(link, headers=session.headers)
 	if not str(req.status).startswith("2"):
@@ -144,13 +156,12 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 	path = Path(pdfname)
 	
 	if fpdf:
-		fld2pdf(images, path.stem)
+		try:
+			fpdfmake(images, path.stem)
+		except:
+			images_to_pdf(path, images)
 	else:
-		with path.open("wb") as pdf:
-			try:
-				pdf.write(img2pdf.convert(images, producer="t.me/Adult_Mangas", creator="t.me/Adult_Mangas", title=path.stem))
-			except:
-				create_pdf(pdf.name, images)
+		images_to_pdf(path, images)
 				
 	shutil.rmtree(dir_name)
 	return path
