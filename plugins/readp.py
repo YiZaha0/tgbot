@@ -259,7 +259,7 @@ async def update_manhwas():
 		
 		for link, new_chapters in update.items():
 			sub = db.find_one({"msub": ps, "link": link})
-			title = sub["title"]
+			title = sub["title"].replace("’", "'")
 			chat = sub["chat"]
 			logger.info(f"»{ps} Feed: Updates for {title}\n→{new_chapters}")
 			#to get manhwa channel link
