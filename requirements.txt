@@ -5,7 +5,6 @@ aiofiles
 bs4
 cloudscraper
 cryptg
-fastapi
 ffmpeg-python 
 fpdf2
 html-telegraph-poster
@@ -26,4 +25,3 @@ search-engine-parser
 telegraph
 telethon
 tgcrypto
-uvicorn[standard]
