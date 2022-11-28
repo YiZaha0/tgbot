@@ -156,10 +156,7 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 	path = Path(pdfname)
 	
 	if fpdf:
-		try:
-			fpdfmake(images, path.stem)
-		except:
-			images_to_pdf(path, images)
+		fld2pdf(images, path.stem)
 	else:
 		images_to_pdf(path, images)
 				
