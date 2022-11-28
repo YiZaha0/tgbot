@@ -1,7 +1,14 @@
-from fastapi import FastAPI, Request
+import logging
+from aiohttp import web
+from config import Config
 
-app = FastAPI()
+logging.basicConfig(level=logging.INFO)
 
-@app.get('/')
-def root(request: Request):
-    return {"status": "ok", "root": request.url.hostname}
+async def root(request):
+    return web.Response(text="Online!")
+
+app = web.Application()
+app.add_routes([web.get("/"), root])
+
+if __name__ == "__main__:
+    web.run_app(app, port=Config.PORT)
