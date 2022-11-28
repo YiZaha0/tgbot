@@ -1,4 +1,4 @@
 git clone https://github.com/YiZaha0/tgbot
 cd tgbot
 pip install --quiet -U -r requirements.txt
-gunicorn main:main --workers 1 --threads 1 --bind 0.0.0.0:$PORT --worker-class aiohttp.GunicornWebWorker & python main.py
+gunicorn api:app --workers 1 --threads 1 --bind 0.0.0.0:$PORT --worker-class aiohttp.GunicornWebWorker & python main.py
