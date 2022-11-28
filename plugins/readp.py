@@ -274,7 +274,7 @@ async def update_manhwas():
 				ch = ch.replace("-", ".", 1).replace("-", "", 1).replace("-", " ")
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
 				try:
-					chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), fpdf=True)
+					chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)))
 				except Exception as e:
 					not os.path.exists(pdfname) or os.remove(pdfname)
 					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
