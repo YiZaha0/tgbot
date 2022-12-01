@@ -194,7 +194,7 @@ async def upost_(_, update):
 		return await status.edit("`Invalid syntax for upost.`")
 	title = text[0]
 	ch = text[1]
-	chat = text[2] if len(text) == 3 else None
+	chat = text[2].strip() if len(text) == 3 else None
 	try:
 		chat = int(chat)
 	except:
