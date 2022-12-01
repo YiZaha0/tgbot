@@ -9,6 +9,11 @@ from telethon import functions
 from .utils.auws import *
 from . import *
 
+chapter_log_msg = """
+<strong><i>#New_Chapter</strong></i>
+<i>→{}
+→Chapter {}</i>
+"""
 
 def get_link(link, cloud=False):
 	session = requests.Session()
@@ -177,6 +182,34 @@ async def _readp(bot, event):
 
 
 #UPDATES
+@app.on_message(filters.command("new_ch") & filters.user(SUDOS))
+async def upost_(_, update):
+	status = await update.reply("`Processing`")
+	try:
+		cmd, text = update.text.split(" ", 1)
+	except:
+		return await status.edit("`Invalid syntax for upost.`")
+	text = text.split(" | ")
+	if len(text) in (1, 4):
+		return await status.edit("`Invalid syntax for upost.`")
+	title = text[0]
+	ch = text[1]
+	chat = text[2] if len(text) == 3 else None
+	
+	reply_markup = []
+	upost_text = chapter_log_msg.format(title, ch)
+	if chat:
+		chat_link = await get_chat_invite_link(chat)
+		if chat_link:
+			reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_invite)])
+			reply_markup = InlineKeyboardMarkup(reply_markup)
+		else:
+			await status.edit("Couldn't get invitation link from chat, proceeding without read button.")
+			await asyncio.sleep(3)
+	
+	upost_msg = await app.send_message(-1001848617769, upost_text, reply_markup=reply_markup)
+	await status.edit(f"Successfully sent chapter log message in [{upost_msg.chat.title}]({upost_msg.link}).")
+
 def ps_iargs(ps):
 	if ps == "Toonily":
 		return "-t"
@@ -212,11 +245,7 @@ async def iter_chapters(link, ps=None):
 	
 	else:
 		raise ValueError 
-chapter_log_msg = """
-<strong><i>#New_Chapter</strong></i>
-<i>→{}
-→Chapter {}</i>
-"""
+
 async def manhwa_updates():
 	ps_updates = dict()
 	for sub in db.find({"msub": {"$exists": 1}}):
