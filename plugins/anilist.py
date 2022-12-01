@@ -64,16 +64,13 @@ async def manga_data(client, event):
 		return await event.answer("This is an old button. Please redo the command.")
 	await event.answer("Processing...")
 	text, image, reply_markup = await get_anime_manga(manga, "anime_manga", event.from_user.id)
+	image_path = "./plugins/utils/anilist_img-{anime_id}.jpg"
+	os.path.exists(image_path) or await req_download(image, filename=image_path)
 	if message.photo:
-		media = InputMediaPhoto(image, caption=text)
+		media = InputMediaPhoto(image_path, caption=text)
 		await event.edit_message_media(media, reply_markup=reply_markup)
 		return
-	try:
-		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False)
-	except:
-		image = (await req_download(image, filename=manga_id+".jpg"))[0]
-		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False) 
-		os.remove(image)
+	await message.reply_photo(image_path, caption=text, reply_markup=reply_markup, quote=False)
 	await message.delete()
 
 @app.on_callback_query(filters.regex(r"anime_(.*)"))
@@ -86,15 +83,12 @@ async def anime_data(client, event):
 	message = event.message
 	await event.answer("Processing...")
 	text, image, reply_markup = await get_anime_manga(anime, "anime_anime", event.from_user.id)
+	image_path = "./plugins/utils/anilist_img-{anime_id}.jpg"
+	os.path.exists(image_path) or await req_download(image, filename=image_path)
 	if message.photo:
-		media = InputMediaPhoto(image, caption=text)
+		media = InputMediaPhoto(image_path, caption=text)
 		await event.edit_message_media(media)
 		return
-	try:
-		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False)
-	except:
-		image = (await req_download(image, filename=anime_id+".jpg"))[0]
-		await message.reply_photo(image, caption=text, reply_markup=reply_markup, quote=False) 
-		os.remove(image)
+	await message.reply_photo(image_path, caption=text, reply_markup=reply_markup, quote=False)
 	await message.delete()
 
