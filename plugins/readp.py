@@ -195,7 +195,11 @@ async def upost_(_, update):
 	title = text[0]
 	ch = text[1]
 	chat = text[2] if len(text) == 3 else None
-	
+	try:
+		chat = int(chat)
+	except:
+		await status.edit("`Invalid chat_id for upost.`")
+
 	reply_markup = []
 	upost_text = chapter_log_msg.format(title, ch)
 	if chat:
