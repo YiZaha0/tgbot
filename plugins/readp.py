@@ -205,7 +205,7 @@ async def upost_(_, update):
 	if chat:
 		chat_link = await get_chat_invite_link(chat)
 		if chat_link:
-			reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_invite)])
+			reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_link)])
 			reply_markup = InlineKeyboardMarkup(reply_markup)
 		else:
 			await status.edit("Couldn't get invitation link from chat, proceeding without read button.")
