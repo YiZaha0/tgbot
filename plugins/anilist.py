@@ -64,7 +64,7 @@ async def manga_data(client, event):
 		return await event.answer("This is an old button. Please redo the command.")
 	await event.answer("Processing...")
 	text, image, reply_markup = await get_anime_manga(manga, "anime_manga", event.from_user.id)
-	image_path = f"./plugins/utils/anilist_img-{anime_id}.jpg"
+	image_path = f"./plugins/utils/anilist_img-{manga_id}.jpg"
 	os.path.exists(image_path) or await req_download(image, filename=image_path)
 	if message.photo:
 		media = InputMediaPhoto(image_path, caption=text)
