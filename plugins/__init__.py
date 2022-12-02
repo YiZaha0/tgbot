@@ -28,7 +28,7 @@ db = mongodb["MAIN"]
 
 #VARS
 logger = logging.getLogger("Bot")
-sudo_users = Config.SUDOS or "5304356242 5370531116 5606839760"
+sudo_users = Config.SUDOS or "5304356242 5370531116 5551387300"
 sudo_users = sudo_users.split()
 SUDOS = []
 for sudo_id in sudo_users:
