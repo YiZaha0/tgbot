@@ -678,7 +678,7 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
             f"<img src='{title_img}' title={romaji}/>\n"
             + f"<code>{caption.replace('<code>', '').replace('</code>', '')}</code>\n"
             + markdown.markdown(html_pc),
-            "Useless",
+            "@Adult_Mangas",
             "https://t.me/Adult_Mangas"
         )
     reply_markup = []
