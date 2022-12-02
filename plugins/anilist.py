@@ -22,8 +22,6 @@ async def anime_(client, event):
 	for result in results:
 		name = result["title"].get("english") or result["title"].get("romaji")
 		id = str(result["id"])
-		if not get_db(id, cn="Adb"):
-			add_db(id, result["title"].get("native") or result["title"].get("romaji"), cn="Adb")
 		buttons.append([InlineKeyboardButton(name, f"anime_{id}")])
 	await event.reply(f"Search results for `{text[1]}`", reply_markup=InlineKeyboardMarkup(buttons))
 	if not event.from_user:
@@ -47,8 +45,6 @@ async def manga_(client, event):
 	for result in results:
 		name = result["title"].get("english") or result["title"].get("romaji")
 		id = str(result["id"])
-		if not get_db(id, cn="Adb"):
-			add_db(id, result["title"].get("native") or result["title"].get("romaji"), cn="Adb")
 		buttons.append([InlineKeyboardButton(name, f"manga_{id}")])
 	await event.reply(f"Search results for `{text[1]}`", reply_markup=InlineKeyboardMarkup(buttons))
 	if not event.from_user:
@@ -56,14 +52,10 @@ async def manga_(client, event):
 
 @app.on_callback_query(filters.regex(r"manga_(.*)"))
 async def manga_data(client, event):
-	Adb = mongodb["Adb"]
 	manga_id = event.matches[0].group(1)
 	message = event.message
-	manga = get_db(manga_id, cn="Adb")
-	if not manga:
-		return await event.answer("This is an old button. Please redo the command.")
 	await event.answer("Processing...")
-	text, image, reply_markup = await get_anime_manga(manga, "anime_manga", event.from_user.id)
+	text, image, reply_markup = await get_anime_manga(manga, "anime_manga", manga_id)
 	image_path = f"./plugins/utils/anilist_img-{manga_id}.jpg"
 	os.path.exists(image_path) or await req_download(image, filename=image_path)
 	if message.photo:
@@ -75,14 +67,10 @@ async def manga_data(client, event):
 
 @app.on_callback_query(filters.regex(r"anime_(.*)"))
 async def anime_data(client, event):
-	Adb = mongodb["Adb"]
 	anime_id = event.matches[0].group(1)
-	anime = get_db(anime_id, cn="Adb")
-	if not anime:
-		return await event.answer("This is an old button. Please redo the command.")
 	message = event.message
 	await event.answer("Processing...")
-	text, image, reply_markup = await get_anime_manga(anime, "anime_anime", event.from_user.id)
+	text, image, reply_markup = await get_anime_manga(None, "anime_anime", anime_id)
 	image_path = f"./plugins/utils/anilist_img-{anime_id}.jpg"
 	os.path.exists(image_path) or await req_download(image, filename=image_path)
 	if message.photo:
