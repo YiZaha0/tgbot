@@ -605,7 +605,7 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
             html_pc += "<br><br>"
         html_pc += "<h3>More Info:</h3>"
         if result["idMal"] != "Unknown":
-            html_pc += f"<a href='https://myanimelist.net/anime/{result['idMal']}'>View on MAL</a>"
+            html_pc += f"<a href='https://myanimelist.net/manga/{result['idMal']}'>View on MAL</a>"
         html_pc += f"<a href='{anilist_animelink}'>View on anilist.co</a>"
         html_pc += f"<img src='{bannerImg}'/>"
         html_pc = html_pc.replace("~!", "<spoiler>").replace("!~", "</spoiler>")
