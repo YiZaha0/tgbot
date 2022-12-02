@@ -465,9 +465,9 @@ def getBannerLink(mal, kitsu_search=True, anilistid=0):
     return getPosterLink(mal)
 
 
-async def get_anime_manga(search_str, search_type, _user_id):  # sourcery no-metrics
+async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery no-metrics
     if search_type == "anime_anime":
-        variables = {"search": search_str}
+        variables = {"search": search_str} if not _id else {"id": _id}
         query = anime_query
         result = json.loads(
             (
@@ -485,7 +485,7 @@ async def get_anime_manga(search_str, search_type, _user_id):  # sourcery no-met
             TRAILER = "🎬 <i>No Trailer Available</i>"
         studio_string = ", ".join(nodes["name"] for nodes in result["studios"]["nodes"])
     elif search_type == "anime_manga":
-        variables = {"search": search_str}
+        variables = {"search": search_str} if not _id else {"id": _id}
         query = manga_query
         result = json.loads(
             (
