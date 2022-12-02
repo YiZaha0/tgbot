@@ -55,7 +55,7 @@ async def manga_data(client, event):
 	manga_id = event.matches[0].group(1)
 	message = event.message
 	await event.answer("Processing...")
-	text, image, reply_markup = await get_anime_manga(manga, "anime_manga", manga_id)
+	text, image, reply_markup = await get_anime_manga(None, "anime_manga", manga_id)
 	image_path = f"./plugins/utils/anilist_img-{manga_id}.jpg"
 	os.path.exists(image_path) or await req_download(image, filename=image_path)
 	if message.photo:
