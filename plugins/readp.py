@@ -71,8 +71,9 @@ async def clink(site, name, chapter):
 		link = "https://toonily.com/webtoon/" + name
 		link = get_link(link, cloud=True) + "chapter-" + chapter
 	elif site == "-3z":
-		link = await gsearch(name, site=site)
-		link = link + "chapter-" + chapter
+		name = get_wname(name)
+		link = "https://hentai3z.com/manga/" + name
+		link = get_link(link, cloud=True) + "chapter-" + chapter
 	elif site == "-20":
 		link = await gsearch(name, site=site)
 		link = link + "chapter-" + chapter
