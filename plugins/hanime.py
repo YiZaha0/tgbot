@@ -6,12 +6,13 @@ from .nhentai import post_to_telegraph
 from . import *
 
 
+Api = "https://hanime-api.vercel.app"
 @app.on_message(filters.command("hentai"))
 async def search_hentai(bot, update):
 	text = update.text.split(" ", maxsplit=1)
 	if len(text) == 1:
 		return await update.reply("`What should i do? Give me a query to search for.`")
-	results = requests.get(f"https://pure-badlands-32036.herokuapp.com/search?query={text[1]}&page=0").json()
+	results = requests.get(f"{Api}/search?query={text[1]}&page=0").json()
 	if not results["response"]:
 		return await update.reply("`No result found for the given query.`")
 	buttons = []
@@ -30,7 +31,7 @@ async def info_hentai(bot, update):
 		await update.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
 		return
 	message = update.message
-	result = requests.get(f"https://pure-badlands-32036.herokuapp.com/details?id={query}").json()
+	result = requests.get(f"{Api}/details?id={query}").json()
 	name = result["name"]
 	rd = result["released_date"].replace(" ", "-")
 	censor = "Censored" if result["is_censored"] else "Uncensored"
@@ -55,7 +56,7 @@ async def info_hentai(bot, update):
 async def link_hentai(bot, update):
 	query = update.matches[0].group(1)
 	message = update.message
-	result = requests.get(f"https://pure-badlands-32036.herokuapp.com/link?id={query}").json()
+	result = requests.get(f"{Api}/link?id={query}").json()
 	url = result["data"][0]["url"]
 	if not url == "":
 		url1 = result["data"][0]["url"]
@@ -92,7 +93,7 @@ async def download_hentai(bot, update):
 		await bot.copy_message(message.chat.id, cache_chat, is_hentai, caption=f"`{query}.mp4`")
 		await message.edit("<code>Upload Completed!</code>", reply_markup=reply_markup)
 		return
-	result = requests.get(f"https://pure-badlands-32036.herokuapp.com/link?id={query}").json()
+	result = requests.get(f"{Api}/link?id={query}").json()
 	url = result["data"][0]["url"]
 	await message.edit(f"<code>Wait a bit... Downloading {query}.mp4 </code>")
 	if not is_hentai:
