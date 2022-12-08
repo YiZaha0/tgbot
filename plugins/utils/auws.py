@@ -135,7 +135,7 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 	ch = ch[0].strip()
 	dir_name = f"manga_{ch}"
 	os.path.exists(dir_name) or os.mkdir(dir_name)
-	headers = dict()
+	headers = dict(session.headers)
 	headers["Referer"] = rurl
 	images = list()
 	Process = list()
