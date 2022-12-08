@@ -2,4 +2,4 @@
 
 git pull -f
 pip install --quiet -U -r requirements.txt
-python main.py
+python3 main.py
