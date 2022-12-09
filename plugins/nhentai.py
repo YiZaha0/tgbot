@@ -99,7 +99,6 @@ async def _(bot, event):
 	await app.send_document(chat, file, caption="**PDF VIEW**")
 	await app.send_cached_media(chat, "CAADAQADRwIAArtf8EeIGkF9Fv05gQI")
 	await temp_msg.delete()
-	os.remove(file)
 	here = f"[{mess.chat.title}]({mess.link})."
 	await m.edit(f"<b><i>Done Successfully Sent  in {here}</i></b>")
 
@@ -143,7 +142,6 @@ async def dn_(bot, event):
 	await bot.send_message(event.chat.id, msg, parse_mode=ParseMode.MARKDOWN)
 	await app.send_document(event.chat.id, file)
 	await asyncio.gather(m.delete(), bot.send_message(-1001568226560, f"[{title}]({doujin.url})\n\nSuccessfully sent to {event.from_user.mention}"))
-	os.remove(file)
 
 @app.on_message(filters.regex("^[/!]dn(?: |$)(.*)") & filters.user(SUDOS))
 async def telegraphNhentai(bot, event):
