@@ -30,7 +30,12 @@ async def post_to_telegraph(page_title, html_format_content):
     	return
     return post_page["url"].replace("telegra.ph", "graph.org")
 
-async def _to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
+async def _to_pdf(images: list, pdfname: str, dir: = "nhentai"):
+	path = os.path.join("./nhentai_cache", pdfname)
+	if os.path.exists(path):
+		return path
+	os.path.exists("nhentai_cache") or os.mkdir("nhentai_cache")
+	dir = os.path.join("./nhentai_cache", dir)
 	os.path.exists(dir) or os.mkdir(dir)
 	process = list()
 	n = 0
@@ -41,7 +46,6 @@ async def _to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 		process.append(req_download(i, filename=name))
 		image_list.append(name)
 	await asyncio.gather(*process)
-	path = pdfname
 	images_to_pdf(path, image_list)
 	shutil.rmtree(dir)
 	return path 
