@@ -40,7 +40,7 @@ async def images_to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 		n += 1
 		await req_download(i, filename=name)
 		image_list.append(name)
-	path = os.path.join(os.getcwd(), pdfname)
+	path = pdfname
 	fld2pdf(image_list, path)
 	shutil.rmtree(dir)
 	return path 
