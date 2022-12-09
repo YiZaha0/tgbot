@@ -42,14 +42,7 @@ async def images_to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 		image_list.append(name)
 	await asyncio.gather(*process)
 	path = os.path.join(os.getcwd(), pdfname)
-	with open(path, "wb") as pdf:
-		try:
-			pdf.write(img2pdf.convert(image_list))	
-		except BaseException:
-			pdf.close()
-			os.remove(pdf.name)
-			create_pdf(pdfname, image_list)
-
+	fld2pdf(image_list, path)
 	shutil.rmtree(dir)
 	return path 
 
