@@ -30,7 +30,7 @@ async def post_to_telegraph(page_title, html_format_content):
     	return
     return post_page["url"].replace("telegra.ph", "graph.org")
 
-async def _to_pdf(images: list, pdfname: str, dir: = "nhentai"):
+async def _to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 	path = os.path.join("./nhentai_cache", pdfname)
 	if os.path.exists(path):
 		return path
