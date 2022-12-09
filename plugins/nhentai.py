@@ -30,7 +30,7 @@ async def post_to_telegraph(page_title, html_format_content):
     	return
     return post_page["url"].replace("telegra.ph", "graph.org")
 
-async def images_to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
+async def _to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 	os.path.exists(dir) or os.mkdir(dir)
 	process = list()
 	n = 0
@@ -83,7 +83,7 @@ async def _(bot, event):
 	if doujin.tags:
 		msg += "\n➤ **Tags : **"
 		msg += " ".join(natsorted(doujin.tags))
-	file = await images_to_pdf(doujin.images, pdfname, dir=doujin.code)
+	file = await _to_pdf(doujin.images, pdfname, dir=doujin.code)
 	graph_post = msg.split("\n")[0]
 	await m.edit(graph_post)
 	graph_link = await post_to_telegraph(title, imgs)
@@ -135,7 +135,7 @@ async def dn_(bot, event):
 		msg += "\n➤ **Tags : **"
 		msg += " ".join(natsorted(doujin.tags))
 	await m.edit(f"`Wait a bit... Downloading` [{title}]({doujin.url})")
-	file = await images_to_pdf(doujin.images, pdfname, dir=doujin.code)
+	file = await _to_pdf(doujin.images, pdfname, dir=doujin.code)
 	await bot.send_message(event.chat.id, msg, parse_mode=ParseMode.MARKDOWN)
 	await app.send_document(event.chat.id, file)
 	await asyncio.gather(m.delete(), bot.send_message(-1001568226560, f"[{title}]({doujin.url})\n\nSuccessfully sent to {event.from_user.mention}"))
