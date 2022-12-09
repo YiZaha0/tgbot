@@ -42,7 +42,7 @@ async def images_to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 		image_list.append(name)
 	await asyncio.gather(*process)
 	path = pdfname
-	images_to_pdf(path, images_list)
+	images_to_pdf(path, image_list)
 	shutil.rmtree(dir)
 	return path 
 
