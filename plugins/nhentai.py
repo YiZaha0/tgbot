@@ -12,7 +12,7 @@ from telethon import events
 from natsort import natsorted
 from pyrogram import filters
 from pyrogram.enums import ParseMode
-from .utils.auws import fld2pdf, nhentai, create_pdf
+from .utils.auws import fld2pdf, nhentai, create_pdf, images_to_pdf
 
 from . import *
 
@@ -42,7 +42,7 @@ async def images_to_pdf(images: list, pdfname: str, dir: str = "nhentai"):
 		image_list.append(name)
 	await asyncio.gather(*process)
 	path = os.path.join(os.getcwd(), pdfname)
-	create_pdf(path, image_list)
+	fld2pdf(image_list, pdf)
 	shutil.rmtree(dir)
 	return path 
 
