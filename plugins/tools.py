@@ -39,22 +39,22 @@ async def update_pindex():
     az_dict = {"#": list()}
     [az_dict.update({i: list()}) for i in string.ascii_uppercase]
     
-    last_msg_id = get_db("MID")
-    messages = await get_amessages()
-    for m in messages:
-        if hasattr(m, "text") and m.text and "Type" in m.message:
-            name = m.message.split("\n")[0].split("|")[0].strip()
-            link = f"https://t.me/c/{m.chat.id}/{m.id}"
-            f = name[0].upper()
-            if not f.isalpha():
-                f = "#"
-            if "RELEASING" in m.message:
-                tick = "🔷"
-            elif "FINISHED" in m.message:
-                tick = "🔶"
-            data = f"{tick} <a href='{link}'>{name}</a>\n"
-            az_dict[f].append(data)
-    [l.sort() for _, l in az_dict.items()]
+    messages = [m for m in await get_amessages() if m and m.text and m.photo and "Type" in m.text]
+    
+    messages = {m.message.split("\n")[0].split("|")[0].strip():m for m in messages}
+    for name in sorted(messages):
+        m = messages[name]
+        link = f"https://t.me/c/{m.chat.id}/{m.id}"
+        f = name[0].upper()
+        if not f.isalpha():
+            f = "#"
+        if "RELEASING" in m.message:
+            tick = "🔷"
+        elif "FINISHED" in m.message:
+            tick = "🔶"
+        data = f"{tick} <a href='{link}'>{name}</a>\n"
+        az_dict[f].append(data)
+
     posts = dict()
     for i in az_dict:
         data = f"<b>⛩️ {i}-{i}-{i} ⛩️</b>\n\n"
