@@ -54,6 +54,7 @@ async def update_pindex():
                 tick = "🔶"
             data = f"{tick} <a href='{link}'>{name}</a>\n"
             az_dict[f].append(data)
+    [l.sort() for _, l in az_dict.items()]
     posts = dict()
     for i in az_dict:
         data = f"<b>⛩️ {i}-{i}-{i} ⛩️</b>\n\n"
