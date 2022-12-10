@@ -672,7 +672,7 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
         <b>››Genres</b>: <i>{genre_string}</i>
         """
         )
-        caption += "━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        caption += "━━━━━━━━━━━━━━━━━━━━━━━━━━"
         synopsis_link = post_telegraph(
             title_h,
             f"<img src='{title_img}' title={romaji}/>\n"
