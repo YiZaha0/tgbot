@@ -504,7 +504,7 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
     else:
         caption = f"<b>{result['title']['romaji']}</b>\n\t\t(<code>{result['title']['native']}</code>)\n"
     alternative_names.extend(result["synonyms"])
-    caption += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    caption += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━"
     if alternative_names:
         alternative_names_string = ", ".join(alternative_names[:3])
         caption += f"\n<b>Alternative(s)</b>: <i>{alternative_names_string}</i>"
@@ -656,7 +656,7 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
             "https://t.me/Adult_Mangas"
         )
         caption += f"<b>{TRAILER}</b>"
-        caption += "━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        caption += "━━━━━━━━━━━━━━━━━━━━━━━━━━"
         
     elif search_type == "anime_manga":
         caption += textwrap.dedent(
