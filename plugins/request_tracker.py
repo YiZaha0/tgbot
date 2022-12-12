@@ -31,8 +31,8 @@ async def _requests(client, update):
 	text_tosend = f"Request By {user_mention}\n\n<code>{text}</code>"
 	buttons_tosend = list()
 	buttons_tosend.append([InlineKeyboardButton("Request Message", url=update.link)])
-	buttons_tosend.append([InlineKeyboardButton("Done", r"rcompleted")], [InlineKeyboardButton("Reject", r"rrejected")])
-	buttons_tosend.append([InlineKeyboardButton("Unavailable", "runavailable")], [InlineKeyboardButton("Already Available", "ralready_available")])
+	buttons_tosend.append([InlineKeyboardButton("Done", r"rcompleted"), InlineKeyboardButton("Reject", r"rrejected")])
+	buttons_tosend.append([InlineKeyboardButton("Unavailable", "runavailable"), InlineKeyboardButton("Already Available", "ralready_available")])
 	
 	await app.send_message(
 		chat_tosend,
