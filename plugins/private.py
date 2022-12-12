@@ -7,7 +7,7 @@ from telethon import errors
 from . import *
 
 Start_Text = """
-Hello {}. I am a Bot working for Pornhwa Hub
+Hello {}. I am a Bot working for Pornhwa Hub.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 <b>• Uptime :</b> <code>{}</code>
