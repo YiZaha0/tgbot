@@ -5,9 +5,44 @@ from telethon import errors
 
 from . import *
 
+Start_Text = f"""
+Hi {}. I am a Bot working for Pornhwa Hub
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+<b>• Uptime :</b> {}
+<b>• Ping :</b> {}
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+
 @app.on_message(filters.private & filters.command("start") & ~filters.user(SUDOS))
-async def start(bot, update):
-	await update.delete()
+async def pm_start(client, update):
+	s_time = time.time()
+	uptime = readable_time(time.time() - bot_start_time)
+	t_taken = (time.time() - s_time)
+	ping =. f"{t_taken:.3f}"
+
+	await update.reply_text(
+		Start_Text.format(
+			update.from_user.mention
+			uptime,
+			ping 
+		),
+		reply_markup=InlineKeyboardMarkup(
+			[
+				[
+					InlineKeyboardButton(
+						"My Channel",
+						url="https://t.me/Adult_Mangas"
+					)
+					InlineKeyboardButton(
+						"My Owner",
+						user_id=5304356242
+					)
+				]
+			]
+		)
+	)
+
 
 @app.on_message(filters.private & filters.incoming & ~filters.user(SUDOS), group=2)
 async def pm(_, update):
