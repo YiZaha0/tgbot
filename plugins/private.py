@@ -1,6 +1,7 @@
 #test
 
 from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup 
 from telethon import errors
 
 from . import *
