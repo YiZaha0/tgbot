@@ -46,7 +46,7 @@ async def _to_pdf(images: list, pdfname: str, code: str):
 		process.append(req_download(i, filename=name))
 		image_list.append(name)
 	await asyncio.gather(*process)
-	fld2pdf(path, image_list)
+	fld2pdf(image_list, path.replace(".pdf", ""))
 	shutil.rmtree(dir)
 	return path 
 
