@@ -8,6 +8,7 @@ from . import *
 
 Start_Text = """
 Hello {}. I am a Bot working for Pornhwa Hub.
+You can contact my owner through me.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 <b>• Uptime :</b> <code>{}</code>
