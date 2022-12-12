@@ -9,8 +9,8 @@ Start_Text = f"""
 Hi {}. I am a Bot working for Pornhwa Hub
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-<b>• Uptime :</b> {}
-<b>• Ping :</b> {}
+<b>• Uptime :</b> <code>{}</code>
+<b>• Ping :</b> <code>{}</code>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
