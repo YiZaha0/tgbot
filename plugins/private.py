@@ -7,7 +7,7 @@ from telethon import errors
 from . import *
 
 Start_Text = """
-Hi {}. I am a Bot working for Pornhwa Hub
+Hello {}. I am a Bot working for Pornhwa Hub
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 <b>• Uptime :</b> <code>{}</code>
@@ -19,10 +19,11 @@ Hi {}. I am a Bot working for Pornhwa Hub
 async def pm_start(client, update):
 	s_time = time.time()
 	uptime = readable_time(time.time() - bot_start_time)
+	m = await update.reply_text("<code>...</code>")
 	t_taken = (time.time() - s_time)
 	ping = f"{t_taken:.3f}"
 
-	await update.reply_text(
+	await m.edit_text(
 		Start_Text.format(
 			update.from_user.mention,
 			uptime,
