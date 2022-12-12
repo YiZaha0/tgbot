@@ -19,9 +19,10 @@ def get_request_from_text(text):
 
 @app.on_message(filters.command("request", prefixes=["/", "!", "#"]) & filters.chat(rgroups))
 async def _requests(client, update):
-	if update.reply_to:
-		text = get_request_from_text(update.reply_to.text)
-		user_mention = update.reply_to.from_user.mention
+	reply = update.reply_to_message
+	if reply:
+		text = get_request_from_text(reply.text)
+		user_mention = reply.from_user.mention
 	else:
 		_, text = update.text.split(" ")
 		user_mention = update.from_user.mention 
@@ -41,8 +42,10 @@ async def _requests(client, update):
 			)
 		)
 	
-	await update.reply_text(
-		f"Hi {user_mention}, your request for <code>{text}</code> has been submitted to the admins.\n\n<b>Please Note that Admins might be busy. So, this may take more time.</b>"
+	await app.send_message(
+		update.chat.id,
+		f"Hi {user_mention}, your request for <code>{text}</code> has been submitted to the admins.\n\n<b>Please Note that Admins might be busy. So, this may take more time.</b>",
+		reply_to_message_id=update.reply_to_message_id or update.id
 		)
 
 @app.on_callback_query(filters.chat(rchannels))
