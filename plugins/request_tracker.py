@@ -58,8 +58,8 @@ async def cb_requests(client, update):
 		sender = None
 
 	if not sender or sender.status != ChatMemberStatus.ADMINISTRATOR:
-		await update.answer(
-			"Not your place to click, {update.from_user.first_name}"
+		return await update.answer(
+			"Not your place to click, {update.from_user.first_name}", show_alert=True
 		)
 	action = update.matches[0].group(1).replace("_", " ")
 	user_id = 123456789
