@@ -5,7 +5,7 @@ from pyrogram.enums import ChatMemberStatus, MessageEntityType
 from . import *
 
 rchats = dict()
-rchats[-1001817093909] = -1001459727128 # requestGroup = requestChannel
+rchats[-1001568226560] = -1001459727128 # requestGroup = requestChannel
 
 rgroups = list(rchats.keys()) # requestGroups
 rchannels = list(rchats.values()) # requestChannels
