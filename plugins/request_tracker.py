@@ -31,8 +31,8 @@ async def _requests(client, update):
 	text_tosend = f"Request By {user_mention}\n\n<code>{text}</code>"
 	buttons_tosend = list()
 	buttons_tosend.append([InlineKeyboardButton("Request Message", url=update.link)])
-	buttons_tosend.append([InlineKeyboardButton("Done", r"rcompleted"), InlineKeyboardButton("Reject", r"rrejected")])
-	buttons_tosend.append([InlineKeyboardButton("Unavailable", "runavailable"), InlineKeyboardButton("Already Available", "ralready_available")])
+	buttons_tosend.append([InlineKeyboardButton("Done", r"reqs_completed"), InlineKeyboardButton("Reject", r"reqs_rejected")])
+	buttons_tosend.append([InlineKeyboardButton("Unavailable", "reqs_unavailable"), InlineKeyboardButton("Already Available", "reqs_already_available")])
 	
 	await app.send_message(
 		chat_tosend,
@@ -48,7 +48,7 @@ async def _requests(client, update):
 		reply_to_message_id=update.reply_to_message_id or update.id
 		)
 
-@app.on_callback_query(filters.chat(rchannels))
+@app.on_callback_query(filters.regex("reqs_(.*)"))
 async def cb_requests(client, update):
 	message = update.message
 	sender = await app.get_chat_member(message.chat.id, update.from_user.id)
@@ -56,7 +56,7 @@ async def cb_requests(client, update):
 		await update.answer(
 			"Not your place to click, {update.from_user.first_name}"
 		)
-	action = update.data.replace("r", "", 1).replace("_", " ")
+	action = update.matches[0].group(1).replace("_", " ")
 	user_id = 123456789
 	user_name = message.text.split("\n")[0].replace("Request By", "").strip()
 	for e in message.entities:
