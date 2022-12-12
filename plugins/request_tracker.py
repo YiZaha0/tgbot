@@ -66,7 +66,7 @@ async def cb_requests(client, update):
 			break 
 	user_mention = f"<a href='tg://user?id={user_id}'>{user_name}</a>"
 	crequest = message.text.split("\n")[-1].strip()
-	tosend = f"Hey {user_mention}, your request for <i>{crequest}</i> is {action}."
+	tosend = f"Hey {user_mention}, your request for <b>{crequest}</b> is {action}."
 	toedit = f"<b>▼{action.upper()}▼</b>\n\n<s>{message.text}</s>"
 	
 	try:
