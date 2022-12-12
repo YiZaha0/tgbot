@@ -14,7 +14,7 @@ Hi {}. I am a Bot working for Pornhwa Hub
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
-@app.on_message(filters.private & filters.command("start") & ~filters.user(SUDOS))
+@app.on_message(filters.private & filters.command("start"))
 async def pm_start(client, update):
 	s_time = time.time()
 	uptime = readable_time(time.time() - bot_start_time)
