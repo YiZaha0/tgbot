@@ -28,7 +28,7 @@ async def _requests(client, update):
 		user_mention = update.from_user.mention 
 		
 	chat_tosend = rchats[update.chat.id]
-	text_tosend = f"Request By {user_mention}\n\n<code>{text}</code>"
+	text_tosend = f"<b>Request By {user_mention}</b>\n\n<code>{text}</code>"
 	buttons_tosend = list()
 	buttons_tosend.append([InlineKeyboardButton("Request Message", url=update.link)])
 	buttons_tosend.append([InlineKeyboardButton("Done", r"reqs_completed"), InlineKeyboardButton("Reject", r"reqs_rejected")])
@@ -64,7 +64,8 @@ async def cb_requests(client, update):
 			user_id = e.user.id
 			break 
 	user_mention = f"<a href='tg://user?id={user_id}'>{user_name}</a>"
-	tosend = f"Hey {user_mention}, your request"
+	crequest = message.text.split("\n")[-1].strip()
+	tosend = f"Hey {user_mention}, your request for {crequest} is {action}."
 	toedit = f"<b>﹀{action.title()}﹀<b>\n\n<s>{message.text.html}</s>"
 	
 	try:
