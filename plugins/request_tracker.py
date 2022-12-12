@@ -52,7 +52,11 @@ async def _requests(client, update):
 @app.on_callback_query(filters.regex("reqs_(.*)"))
 async def cb_requests(client, update):
 	message = update.message
-	sender = await app.get_chat_member(message.chat.id, update.from_user.id)
+	try:
+		sender = await app.get_chat_member(message.chat.id, update.from_user.id)
+	except:
+		sender = None
+
 	if not sender or sender.status != ChatMemberStatus.ADMINISTRATOR:
 		await update.answer(
 			"Not your place to click, {update.from_user.first_name}"
