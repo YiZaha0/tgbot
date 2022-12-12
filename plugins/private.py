@@ -19,7 +19,7 @@ async def pm_start(client, update):
 	s_time = time.time()
 	uptime = readable_time(time.time() - bot_start_time)
 	t_taken = (time.time() - s_time)
-	ping =. f"{t_taken:.3f}"
+	ping = f"{t_taken:.3f}"
 
 	await update.reply_text(
 		Start_Text.format(
