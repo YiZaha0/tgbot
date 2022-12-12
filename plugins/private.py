@@ -5,7 +5,7 @@ from telethon import errors
 
 from . import *
 
-Start_Text = f"""
+Start_Text = """
 Hi {}. I am a Bot working for Pornhwa Hub
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
