@@ -53,7 +53,7 @@ async def _requests(client, update):
 async def cb_requests(client, update):
 	message = update.message
 	sender = await app.get_chat_member(message.chat.id, update.from_user.id)
-	if not sender or sender.status.type != ChatMemberStatus.ADMINISTRATOR:
+	if not sender or sender.status != ChatMemberStatus.ADMINISTRATOR:
 		await update.answer(
 			"Not your place to click, {update.from_user.first_name}"
 		)
