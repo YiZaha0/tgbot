@@ -4,6 +4,7 @@ import random
 import requests
 import time
 import asyncio
+import zipfile
 
 from html_telegraph_poster import TelegraphPoster
 from html_telegraph_poster.errors import TelegraphError
@@ -30,10 +31,11 @@ async def post_to_telegraph(page_title, html_format_content):
     	return
     return post_page["url"].replace("telegra.ph", "graph.org")
 
-async def _to_pdf(images: list, pdfname: str, code: str):
-	path = os.path.join("./nhentai_cache", pdfname)
+async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False):
+	pdf_path = os.path.join("./nhentai_cache", filename + ".pdf")
+	cbz_pdf = os.path.join("./nhentai_cache", filename + ".cbz")
 	if os.path.exists(path):
-		return path
+		return pdf_path, cbz_path if alsocbz else pdf_path
 	os.path.exists("nhentai_cache") or os.mkdir("nhentai_cache")
 	dir = os.path.join("./nhentai_cache", code)
 	os.path.exists(dir) or os.mkdir(dir)
@@ -46,9 +48,12 @@ async def _to_pdf(images: list, pdfname: str, code: str):
 		process.append(req_download(i, filename=name))
 		image_list.append(name)
 	await asyncio.gather(*process)
-	fld2pdf(image_list, path.replace(".pdf", ""))
+	fld2pdf(image_list, pdf_path.strip(".pdf"))
+	with zipfile.ZipFile(cbz_path, "w") as cbz:
+		for img in image_list:
+			cbz.write(img, compress_type=zipfile.ZIP_DEFLATED)
 	shutil.rmtree(dir)
-	return path 
+	return pdf_path, cbz_path if alsocbz else pdf_path
 
 @app.on_message(filters.regex("[!/]nh(?: |$)(.*)") & filters.user(SUDOS))
 async def _(bot, event):
@@ -66,7 +71,7 @@ async def _(bot, event):
 	imgs =  "".join(f"<img src='{url}'/>" for url in doujin.images)
 	title = doujin.title
 	nn = title.split("|")
-	pdfname = nn[0].strip() + " @Adult_Mangas.pdf" if len(nn) > 1 else nn[0] + ".pdf"
+	pdfname = nn[0].strip() + " @Adult_Mangas" if len(nn) > 1 else nn[0] + ".pdf"
 	pdfname = pdfname.replace("/", "|")
 	graph_link = await post_to_telegraph(title, imgs)
 	msg += f"[{title}]({graph_link})\n"
@@ -116,7 +121,7 @@ async def dn_(bot, event):
 	msg = ""
 	imgs =  "".join(f"<img src='{url}'/>" for url in doujin.images)
 	title = doujin.title
-	pdfname = f"{doujin.code}.pdf"
+	pdfname = f"{doujin.code}"
 	graph_link = await post_to_telegraph(title, imgs)
 	graph_link = graph_link or doujin.read_url
 	msg += f"[{title}]({graph_link})\n"
@@ -138,9 +143,9 @@ async def dn_(bot, event):
 		msg += "\n➤ **Tags : **"
 		msg += " ".join(natsorted(doujin.tags))
 	await m.edit(f"`Wait a bit... Downloading` [{title}]({doujin.url})")
-	file = await _to_pdf(doujin.images, pdfname, doujin.code)
+	pdf, cbz = await _to_pdf(doujin.images, pdfname, doujin.code, alsocbz=True)
 	await bot.send_message(event.chat.id, msg, parse_mode=ParseMode.MARKDOWN)
-	await app.send_document(event.chat.id, file)
+	await asyncio.gather(app.send_document(event.chat.id, pdf), app.send_document(event.chat.id, cbz))
 	await asyncio.gather(m.delete(), bot.send_message(-1001568226560, f"[{title}]({doujin.url})\n\nSuccessfully sent to {event.from_user.mention}"))
 
 @app.on_message(filters.regex("^[/!]dn(?: |$)(.*)") & filters.user(SUDOS))
