@@ -34,7 +34,7 @@ async def _requests(client, update):
 	buttons_tosend.append([InlineKeyboardButton("Done", r"reqs_completed"), InlineKeyboardButton("Reject", r"reqs_rejected")])
 	buttons_tosend.append([InlineKeyboardButton("Unavailable", "reqs_unavailable"), InlineKeyboardButton("Already Available", "reqs_already_available")])
 	
-	await app.send_message(
+	rmsg = await app.send_message(
 		chat_tosend,
 		text_tosend,
 		reply_markup=InlineKeyboardMarkup(
@@ -45,6 +45,7 @@ async def _requests(client, update):
 	await app.send_message(
 		update.chat.id,
 		f"Hi {user_mention}, your request for <code>{text}</code> has been submitted to the admins.\n\n<b>Please Note that Admins might be busy. So, this may take more time.</b>",
+		reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("View Status", url=rmsg.link)]]),
 		reply_to_message_id=update.reply_to_message_id or update.id
 		)
 
