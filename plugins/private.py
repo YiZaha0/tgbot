@@ -11,16 +11,16 @@ Hello {}. I am a Bot working for Pornhwa Hub
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 <b>• Uptime :</b> <code>{}</code>
-<b>• Ping :</b> <code>{}</code>
+<b>• Ping :</b> <code>{} ms</code>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
 @app.on_message(filters.private & filters.command("start"))
 async def pm_start(client, update):
-	s_time = time.time()
 	uptime = readable_time(time.time() - bot_start_time)
+	s_time = time.time()
 	m = await update.reply_text("<code>...</code>")
-	t_taken = (time.time() - s_time)
+	t_taken = (time.time() - s_time) * 1000
 	ping = f"{t_taken:.3f}"
 
 	await m.edit_text(
