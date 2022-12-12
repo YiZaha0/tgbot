@@ -27,6 +27,7 @@ mongodb = mongo["TESTDB"]
 db = mongodb["MAIN"]
 
 #VARS
+bot_start_time = time.time()
 logger = logging.getLogger("Bot")
 sudo_users = Config.SUDOS or "5304356242 5370531116 5551387300"
 sudo_users = sudo_users.split()
