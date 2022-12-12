@@ -48,7 +48,7 @@ async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False)
 		process.append(req_download(i, filename=name))
 		image_list.append(name)
 	await asyncio.gather(*process)
-	fld2pdf(image_list, pdf_path.strip(".pdf"))
+	fld2pdf(image_list, pdf_path.replace(".pdf", ""))
 	with zipfile.ZipFile(cbz_path, "w") as cbz:
 		for img in image_list:
 			cbz.write(img, compress_type=zipfile.ZIP_DEFLATED)
