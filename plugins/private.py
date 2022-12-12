@@ -23,7 +23,7 @@ async def pm_start(client, update):
 
 	await update.reply_text(
 		Start_Text.format(
-			update.from_user.mention
+			update.from_user.mention,
 			uptime,
 			ping 
 		),
