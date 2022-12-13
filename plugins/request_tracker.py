@@ -28,7 +28,7 @@ async def _requests(client, update):
 		user_mention = update.from_user.mention 
 		
 	chat_tosend = rchats[update.chat.id]
-	text_tosend = f"<b>Request By {user_mention}</b>\n\n<code>{text}</code>"
+	text_tosend = f"<b>Request By</b> {user_mention}\n\n<code>{text}</code>"
 	buttons_tosend = list()
 	buttons_tosend.append([InlineKeyboardButton("Request Message", url=update.link)])
 	buttons_tosend.append([InlineKeyboardButton("Done", r"reqs_completed"), InlineKeyboardButton("Reject", r"reqs_rejected")])
