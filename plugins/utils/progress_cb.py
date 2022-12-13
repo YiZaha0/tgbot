@@ -16,7 +16,7 @@ def humanbytes(size):
     return size
 
 No_Flood = dict()
-async def progress(current, total, type_for_ps, start, message, file_name=None):
+async def progress(current, total, ps_type, start, message, file_name=None):
     now = time.time()
     if No_Flood.get(message.chat.id):
         if No_Flood[message.chat.id].get(message.id):
@@ -48,7 +48,7 @@ async def progress(current, total, type_for_ps, start, message, file_name=None):
         )
         if file_name:
             await message.edit(
-                "`✦ {}`\n\n`File Name: {}`\n\n{}".format(type_of_ps, file_name, tmp)
+                "`✦ {}`\n\n`File Name: {}`\n\n{}".format(ps_type, file_name, tmp)
             )
         else:
-            await message.edit("`✦ {}`\n\n{}".format(type_of_ps, tmp))
+            await message.edit("`✦ {}`\n\n{}".format(ps_type, tmp))
