@@ -35,7 +35,7 @@ async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False)
 	pdf_path = os.path.join("./nhentai_cache", filename + ".pdf")
 	cbz_path = os.path.join("./nhentai_cache", filename + ".cbz")
 	if os.path.exists(pdf_path):
-		return pdf_path, cbz_path if alsocbz else pdf_path
+		return ((pdf_path, cbz_path) if alsocbz else pdf_path)
 	os.path.exists("nhentai_cache") or os.mkdir("nhentai_cache")
 	dir = os.path.join("./nhentai_cache", code)
 	os.path.exists(dir) or os.mkdir(dir)
@@ -53,7 +53,7 @@ async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False)
 		for img in image_list:
 			cbz.write(img, compress_type=zipfile.ZIP_DEFLATED)
 	shutil.rmtree(dir)
-	return pdf_path, cbz_path if alsocbz else pdf_path
+	return ((pdf_path, cbz_path) if alsocbz else pdf_path)
 
 @app.on_message(filters.regex("[!/]nh(?: |$)(.*)") & filters.user(SUDOS))
 async def _(bot, event):
