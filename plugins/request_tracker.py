@@ -24,7 +24,7 @@ async def _requests(client, update):
 		text = get_request_from_text(reply.text)
 		user_mention = reply.from_user.mention
 	else:
-		_, text = update.text.split(" ")
+		_, text = update.text.split(" ", 1)
 		user_mention = update.from_user.mention 
 		
 	chat_tosend = rchats[update.chat.id]
