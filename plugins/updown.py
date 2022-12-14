@@ -122,14 +122,23 @@ async def up_upload(client, update):
 			continue 
 		try:
 			c_time = time.time()
-			await app.send_document(
-				chat,
-				file,
-				force_document=True,
-				thumb=thumb,
-				progress=progress,
-				progress_args=(msg, c_time, "Uploading...", file)
-			)
+			if stream:
+			    await app.send_video(
+			        chat,
+			        file,
+			        thumb=thumb,
+			        progress=progress,
+			        progress_args=(msg, c_time, "Uploading...", file)
+				)
+			else:
+			    await app.send_document(
+			        chat,
+			        file,
+			        force_document=True,
+			        thumb=thumb,
+			        progress=progress,
+			        progress_args=(msg, c_time, "Uploading...", file)
+				)
 		except Exception as e:
 			return await msg.edit(
 				f"<b>Something Went Wrong❗</b>\n\n<code>{e.__class__.__name__}: {e}"
