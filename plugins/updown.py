@@ -1,9 +1,12 @@
+import glob
+
 from pathlib import Path 
 from datetime import datetime
 
 from pyrogram import filters
 
 from . import *
+
 
 TMP_DL_DIR = Config.TMP_DL_DIR or "downloads"
 
@@ -77,6 +80,11 @@ async def up_upload(client, update):
 	msg = await update.reply(
 		"<code>Processing...</code>"
 	)
+	if not input_str:
+		return await msg.edit(
+			f"<code>Give a file name to upload.</code>"
+		)
+
 	chat = update.chat.id
 	thumb = "thumb.jpg" if "-t" in input_str.strip() else None
 	force_doc = False if "-s" in input_str.strip() else True 
@@ -106,7 +114,7 @@ async def up_upload(client, update):
 	
 	if not files and not os.path.exists(input_str):
 		return await msg.edit(
-			"<code>Give the filename to upload.</code>"
+			"<code>File doesn't exist.</code>"
 		)
 	start_time = datetime.now()
 	for file in files:
