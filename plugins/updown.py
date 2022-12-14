@@ -87,7 +87,7 @@ async def up_upload(client, update):
 
 	chat = update.chat.id
 	thumb = "thumb.jpg" if "-t" in input_str.strip() else None
-	force_doc = True if "-s" not in input_str.strip() else False
+	stream = True if "-s" in input_str.strip() else False
 	
 	flags = ("-t", "-s")
 	for _f in flags:
@@ -125,7 +125,7 @@ async def up_upload(client, update):
 			await app.send_document(
 				chat,
 				file,
-				force_document=force_doc,
+				force_document=True,
 				thumb=thumb,
 				progress=progress,
 				progress_args=(msg, c_time, "Uploading...", file)
