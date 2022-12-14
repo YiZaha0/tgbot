@@ -3,7 +3,6 @@ import importlib, inspect, re, asyncio, time, sys, os, requests, shutil, aiohttp
 import pyromod.listen
 from urllib.parse import unquote
 from pathlib import Path
-from telethon import events
 from asyncio import sleep
 from config import Config
 from .utils.fast_telethon import uploader, downloader
@@ -12,7 +11,8 @@ from html_telegraph_poster import TelegraphPoster
 from pymongo import MongoClient
 from telethon import TelegramClient
 from pyrogram import Client 
-from telethon import events 
+from telethon import events
+from telethon.helpers import _maybe_await
 from telethon.tl.custom import Message
 from telethon.tl.types import MessageService
 from telethon.errors import MessageDeleteForbiddenError, MessageNotModifiedError
