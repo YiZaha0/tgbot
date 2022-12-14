@@ -17,7 +17,8 @@ async def dl_download(client, update):
 	msg = await update.reply(
 		"<code>Processing...</code>"
 	)
-	
+	if not os.path.isdir(TMP_DL_DIR):
+		os.mkdir(TMP_DL_DIR)
 	if reply and reply.media:
 		start_time = datetime.now()
 		file_path = TMP_DL_DIR + "/"
