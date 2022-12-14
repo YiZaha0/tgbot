@@ -1,6 +1,6 @@
 import time
 import math
-from plugins import time_formatter
+from .fast_telethon import time_formatter
 
 def humanbytes(size):
     if not size:
