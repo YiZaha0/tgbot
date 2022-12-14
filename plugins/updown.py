@@ -32,7 +32,7 @@ async def dl_download(client, update):
 		downloaded_path = await reply.download(
 			file_name=file_path,
 			progress=progress,
-			progress_args=(msg, c_time, "Downloading...")
+			progress_args=(msg, c_time, "Downloading...", path.name)
 		)
 		end_time = datetime.now()
 		time_taken = (end_time - start_time).seconds 
@@ -61,7 +61,8 @@ async def dl_download(client, update):
 						t,
 						msg,
 						c_time,
-						f"Downloading URL - {dl_url}"
+						f"Downloading URL - {dl_url}",
+						file_path
 					)
 				)
 			)
