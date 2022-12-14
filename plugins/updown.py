@@ -52,7 +52,7 @@ async def dl_download(client, update):
 			file_path = os.path.join(TMP_DL_DIR, file_path)
 		c_time = time.time()
 		try:
-			downloaded_path, _ = await fast_download(
+			downloaded_path, _ = await req_download(
 				dl_url,
 				file_path,
 				progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
@@ -68,7 +68,7 @@ async def dl_download(client, update):
 			)
 		except Exception as e:
 			return await msg.edit(
-				f"<b>Something Went Wrong❗</b>\n\n<code>{e.__class__.__name__}: {e}"
+				f"<b>Something Went Wrong❗</b>\n\n<code>{e.__class__.__name__}: {e}</code>"
 			)
 	else:
 		return await msg.edit(
@@ -142,7 +142,7 @@ async def up_upload(client, update):
 				)
 		except Exception as e:
 			return await msg.edit(
-				f"<b>Something Went Wrong❗</b>\n\n<code>{e.__class__.__name__}: {e}"
+				f"<b>Something Went Wrong❗</b>\n\n<code>{e.__class__.__name__}: {e}</code>"
 			)
 	end_time = datetime.now()
 	time_taken = (end_time - start_time).seconds 
