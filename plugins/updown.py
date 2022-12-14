@@ -87,7 +87,7 @@ async def up_upload(client, update):
 
 	chat = update.chat.id
 	thumb = "thumb.jpg" if "-t" in input_str.strip() else None
-	force_doc = False if "-s" in input_str.strip() else True 
+	force_doc = True if "-s" not in input_str.strip() else False
 	
 	flags = ("-t", "-s")
 	for _f in flags:
@@ -138,10 +138,10 @@ async def up_upload(client, update):
 	time_taken = (end_time - start_time).seconds 
 	if chat != update.chat.id:
 		await msg.edit(
-			f"Successfully upload <code>{input_str}</code> to <code>{chat}</code> in <code>{time_taken}</code> seconds."
+			f"Successfully uploaded <code>{input_str}</code> to <code>{chat}</code> in <code>{time_taken}</code> seconds."
 		)
 	else:
 		await msg.edit(
-			f"Successfully upload <code>{input_str}</code> in <code>{time_taken}</code> seconds." 
+			f"Successfully uploaded <code>{input_str}</code> in <code>{time_taken}</code> seconds." 
 		)
 		
