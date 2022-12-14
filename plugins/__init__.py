@@ -160,7 +160,7 @@ async def eod(event, text=None, **kwargs):
     return await eor(event, text, **kwargs)
 
 def post_telegraph(title, content, author, author_url=None):
-    post_client = TelegraphPoster(use_api=True)
+    post_client = TelegraphPoster(use_api=True, telegraph_api_url='https://api.graph.org')
     post_client.create_api_token(author)
     post_page = post_client.post(
         title=title,
