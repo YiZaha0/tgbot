@@ -70,6 +70,11 @@ async def dl_download(client, update):
 			return await msg.edit(
 				f"<b>Something Went Wrong❗</b>\n\n<code>{e.__class__.__name__}: {e}</code>"
 			)
+		end_time = datetime.now()
+		time_taken = (end_time - start_time).seconds
+		await msg.edit(
+			f"Successfully downloaded url <code>{dl_url}</code> to <code>{file_path}</code> in <code>{time_taken}</code> seconds."
+		)
 	else:
 		return await msg.edit(
 			f"<code>Repy to a media or give a url to download.</code>"
