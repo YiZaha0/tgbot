@@ -6,6 +6,9 @@ from . import *
 
 @app.on_message(filters.command("anime") & (filters.channel | ~filters.channel))
 async def anime_(client, event):
+	if hasattr(event.from_user, "id") and event.from_user.id not in SUDOS:
+		return
+
 	text = event.text.split(" ", maxsplit=1)
 	if len(text) == 1:
 		k = await event.reply("`What should i do? Give me a query to search for.`")
@@ -29,6 +32,9 @@ async def anime_(client, event):
 
 @app.on_message(filters.command("manga") & (filters.channel | ~filters.channel))
 async def manga_(client, event):
+	if hasattr(event.from_user, "id") and event.from_user.id not in SUDOS:
+		return
+
 	text = event.text.split(" ", maxsplit=1)
 	if len(text) == 1:
 		k = await event.reply("`What should i do? Give me a query to search for.`")
