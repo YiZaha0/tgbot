@@ -65,8 +65,14 @@ async def progress(current, total, message, start, ps_type, file_name=None):
             )
         )
         if file_name:
-            await message.edit(
+            try:
+                await message.edit(
                 "**✦ Status :** `{}`\n\n`File Name: {}`\n\n{}".format(ps_type, file_name, tmp)
-            )
+                )
+            except:
+                pass
         else:
-            await message.edit("**✦ Status :** `{}`\n\n{}".format(ps_type, tmp))
+            try:
+                await message.edit("**✦ Status :** `{}`\n\n{}".format(ps_type, tmp))
+            except:
+                pass
