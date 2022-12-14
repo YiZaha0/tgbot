@@ -18,7 +18,7 @@ from .utils.auws import fld2pdf, nhentai, create_pdf, images_to_pdf
 from . import *
 
 async def post_to_telegraph(page_title, html_format_content):
-    post_client = TelegraphPoster(use_api=True)
+    post_client = TelegraphPoster(use_api=True, telegraph_api_url='https://api.graph.org'))
     auth_name = "@Adult_Mangas"
     post_client.create_api_token(auth_name)
     try:
@@ -29,7 +29,7 @@ async def post_to_telegraph(page_title, html_format_content):
         text=html_format_content)
     except TelegraphError:
     	return
-    return post_page["url"].replace("telegra.ph", "graph.org")
+    return post_page["url"]
 
 async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False):
 	pdf_path = os.path.join("./nhentai_cache", filename + ".pdf")
