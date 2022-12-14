@@ -18,7 +18,7 @@ from .utils.auws import fld2pdf, nhentai, create_pdf, images_to_pdf
 from . import *
 
 async def post_to_telegraph(page_title, html_format_content):
-    post_client = TelegraphPoster(use_api=True, telegraph_api_url='https://api.graph.org'))
+    post_client = TelegraphPoster(use_api=True, telegraph_api_url='https://api.graph.org')
     auth_name = "@Adult_Mangas"
     post_client.create_api_token(auth_name)
     try:
