@@ -68,10 +68,10 @@ async def dl_download(client, update):
 			)
 	else:
 		return await msg.edit(
-			f"<code>Repy to a media or give a url to download."
+			f"<code>Repy to a media or give a url to download.</code>"
 		)
 
-@app.on_message(filters.regex(r"^/(ul|up|upload) ?(.*)", re.IGNORECASE) & filter.user(SUDOS))
+@app.on_message(filters.regex(r"^/(ul|up|upload) ?(.*)", re.IGNORECASE) & filters.user(SUDOS))
 async def up_upload(client, update):
 	input_str = update.matches[0].group(2)
 	msg = await update.reply(
