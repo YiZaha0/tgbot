@@ -95,8 +95,9 @@ async def up_upload(client, update):
 	chat = update.chat.id
 	thumb = "thumb.jpg" if "-t" in input_str.strip() else None
 	stream = True if "-s" in input_str.strip() else False
+	asdoc = True if "-f" in input_str.strip() else False
 	
-	flags = ("-t", "-s")
+	flags = ("-t", "-s", "-f")
 	for _f in flags:
 		input_str = input_str.replace(_f, "").strip()
 	
@@ -135,13 +136,14 @@ async def up_upload(client, update):
 			        file,
 			        thumb=thumb,
 			        progress=progress,
+			        supports_streaming=not asdoc,
 			        progress_args=(msg, c_time, "Uploading...", file)
 				)
 			else:
 			    await app.send_document(
 			        chat,
 			        file,
-			        force_document=True,
+			        force_document=asdoc,
 			        thumb=thumb,
 			        progress=progress,
 			        progress_args=(msg, c_time, "Uploading...", file)
