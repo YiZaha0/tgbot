@@ -278,8 +278,9 @@ async def manhwa_updates():
 					break 
 				new_chapters.append(i) 
 			new_chapters.reverse()
-			
-			manhwas_updates[ps][link] = new_chapters 
+
+			if new_chapters:
+				manhwas_updates[ps][link] = new_chapters 
 	
 	return manhwas_updates
 
