@@ -136,7 +136,6 @@ async def up_upload(client, update):
 			        file,
 			        thumb=thumb,
 			        progress=progress,
-			        supports_streaming=not asdoc,
 			        progress_args=(msg, c_time, "Uploading...", file)
 				)
 			else:
