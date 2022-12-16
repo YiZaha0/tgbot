@@ -300,7 +300,7 @@ async def iter_chapters_ps(link, ps=None):
 	elif ps == "Manganato":
 		manga_id = link.split("/")[-1]
 		manga = Minfo(manga_id)
-		for ch_url in manga.chapters.values():
+		for ch_url in reversed(manga.chapters.values()):
 			yield ch_url
 	else:
 		raise ValueError(f"Invalid Site: {ps}")
