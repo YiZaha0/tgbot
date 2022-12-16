@@ -8,7 +8,7 @@ from pyrogram import filters, errors
 from pyrogram.enums import ParseMode
 from telegraph import upload_file
 from telethon.utils import pack_bot_file_id
-from .readp import get_names, get_soup, get_link, anext, ps_iter_chapters
+from .readp import get_names, get_soup, get_link, anext, iter_chapters_ps
 from . import *
 
 async def get_amessages():
@@ -318,7 +318,7 @@ async def msub(_, update):
 		ps = get_ps(link)
 		chat = int(chat)
 		title = get_title(link, ps)
-		last_chapter = await anext(ps_iter_chapters(link, ps))
+		last_chapter = await anext(iter_chapters_ps(link, ps))
 	except:
 		return await update.reply("Give a valid url and chat_id.")
 	
