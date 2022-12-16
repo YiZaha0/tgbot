@@ -334,7 +334,7 @@ async def updates_from_ps(ps=None):
 		soup = BeautifulSoup(content, "html.parser")
 		items = soup.find_all("div", "content-homepage-item")
 		data = dict()
-		for item items:
+		for item in items:
 			manga_url = item.findNext("a")["href"]
 			chapter_item = item.findNext("p", "a-h item-chapter")
 			if not chapter_item:
