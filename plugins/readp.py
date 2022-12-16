@@ -233,23 +233,7 @@ async def get_chat_invite_link(chat_id: int):
 		return None
 
 async def anext(iteration):
-    async for i in iteration: return i
-
-async def iter_chapters(link, ps=None):
-	if ps == "Manhwa18":
-		bs = get_soup(link)
-		urls = list()
-		for item in bs.find("div", "panel-manga-chapter wleft").find_all("a"):
-			yield urljoin("https://manhwa18.cc/", item["href"])
-	
-	elif ps == "Toonily":
-		bs = get_soup(link)
-		urls = dict()
-		for item in bs.find_all("li", "wp-manga-chapter"):
-			yield item.a["href"]
-	
-	else:
-		raise ValueError 
+    async for i in iteration: return i 
 
 async def manhwa_updates():
 	ps_updates = dict()
@@ -273,7 +257,7 @@ async def manhwa_updates():
 			
 			new_chapters = list()
 			
-			async for i in iter_chapters(link, ps):
+			async for i in iter_chapters_ps(link, ps):
 				if i == last_chapter:
 					break 
 				new_chapters.append(i) 
