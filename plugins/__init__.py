@@ -177,8 +177,8 @@ async def req_content(url, method="GET", data=None, *args, **kwargs):
 			response = await session.post(url, data=data or dict(), **kwargs)
 		else:
 			raise ValueError
-	content = await response.read()
-	return content
+		content = await response.read()
+		return content
 
 async def req_url(url, method="GET", data=None, *args, **kwargs):
 	async with aiohttp.ClientSession() as session:
@@ -188,7 +188,7 @@ async def req_url(url, method="GET", data=None, *args, **kwargs):
 			response = await session.post(url, data=data or dict(), **kwargs)
 		else:
 			raise ValueError
-	return response
+		return response
 
 async def req_download(download_url, filename=None, progress_callback=None, headers=None):
     async with aiohttp.ClientSession() as session:
