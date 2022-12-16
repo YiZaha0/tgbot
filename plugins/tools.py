@@ -8,7 +8,7 @@ from pyrogram import filters, errors
 from pyrogram.enums import ParseMode
 from telegraph import upload_file
 from telethon.utils import pack_bot_file_id
-from .readp import get_names, get_soup, anext, iter_chapters
+from .readp import get_names, get_soup, get_link, anext, ps_iter_chapters
 from . import *
 
 async def get_amessages():
@@ -303,19 +303,28 @@ def get_ps(link):
 		return "Toonily"
 	elif "manhwa18.cc" in link:
 		return "Manhwa18"
+	elif "readmanganato.com" in link:
+		return "Manganato"
+	else:
+		raise ValueError("Invalid Ps Link: {link}")
+
 @app.on_message(filters.command("msub") & filters.user(SUDOS))
 async def msub(_, update):
 	try:
 		cmd, link, chat = update.text.split()
+		link = get_link(link)
 		ps = get_ps(link)
 		chat = int(chat)
 		title = get_title(link, ps)
-		last_chapter = await anext(iter_chapters(link, ps))
+		last_chapter = await anext(ps_iter_chapters(link, ps))
 	except:
 		return await update.reply("Give a valid url and chat_id.")
 	
 	data = {"msub": ps, "title": title, "link": link, "chat": chat, "last_chapter": last_chapter}
-	db.update_one({"msub": ps, "link": link}, {"$set": data}, upsert=True)
+	_sub = db.find_one(data)
+	if _sub:
+		db.delete_one(_sub)
+	db.insert_one(data)
 	await update.reply(f"Successfully added `{link}` [{ps}] to db with chat `{chat}`")
 
 @app.on_message(filters.command("rmsub") & filters.user(SUDOS))
