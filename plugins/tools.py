@@ -295,8 +295,10 @@ def get_title(link, ps=None):
 	elif ps == "Toonily":
 		return bs.find("div", "post-title").find("h1").text.strip()
 	
+	elif ps == "Manganato":
+		return bs.find(class_="story-info-right").find("h1").text.strip()
 	else:
-		raise ValueError 
+		raise ValueError(f"Invalid Site: {ps}")
 
 def get_ps(link):
 	if "toonily.com" in link:
