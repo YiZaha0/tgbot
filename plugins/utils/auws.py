@@ -319,7 +319,7 @@ async def updates_from_ps(ps=None):
 	
 	elif ps == "Toonily":
 		base = "https://toonily.com/"
-		content = await req_content(base, cookies={"toonily-mature": "1"})
+		content = await req_content(base, cookies={"toonily-mature": "1"}, headers=session.headers)
 		soup = BeautifulSoup(content, "html.parser")
 		items = soup.find_all("div", "page-item-detail manga")
 		data = dict()
@@ -328,8 +328,21 @@ async def updates_from_ps(ps=None):
 			chapter_url = item.find("div", "chapter-item").find("a")["href"]
 			data[manga_url] = chapter_url
 	
+	elif ps == "Manganato":
+		base = "https://manganato.com/"
+		content = await req_content(base, headers=session.headers)
+		soup = BeautifulSoup(content, "html.parser")
+		items = soup.find_all("div", "content-homepage-item")
+		data = dict()
+		for item items:
+			manga_url = item.findNext("a")["href"]
+			chapter_item = item.findNext("p", "a-h item-chapter")
+			if not chapter_item:
+				continue
+			chapter_url = chapter_item.findNext("a")["href"]
+			data[manga_url] = chapter_url
 	else:
-		raise ValueError
+		raise ValueError(f"Inavlid Site: {ps}")
 	
 	return data
           
