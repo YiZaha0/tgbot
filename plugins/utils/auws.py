@@ -284,6 +284,27 @@ def fetch_headers(url, rurl):
             'Connection': 'keep-alive'
         }
 
+async def iter_chapters_ps(link, ps=None):
+	if ps == "Manhwa18":
+		bs = get_soup(link)
+		urls = list()
+		for item in bs.find("div", "panel-manga-chapter wleft").find_all("a"):
+			yield urljoin("https://manhwa18.cc/", item["href"])
+	
+	elif ps == "Toonily":
+		bs = get_soup(link)
+		urls = dict()
+		for item in bs.find_all("li", "wp-manga-chapter"):
+			yield item.a["href"]
+	
+	elif ps == "Manganato":
+		manga_id = link.split("/")[-1]
+		manga = Minfo(manga_id)
+		for ch_url in manga.chapters.values():
+			yield ch_url
+	else:
+		raise ValueError(f"Invalid Site: {ps}")
+
 async def updates_from_ps(ps=None):
 	if ps == "Manhwa18":
 		base = "https://manhwa18.cc/"
