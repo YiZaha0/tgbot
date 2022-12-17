@@ -51,7 +51,7 @@ async def read_manga(bot, update):
 	try:
 		text = update.text.split(" ", 1)[1]
 	except:
-		return await update.reply("`Give manga Id.`")
+		return await update.reply("`Give manga Id and chapter No.`")
 
 	is_thumb = True if "-thumb" in text else False 
 	nelo = True if "-nelo" in text else False 
@@ -60,7 +60,9 @@ async def read_manga(bot, update):
 	flags = ("-thumb", "-nelo", "-pdf")
 	for _f in text:
 		text = text.replace(_f, "").strip()
+
 	text = text.split(" ", 1)
+	print(text)
 	if len(text) != 2:
 		return await update.reply("`Give manga Id and chapter No.`")
 		
