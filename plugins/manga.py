@@ -48,11 +48,15 @@ async def getmanga_data(bot, update):
 
 @app.on_message(filters.command("mread"))
 async def read_manga(bot, update):
-	text = update.text.split(" ", 1)
-	text = text[-1]
+	try:
+		text = update.text.split(" ", 1)[1]
+	except:
+		return await update.reply("`Give manga Id.`")
+
 	is_thumb = True if "-thumb" in text else False 
 	nelo = True if "-nelo" in text else False 
 	mode = "pdf" if "-pdf" in text else "cbz"
+
 	flags = ("-thumb", "-nelo", "-pdf")
 	for _f in text:
 		text = text.replace(_f, "").strip()
