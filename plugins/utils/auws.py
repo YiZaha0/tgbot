@@ -182,7 +182,10 @@ async def dl_chapter(url, title, mode):
 	await asyncio.gather(*process)
 	if mode == "pdf":
 		file = os.path.join(os.getcwd(), title)
-		pdf = fld2pdf(images, file)
+		try:
+			pdf = fld2pdf(images, file)
+		except:
+			pdf = images_to_pdf(file+".pdf", images)
 		shutil.rmtree(dir)
 		return pdf
 	if mode == "cbz":
