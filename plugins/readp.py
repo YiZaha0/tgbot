@@ -323,7 +323,8 @@ async def update_manhwas():
 						
 					if ps != "Manganato":
 						await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
-						
+
+				os.remove(chapter_file)						
 				db.update_one({"_id": sub["_id"], "msub": ps, "link": link}, {"$set": sub})
 				await asyncio.sleep(2.5)
 
