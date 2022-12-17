@@ -305,7 +305,7 @@ def get_ps(link):
 		return "Toonily"
 	elif "manhwa18.cc" in link:
 		return "Manhwa18"
-	elif "readmanganato.com" in link:
+	elif "chapmanganato.com" in link:
 		return "Manganato"
 	else:
 		raise ValueError("Invalid Ps Link: {link}")
