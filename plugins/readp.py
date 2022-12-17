@@ -261,7 +261,9 @@ async def manhwa_updates():
 			
 			if not updates.get(link) or updates.get(link) == last_chapter:
 				continue
-			
+			if link in manhwas_updates:
+ 				continue
+
 			new_chapters = list()
 			
 			async for i in iter_chapters_ps(link, ps):
