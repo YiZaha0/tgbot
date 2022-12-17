@@ -32,7 +32,7 @@ for name in files:
 loop = asyncio.get_event_loop_policy().get_event_loop()
 
 #LOAD_THUMB
-loop.create_task(update_thumbnail())
+loop.run_until_complete(update_thumbnail())
 
 #STARTING
 loop.create_task(manhwa_updater())
