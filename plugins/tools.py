@@ -339,7 +339,7 @@ async def rmsub(_, update):
 	
 	data = db.find_one({"msub": ps, "link": link}) 
 	if not data:
-		return await event.reply("Link doesn't exist in subscriptions db.")
+		return await update.reply("Link doesn't exist in subscriptions db.")
 	
 	db.delete_one(data)
 	await update.reply(f"Successfully removed `{link}` from db")
