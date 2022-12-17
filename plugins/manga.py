@@ -65,8 +65,8 @@ async def read_manga(bot, update):
 	if len(text) != 2:
 		return await update.reply("`Give manga Id and chapter No.`")
 		
-	manga_id = text[1]
-	chapter_no = text[2]
+	manga_id = text[0]
+	chapter_no = text[1]
 	try:
 		manga = Minfo(manga_id, nelo=nelo)
 	except BaseException:
