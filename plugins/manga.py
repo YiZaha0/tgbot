@@ -62,7 +62,7 @@ async def read_manga(bot, update):
 		text = text.replace(_f, "").strip()
 
 	text = text.split(" ", 1)
-	print(text)
+	logger.info(str(text))
 	if len(text) != 2:
 		return await update.reply("`Give manga Id and chapter No.`")
 		
