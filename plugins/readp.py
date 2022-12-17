@@ -273,7 +273,7 @@ async def manhwa_updates():
 			if new_chapters:
 				manhwas_updates[ps][link] = new_chapters 
 	
-	return manhwas_update, sub_chats
+	return manhwas_updates, sub_chats
 
 async def update_manhwas():
 	updates, sub_chats = await manhwa_updates()
