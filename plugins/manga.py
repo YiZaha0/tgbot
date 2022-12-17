@@ -48,80 +48,126 @@ async def getmanga_data(bot, update):
 
 @app.on_message(filters.command("mread"))
 async def read_manga(bot, update):
-	text = update.text.split(" ")
-	if not len(text) == 3:
+	text = update.text.split(" ", 1)
+	text = text[-1]
+	is_thumb = True if "-thumb" in text else False 
+	nelo = True if "-nelo" in text else False 
+	mode = "pdf" if "-pdf" in text else "cbz"
+	flags = ("-thumb", "-nelo", "-pdf")
+	for _f in text:
+		text = text.replace(_f, "").strip()
+	text = text.split(" ", 1)
+	if not len(text) == 2
 		return await update.reply("`Give manga Id and chapter No.`")
+		
 	manga_id = text[1]
 	chapter_no = text[2]
 	try:
-		manga = Minfo(manga_id, nelo=True)
+		manga = Minfo(manga_id, nelo=nelo)
 	except BaseException:
 		return await update.reply("`Manga ID not found.`")
 	try:
 		chapter_url = manga.chapters[chapter_no]
 	except KeyError:
 		return await update.reply("`Chapter No Invalid/Not Found.`")
+		
 	mm = await update.reply("`Processing...`")
-	data = manga.id + "-ch-" + chapter_no
+	data = "nelo-" if nelo else ""
+	data += manga.id + "-ch-" + chapter_no
 	is_chapter = get_db(data, cn="CACHE")
-	if not is_chapter:
-		chapter_no = ech(chapter_no)
-		file_name = f"[Ch {chapter_no}] {manga.title}"
-		try:
-			file = await dl_chapter(chapter_url, file_name, "cbz")
-			K = await app.send_document(CACHE_CHAT, file, caption=f"**{manga.title} - Chapter {chapter_no}**")
-			await K.copy(update.chat.id, caption=K.caption.markdown)
-			await mm.delete()
-			add_db(data, K.document.file_id, cn="CACHE")
-			os.remove(file)
-		except Exception as e:
-			await mm.edit(f"**Something Went Wrong❗**\n\n`{e}`")
-	if is_chapter:
-		await app.send_cached_media(update.chat.id, is_chapter, caption=f"**{manga.title} - Chapter {chapter_no}**")
+	ch = check(chapter_no)
+	file_name = f"Ch - {ch} {manga.title}"
+	if is_thumb:
+		thumb = await dl_mgn_thumb(manga)
+	else:
+		thumb = None
+	try:
+		file = await dl_chapter(chapter_url, file_name, mode)
+		K = await app.send_document(update.chat.id, file, caption=f"**{manga.title}\n\nChapter - {ch}**", thumb=thumb)
 		await mm.delete()
+		os.remove(file)
+	except Exception as e:
+		await mm.edit(f"**Something Went Wrong❗**\n\n`{e.__class__.__name__} : {e}`")
 
-@app.on_message(filters.regex("^/mbulk( -t)? (-nelo)? ?(.*)") & filters.user(SUDOS))
+@app.on_message(filters.command("mbulk") & filters.user(SUDOS))
 async def bulkmanga(bot, update):
-	is_thumb = update.matches[0].group(1)
-	is_nelo = update.matches[0].group(2)
-	input_str = update.matches[0].group(3)
-	if not input_str:
-		return await update.reply("`Sorry, invalid syntax`")
-	args = dict()
-	splited = input_str.split(" | ")
-	if len(splited) == 2:
+	try:
+		text = update.text.split(" ", 1)[1]
+	except:
+		return await update.reply("`Give manga Id.`")
+		
+	is_thumb = True if "-thumb" in text else False 
+	nelo = True if "-nelo" in text else False 
+	mode = "pdf" if "-pdf" in text else "cbz"
+	
+	flags = ("-thumb", "-nelo", "-pdf")
+	for _f in text:
+		text = text.replace(_f, "").strip()
+	
+	manga_id = text 
+	chat = update.chat.id
+	if " | " in text:
+		splited = text.split(" | ")
 		manga_id = splited[0].strip()
 		chat = splited[1].strip()
-	else:
-		manga_id = input_str.strip()
-		chat = update.chat.id
+		
 	try:
-		if is_nelo:
-			manga = Minfo(manga_id, nelo=True)
-		else:
-			manga = Minfo(manga_id, nelo=False)
+		manga = Minfo(manga_id, nelo=nelo)
 	except:
 		return await update.reply("`Invalid Manga ID`")
+
 	m = await update.reply("`Processing...`")
+	
 	if is_thumb:
-		args["thumb"] = (await req_download(manga.poster_url))[0]
+		thumb = await dl_mgn_thumb(manga)
+	else:
+		thumb = None 
+	
+	ch_msg = None 
+	_edited = False 
+	here = None
 	for ch in manga.chapters:
+		if ch_msg and not _edited:
+			here = await get_chat_link_from_msg(ch_msg)
+			await m.edit(f"Bulk uploading {list(manga.chapters)[-1]} chapters of {manga.title} in [here.]({here})")
+			_edited = True
 		try:
 			url = manga.chapters[ch]
-			ch = ech(ch)
+			ch = check(ch)
 			title = f"[CH - {ch}] {manga.title}"
 			file = await dl_chapter(url, title, "cbz")
-			await app.send_document(int(chat), file, **args)
+			ch_msg = await app.send_document(int(chat), file, **args)
 			os.remove(file)
-		except Exception as err:
-			await m.edit(f"**Something Went Wrong❗**\n\n`{err}`")
+		except Exception as e:
+			await m.edit(f"**Something Went Wrong❗**\n\n`{e.__class__.__name__} : {e}`")
 			return
-	if args:
-		os.remove(args["thumb"])
-	await m.edit(f"Bulk uploaded `{manga.title}`")
 
-def ech(value):
-	value = str(value)
-	if len(value) == 1:
-		return f"0{value}"
-	return value
+	if thumb:
+		os.remove(thumb)
+	
+	await m.edit(f"Successfully bulk uploaded {list(manga.chapters)[-1]} chapters in [here.]({here})")
+	
+async def get_chat_link_from_msg(message):
+	if message.chat.username:
+		return f"https://t.me/{message.chat.username}"
+		
+	elif message.chat.type._value_ == "private":
+		 return f"tg://user?id={message.chat.id}"
+		
+	elif message.chat.invite_link:
+		return message.chat.invite_link
+	
+	else:
+		return message.link.replace("-100", "")
+
+async def dl_mgn_thumb(manga=None, url=None):
+	try:
+		if url:
+			thumb = (await req_download(url))[0]
+		elif manga:
+			thumb = (await req_download(manga.poster_url))[0]
+		else:
+			raise ValueError
+	except:
+		thumb = None 
+	return thumb
