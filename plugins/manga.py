@@ -88,7 +88,7 @@ async def read_manga(bot, update):
 		thumb = None
 	try:
 		file = await dl_chapter(chapter_url, file_name, mode)
-		K = await app.send_document(update.chat.id, file, caption=f"**{manga.title}\n\nChapter - {ch}**", thumb=thumb)
+		K = await app.send_document(update.chat.id, file, caption=f"**{manga.title}\nChapter - {ch}**", thumb=thumb)
 		await mm.delete()
 		os.remove(file)
 	except Exception as e:
