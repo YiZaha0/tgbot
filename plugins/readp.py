@@ -290,12 +290,6 @@ async def update_manhwas():
 			title = sub["title"].replace("’", "'")
 			chats = sub_chats[link]
 			logger.info(f"»{ps} Feed: Updates for {title}\n→{new_chapters}")
-			#to get manhwa channel link
-			reply_markup = list()
-			chat_invite = await get_chat_invite_link(chat)
-			if chat_invite:
-				reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_invite)])
-				reply_markup = types.InlineKeyboardMarkup(reply_markup)
 			
 			for ch_link in new_chapters:
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).replace("chapter-", "").strip()
@@ -314,13 +308,22 @@ async def update_manhwas():
 					
 				await asyncio.sleep(3)
 				sub["last_chapter"] = ch_link
+				
+				reply_markup = list()
 				for chat in chats:
+					chat_invite = await get_chat_invite_link(chat)
+					if chat_invite:
+						reply_markup.append([types.InlineKeyboardButton("Read Here", url=chat_invite)])
+						reply_markup = types.InlineKeyboardMarkup(reply_markup)
+						
 					try:
 						await app.send_document(chat, chapter_file, protect_content=True)
 					except Exception as e:
 						logger.info(f"»{ps} Feed: Got Error while sending {ch_link} in {chat}\n→{e}")
-				if ps != "Manganato":
-					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
+						
+					if ps != "Manganato":
+						await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
+						
 				db.update_one({"_id": sub["_id"], "msub": ps, "link": link}, {"$set": sub})
 				await asyncio.sleep(2.5)
 
