@@ -307,7 +307,6 @@ async def update_manhwas():
 					break
 					
 				await asyncio.sleep(3)
-				sub["last_chapter"] = ch_link
 				
 				reply_markup = list()
 				for chat in chats:
@@ -324,8 +323,10 @@ async def update_manhwas():
 					if ps != "Manganato":
 						await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
 
-				os.remove(chapter_file)						
-				db.update_one({"_id": sub["_id"], "msub": ps, "link": link}, {"$set": sub})
+				os.remove(chapter_file)	
+				for _sub in db.find({"msub": ps, "link": link}):
+					_sub["last_chapter"] = ch_link
+					db.update_one({"_id": _sub["_id"]}, {"$set": _sub})					
 				await asyncio.sleep(2.5)
 
 		logger.info(f"»Completed Updates Run for {ps}")
