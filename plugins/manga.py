@@ -145,7 +145,7 @@ async def bulkmanga(bot, update):
 	if thumb:
 		os.remove(thumb)
 	
-	await m.edit(f"Successfully bulk uploaded {list(manga.chapters)[-1]} chapters in [here.]({here})")
+	await m.edit(f"Successfully bulk uploaded {list(manga.chapters)[-1]} chapters of {manga.title} in [here.]({here})")
 	
 async def get_chat_link_from_msg(message):
 	if message.chat.username:
