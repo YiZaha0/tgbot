@@ -58,11 +58,10 @@ async def read_manga(bot, update):
 	mode = "pdf" if "-pdf" in text else "cbz"
 
 	flags = ("-thumb", "-nelo", "-pdf")
-	for _f in text:
+	for _f in flags:
 		text = text.replace(_f, "").strip()
 
 	text = text.split(" ", 1)
-	logger.info(str(text))
 	if len(text) != 2:
 		return await update.reply("`Give manga Id and chapter No.`")
 		
