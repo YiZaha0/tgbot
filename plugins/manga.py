@@ -138,7 +138,7 @@ async def bulkmanga(bot, update):
 		try:
 			url = manga.chapters[ch]
 			ch = check(ch)
-			title = f"[CH - {ch}] {manga.title}"
+			title = f"Ch - {ch} {manga.title}"
 			file = await dl_chapter(url, title, mode)
 			ch_msg = await app.send_document(int(chat), file, thumb=thumb, protect_content=protect)
 			os.remove(file)
