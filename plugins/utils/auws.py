@@ -193,7 +193,8 @@ async def dl_chapter(url, title, mode):
 		with zipfile.ZipFile(file, "w") as cbz:
 			for image in images:
 				cbz.write(image, compress_type=zipfile.ZIP_DEFLATED)
-			return file
+		shutil.rmtree(dir)
+		return file
 	
 class nhentai:
 	def __init__(self, link):
