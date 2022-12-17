@@ -310,7 +310,7 @@ def get_ps(link):
 	else:
 		raise ValueError("Invalid Ps Link: {link}")
 
-@app.on_message(filters.command("msub") & filters.user(SUDOS))
+@app.on_message(filters.command("msub") & filters.user(SUDOS+[5591954930]) & filters.private)
 async def msub(_, update):
 	try:
 		cmd, link, chat = update.text.split()
@@ -329,7 +329,7 @@ async def msub(_, update):
 	db.insert_one(data)
 	await update.reply(f"Successfully added `{link}` [{ps}] to db with chat `{chat}`")
 
-@app.on_message(filters.command("rmsub") & filters.user(SUDOS))
+@app.on_message(filters.command("rmsub") & filters.user(SUDOS+[5591954930]) & filters.private)
 async def rmsub(_, update):
 	try:
 		cmd, link = update.text.split()
@@ -344,7 +344,7 @@ async def rmsub(_, update):
 	db.delete_one(data)
 	await update.reply(f"Successfully removed `{link}` from db")
 
-@app.on_message(filters.command("subs") & filters.user(SUDOS))
+@app.on_message(filters.command("subs") & filters.user(SUDOS+[5591954930]) & filters.private)
 async def listsubs(_, update):
 	subs_dict = dict()
 	count = 0
