@@ -32,10 +32,10 @@ for name in files:
 loop = asyncio.get_event_loop_policy().get_event_loop()
 
 #LOAD_THUMB
-loop.run_until_complete(update_thumbnail())
+loop.create_task(update_thumbnail())
 
 #STARTING
+loop.create_task(manhwa_updater())
 bot.send_message(LOG_CHAT, "**Bot is alive now❗**")
 logging.info("»Successfully Deployed Bot!")
-loop.create_task(manhwa_updater())
 app.run()
