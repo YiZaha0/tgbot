@@ -319,7 +319,7 @@ async def update_manhwas():
 						logger.info(f"»{ps} Feed: Got Error while sending {ch_link} in {chat}\n→{e}")
 				if ps != "Manganato":
 					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
-				db.update_one({"msub": ps, "link": link}, {"$set": sub})
+				db.update_one({"_id": sub["_id"], "msub": ps, "link": link}, {"$set": sub})
 				await asyncio.sleep(2.5)
 
 		logger.info(f"»Completed Updates Run for {ps}")
