@@ -106,7 +106,7 @@ async def bulkmanga(bot, update):
 	mode = "pdf" if "-pdf" in text else "cbz"
 	
 	flags = ("-thumb", "-nelo", "-pdf")
-	for _f in text:
+	for _f in flags:
 		text = text.replace(_f, "").strip()
 	
 	manga_id = text 
