@@ -141,7 +141,7 @@ async def bulkmanga(bot, update):
 			ch = check(ch)
 			title = f"[CH - {ch}] {manga.title}"
 			file = await dl_chapter(url, title, "cbz")
-			ch_msg = await app.send_document(int(chat), file, **args)
+			ch_msg = await app.send_document(int(chat), file, thumb=thumb)
 			os.remove(file)
 		except Exception as e:
 			await m.edit(f"**Something Went Wrong❗**\n\n`{e.__class__.__name__} : {e}`")
