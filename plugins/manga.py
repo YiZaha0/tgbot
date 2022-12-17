@@ -56,8 +56,7 @@ async def read_manga(bot, update):
 	is_thumb = True if "-thumb" in text else False 
 	nelo = True if "-nelo" in text else False 
 	mode = "pdf" if "-pdf" in text else "cbz"
-
-	flags = ("-thumb", "-nelo", "-pdf")
+	flags = ("-thumb", "-nelo", "-pdf", "-protect")
 	for _f in flags:
 		text = text.replace(_f, "").strip()
 
@@ -104,8 +103,8 @@ async def bulkmanga(bot, update):
 	is_thumb = True if "-thumb" in text else False 
 	nelo = True if "-nelo" in text else False 
 	mode = "pdf" if "-pdf" in text else "cbz"
-	
-	flags = ("-thumb", "-nelo", "-pdf")
+	protect = True if "-protect" in text else False
+	flags = ("-thumb", "-nelo", "-pdf", "-protect")
 	for _f in flags:
 		text = text.replace(_f, "").strip()
 	
@@ -141,7 +140,7 @@ async def bulkmanga(bot, update):
 			ch = check(ch)
 			title = f"[CH - {ch}] {manga.title}"
 			file = await dl_chapter(url, title, mode)
-			ch_msg = await app.send_document(int(chat), file, thumb=thumb)
+			ch_msg = await app.send_document(int(chat), file, thumb=thumb, protect_content=protect)
 			os.remove(file)
 		except Exception as e:
 			await m.edit(f"**Something Went Wrong❗**\n\n`{e.__class__.__name__} : {e}`")
