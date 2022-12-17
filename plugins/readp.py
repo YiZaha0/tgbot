@@ -1,3 +1,4 @@
+
 import requests
 import datetime
 import asyncio
@@ -237,8 +238,14 @@ async def anext(iteration):
 
 async def manhwa_updates():
 	ps_updates = dict()
+	sub_chats = dict()
 	for sub in db.find({"msub": {"$exists": 1}}):
 		ps = sub["msub"]
+		link = sub["link"]
+		chat = sub["chat"]
+		if link not in sub_chats:
+			sub_chats[link] = list()
+		sub_chats[link].append(chat)
 		if ps not in ps_updates:
 			updates = await updates_from_ps(ps)
 			ps_updates[ps] = updates 
@@ -266,10 +273,10 @@ async def manhwa_updates():
 			if new_chapters:
 				manhwas_updates[ps][link] = new_chapters 
 	
-	return manhwas_updates
+	return manhwas_update, sub_chats
 
 async def update_manhwas():
-	updates = await manhwa_updates()
+	updates, sub_chats = await manhwa_updates()
 	await asyncio.sleep(5)
 	
 	for ps, update in updates.items():
@@ -279,7 +286,7 @@ async def update_manhwas():
 		for link, new_chapters in update.items():
 			sub = db.find_one({"msub": ps, "link": link})
 			title = sub["title"].replace("’", "'")
-			chat = sub["chat"]
+			chats = sub_chats[link]
 			logger.info(f"»{ps} Feed: Updates for {title}\n→{new_chapters}")
 			#to get manhwa channel link
 			reply_markup = list()
@@ -293,21 +300,27 @@ async def update_manhwas():
 				ch = ch.replace("-", ".", 1).replace("-", "", 1).replace("-", " ")
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
 				try:
-					chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), fpdf=True)
+					if ps == "Manganato":
+						pdfname = pdfname.replace(".pdf", "")
+						chapter_file = await dl_chapter(ch_link, pdfname, "pdf")
+					else:
+						chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), fpdf=True)
 				except Exception as e:
 					not os.path.exists(pdfname) or os.remove(pdfname)
 					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}")
 					break
-				await asyncio.sleep(1)
-				try:
-					sub["last_chapter"] = ch_link
-					chapter_msg = await app.send_document(chat, chapter_file, protect_content=True)
-					os.remove(chapter_file)
+					
+				await asyncio.sleep(3)
+				sub["last_chapter"] = ch_link
+				for chat in chats:
+					try:
+						await app.send_document(chat, chapter_file, protect_content=True)
+					except Exception as e:
+						logger.info(f"»{ps} Feed: Got Error while sending {ch_link} in {chat}\n→{e}")
+				if ps != "Manganato":
 					await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
-					db.update_one({"msub": ps, "link": link}, {"$set": sub})
-					await asyncio.sleep(2.5)
-				except Exception as e:
-					logger.info(f"»{ps} Feed: Got Error while updating {ch_link}\n→{e}") 
+				db.update_one({"msub": ps, "link": link}, {"$set": sub})
+				await asyncio.sleep(2.5)
 
 		logger.info(f"»Completed Updates Run for {ps}")
 
