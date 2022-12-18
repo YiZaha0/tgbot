@@ -177,8 +177,13 @@ async def req_content(url, method="GET", data=None, *args, **kwargs):
 			response = await session.post(url, data=data or dict(), **kwargs)
 		else:
 			raise ValueError
+
+	if response.content_type == "application/json":
+		content = await response.json()
+	else:
 		content = await response.read()
-		return content
+	
+	return content
 
 async def req_url(url, method="GET", data=None, *args, **kwargs):
 	session = aiohttp.ClientSession()
