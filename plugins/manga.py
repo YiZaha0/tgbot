@@ -8,7 +8,7 @@ from . import *
 
 CACHE_CHAT = -1001590019547
 
-@app.on_message(filters.regex("^/getmanga ?(.*)"))
+@app.on_message(filters.regex("^/getmanga ?(.*)") & filters.user(SUDOS))
 async def getmanga_(bot, update):
 	query = update.matches[0].group(1)
 	if not query:
@@ -46,7 +46,7 @@ async def getmanga_data(bot, update):
 	await app.send_photo(update.message.chat.id, manga.poster_url, caption=caption)
 	await update.message.delete()
 
-@app.on_message(filters.command("mread"))
+@app.on_message(filters.command("mread") & filters.user(SUDOS))
 async def read_manga(bot, update):
 	try:
 		text = update.text.split(" ", 1)[1]
