@@ -117,18 +117,16 @@ def images_to_pdf(path: Path, images):
 	return full_path
 
 async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=False):
-	req = await req_url(link, headers=session.headers)
+	req = requests.get(link, headers=session.headers)
 	if req.status != 200:
-		req.connection.close()
 		req = cloudscraper.create_scraper().get(link)
 
-	rurl = str(req.url)
+	rurl = req.url
 		
 	if ("manhwa18" in rurl or "manhwahentai" in rurl or "toonily" in rurl) and "chapter" not in rurl:
 		return pdfname 
 	
-	content = await req.read() if hasattr(req, "status") else req.content
-	req.connection.close() if hasattr(req, "status") else None
+	content = req.content
 
 	soup = BeautifulSoup(content, "html.parser")
 	items = soup.find_all("img", class_)
