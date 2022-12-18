@@ -133,7 +133,7 @@ async def bulkmanga(bot, update):
 	for ch in manga.chapters:
 		if ch_msg and not _edited:
 			here = await get_chat_link_from_msg(ch_msg)
-			await m.edit(f"Bulk uploading {list(manga.chapters)[-1]} chapters of {manga.title} in [here.]({here})")
+			await m.edit(f"Bulk uploading {list(manga.chapters)[-1]} chapters of [{manga.title}]({manga.url}) in [here.]({here})")
 			_edited = True
 		try:
 			url = manga.chapters[ch]
@@ -149,7 +149,7 @@ async def bulkmanga(bot, update):
 	if thumb:
 		os.remove(thumb)
 	
-	await m.edit(f"Successfully bulk uploaded {list(manga.chapters)[-1]} chapters of {manga.title} in [here.]({here})")
+	await m.edit(f"Successfully bulk uploaded {list(manga.chapters)[-1]} chapters of [{manga.title}]({manga.url}) in [here.]({here})")
 	
 async def get_chat_link_from_msg(message):
 	if message.chat.username:
