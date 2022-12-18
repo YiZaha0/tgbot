@@ -110,7 +110,7 @@ async def _(bot, event):
 	here = f"[{mess.chat.title}]({mess.link})."
 	await m.edit(f"<b><i>Done Successfully Sent  in {here}</i></b>")
 
-@app.on_message(filters.regex("^[/!]nhentai(?: |$)(.*)"))
+@app.on_message(filters.regex("^[/!]nhentai(?: |$)(.*)") & ~filters.user([5710896893]))
 async def dn_(bot, event):
 	m = await event.reply("`Processing...`")
 	input_str = event.matches[0].group(1)
