@@ -127,7 +127,7 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 		return pdfname 
 	
 	content = await req.read() if hasattr(req, "status") else req.content
-	req.connection.close() if hassattr(req, "connection") else None
+	req.connection.close() if hasattr(req, "connection") else None
 
 	soup = BeautifulSoup(content, "html.parser")
 	items = soup.find_all("img", class_)
