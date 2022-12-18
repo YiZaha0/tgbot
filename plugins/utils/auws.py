@@ -118,7 +118,7 @@ def images_to_pdf(path: Path, images):
 
 async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=False):
 	req = requests.get(link, headers=session.headers)
-	if req.status != 200:
+	if req.status_code != 200:
 		req = cloudscraper.create_scraper().get(link)
 
 	rurl = req.url
