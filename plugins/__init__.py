@@ -178,11 +178,10 @@ async def req_content(url, method="GET", data=None, *args, **kwargs):
 		else:
 			raise ValueError
 
-	if response.content_type == "application/json":
-		content = await response.json()
-	else:
-		content = await response.read()
-	
+		if response.content_type == "application/json":
+			content = await response.json()
+		else:
+			content = await response.read()
 	return content
 
 async def req_url(url, method="GET", data=None, *args, **kwargs):
