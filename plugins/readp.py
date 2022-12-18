@@ -8,6 +8,7 @@ from search_engine_parser import GoogleSearch
 from pyrogram import filters, types
 from telethon import functions
 from .utils.auws import *
+from .manga import dl_mgn_thumb
 from . import *
 
 chapter_log_msg = """
@@ -295,8 +296,12 @@ async def update_manhwas():
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).replace("chapter-", "").strip()
 				ch = ch.replace("-", ".", 1).replace("-", "", 1).replace("-", " ")
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
+				thumb = None
 				try:
 					if ps == "Manganato":
+						manga_id = link.split("/")[-1]
+						manga = Minfo(manga_id)
+						thumb = await dl_mgn_thumb(manga)
 						pdfname = pdfname.replace(".pdf", "")
 						chapter_file = await dl_chapter(ch_link, pdfname, "pdf")
 					else:
@@ -316,14 +321,15 @@ async def update_manhwas():
 						reply_markup = types.InlineKeyboardMarkup(reply_markup)
 						
 					try:
-						await app.send_document(chat, chapter_file, protect_content=True)
+						await app.send_document(chat, chapter_file, thumb=thumb, protect_content=True)
 					except Exception as e:
 						logger.info(f"»{ps} Feed: Got Error while sending {ch_link} in {chat}\n→{e}")
 						
 					if ps != "Manganato":
 						await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
 
-				os.remove(chapter_file)	
+				os.remove(chapter_file)
+				not thumb or os.remove(thumb)
 				for _sub in db.find({"msub": ps, "link": link}):
 					_sub["last_chapter"] = ch_link
 					db.update_one({"_id": _sub["_id"]}, {"$set": _sub})					
