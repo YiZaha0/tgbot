@@ -246,7 +246,7 @@ class nhentai:
 class Minfo:
 	def __init__(self, id, nelo=False):
 		baseurl = "https://ww5.manganelo.tv/manga/" if nelo else "https://readmanganato.com/"
-		url = baseurl + id
+		url = session.get(baseurl + id).url
 		soup = get_soup(url)
 		self.url = url
 		self.id = id
