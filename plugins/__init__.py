@@ -203,7 +203,7 @@ async def req_download(download_url, filename=None, progress_callback=None, head
             total_size = int(response.headers.get("content-length", 0)) or None
             downloaded_size = 0
             start_time = time.time()
-            await response.read()
+            await asyncio.sleep(0.1)
             with open(filename, "wb") as f:
                 async for chunk in response.content.iter_chunked(1024):
                     if chunk:
