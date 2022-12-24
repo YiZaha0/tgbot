@@ -15,13 +15,15 @@ import logging
 import zipfile
 import fitz
 from reportlab.pdfgen import canvas
-from PIL import Image
+from PIL import Image, ImageFile
 from AnilistPython import Anilist
 from natsort import natsorted
 from pathlib import Path 
 from urllib.parse import urljoin
 from plugins import *
 from .pdf import fld2pdf, img2pdf as makefpdf
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 session = requests.Session()
 session.headers["User-Agent"] = random.choice(agents)
