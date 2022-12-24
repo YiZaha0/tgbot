@@ -6,10 +6,11 @@ from fpdf import FPDF
 from plugins import logger, Config
 import re
 
-from PIL import Image
+from PIL import Image, ImageFile
 
 from .img_size import get_image_size
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def fld2pdf(files: list,  out: str):
     pdf = Path(f'{out}.pdf')
