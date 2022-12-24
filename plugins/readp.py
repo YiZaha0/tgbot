@@ -302,7 +302,7 @@ async def update_manhwas():
 						manga_id = link.split("/")[-1]
 						manga = Minfo(manga_id)
 						thumb = await dl_mgn_thumb(manga)
-						pdfname = pdfname.replace(" @Adult_Mangas.pdf", "")
+						pdfname = pdfname.replace(" @Adult_Mangas.pdf", " @Manga_Universe")
 						chapter_file = await dl_chapter(ch_link, pdfname, "pdf")
 					else:
 						chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), fpdf=True)
