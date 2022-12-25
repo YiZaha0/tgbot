@@ -74,7 +74,7 @@ db = mongodb["MAIN"]
 
 #FUNCs
 def main():
-	bot = bot.start(bot_token=Config.BOT_TOKEN)
+	bot.start(bot_token=Config.BOT_TOKEN)
 	logger.info("»Telethon Client started successfully.")
 	
 	if uB:
