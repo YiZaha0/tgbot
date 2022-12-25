@@ -48,7 +48,7 @@ app = Client("TestBot-Pyro", Config.API_ID, Config.API_HASH, bot_token=Config.BO
 
 uB = None
 if Config.PYRO_SESSION and Config.UB:
-	uB = Client("TestUser", Config.API_ID, Config.API_HASH, sesson_string=Config.PYRO_SESSION)
+	uB = Client("TestUser", Config.API_ID, Config.API_HASH, session_string=Config.PYRO_SESSION)
 
 
 #DB
