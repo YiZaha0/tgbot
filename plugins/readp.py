@@ -321,7 +321,7 @@ async def update_manhwas():
 						reply_markup = types.InlineKeyboardMarkup(reply_markup)
 						
 					try:
-						await app.send_document(chat, chapter_file, thumb=thumb, protect_content=not ps=="Manganato")
+						await app.send_document(chat, chapter_file, caption="<b>➤ Main Channel : @manga_universe</b>" if ps=="Manganato" else None, thumb=thumb, protect_content=not ps=="Manganato")
 					except Exception as e:
 						logger.info(f"»{ps} Feed: Got Error while sending {ch_link} in {chat}\n→{e}")
 						
