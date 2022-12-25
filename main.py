@@ -8,19 +8,6 @@ from pathlib import Path
 from plugins import *
 from plugins.tools import update_thumbnail
 from plugins.readp import manhwa_updater
-
-def main():
-	bot.start(bot_token=Config.BOT_TOKEN)
-	logger.info("»Telethon Client started successfully.")
-	
-	if uB:
-		uB.start()
-		logger.info("»Pyrogram User Client started successfully.")
-		
-	app.start()
-	logger.info("»Pyrogram Bot Client started successfully.")
-	
-	bot.run_until_disconnected()
 		
 #LOGGING
 LOG_FILE = "LOGS.txt"
@@ -52,7 +39,13 @@ loop.run_until_complete(update_thumbnail())
 loop.create_task(manhwa_updater())
 
 #STARTING
-t = threading.Thread(target=main)
-t.start()
+bot.start(bot_token=Config.BOT_TOKEN)
+logger.info("»Telethon Client started successfully.")
+if uB:
+	uB.start()
+	logger.info("»Pyrogram User Client started successfully.")
+app.start()
+logger.info("»Pyrogram Bot Client started successfully.")
+bot.run_until_disconnected()
 
 
