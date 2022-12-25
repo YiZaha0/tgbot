@@ -41,6 +41,5 @@ loop.create_task(manhwa_updater())
 #STARTING
 t = threading.Thread(target=main)
 t.start()
-logging.info("»Successfully Deployed Bot!")
 
 
