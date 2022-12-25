@@ -2,9 +2,10 @@ import os
 import glob
 import asyncio
 import logging
+import threading
 
 from pathlib import Path 
-from plugins import app, bot, load_plugin, scheduler, LOG_CHAT
+from plugins import main, load_plugin, scheduler, LOG_CHAT
 from plugins.tools import update_thumbnail
 from plugins.readp import manhwa_updater
 
@@ -34,8 +35,12 @@ loop = asyncio.get_event_loop_policy().get_event_loop()
 #LOAD_THUMB
 loop.run_until_complete(update_thumbnail())
 
-#STARTING
+#CREATING TASKS
 loop.create_task(manhwa_updater())
-bot.send_message(LOG_CHAT, "**Bot is alive now❗**")
+
+#STARTING
+t = threading.Thread(target=main)
+t.start()
 logging.info("»Successfully Deployed Bot!")
-app.run()
+
+
