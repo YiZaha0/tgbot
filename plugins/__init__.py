@@ -24,10 +24,13 @@ app = Client("TestBot-Pyro", Config.API_ID, Config.API_HASH, bot_token=Config.BO
 uB = None
 if Config.PYRO_SESSION and Config.UB:
 	uB = Client("TestUser", Config.API_ID, Config.API_HASH, sesson_string=Config.PYRO_SESSION)
+
+
 #DB
 mongo = MongoClient(Config.MONGO_URL)
 mongodb = mongo["TESTDB"]
 db = mongodb["MAIN"]
+
 
 #VARS
 bot_start_time = time.time()
@@ -44,6 +47,7 @@ for sudo_id in sudo_users:
 LOG_CHAT = Config.LOG_CHAT or -1001568226560
 agents = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100 101 Firefox/22.0', 'Mozilla/5.0 (Windows NT 6.1; rv:11.0) Gecko/20100101 Firefox/11.0', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5', 'Mozilla/5.0 (Windows; Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.46 Safari/536.5', 'Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15']
 scheduler = AsyncIOScheduler()
+
 
 #FUNCs
 def get_db(variable, cn="MAIN"):
