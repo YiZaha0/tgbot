@@ -21,7 +21,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 #VARS
 bot_start_time = time.time()
-logger = logging.getLogger("Bot")
+logger = logging.getLogger("Useless [Bot]")
 sudo_users = Config.SUDOS or "5304356242 5370531116 5551387300"
 sudo_users = sudo_users.split()
 SUDOS = []
@@ -100,7 +100,7 @@ def load_plugin(plugin_name):
     	load.logger = logging.getLogger(plugin_name)
     	spec.loader.exec_module(load)
     	sys.modules["plugins." + plugin_name] = load
-    	logging.info("»Bot has imported " + plugin_name)
+    	logger.info("»Bot has imported " + plugin_name)
 
 def restart_bot():
 	os.system("git pull -f && pip3 install --quiet -U -r requirements.txt")
