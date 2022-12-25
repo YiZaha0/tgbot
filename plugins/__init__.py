@@ -20,7 +20,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 #CLIENTS
 bot = TelegramClient("TestBot", Config.API_ID, Config.API_HASH).start(bot_token=Config.BOT_TOKEN)
+
 app = Client("TestBot-Pyro", Config.API_ID, Config.API_HASH, bot_token=Config.BOT_TOKEN)
+
 uB = None
 if Config.PYRO_SESSION and Config.UB:
 	uB = Client("TestUser", Config.API_ID, Config.API_HASH, sesson_string=Config.PYRO_SESSION)
