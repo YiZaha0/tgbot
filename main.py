@@ -9,6 +9,19 @@ from plugins import bot, app, uB, logger, load_plugin, scheduler, LOG_CHAT
 from plugins.tools import update_thumbnail
 from plugins.readp import manhwa_updater
 
+def main():
+	bot.start(bot_token=Config.BOT_TOKEN)
+	logger.info("»Telethon Client started successfully.")
+	
+	if uB:
+		uB.start()
+		logger.info("»Pyrogram User Client started successfully.")
+		
+	app.start()
+	logger.info("»Pyrogram Bot Client started successfully.")
+	
+	bot.run_until_disconnected()
+		
 #LOGGING
 LOG_FILE = "LOGS.txt"
 not os.path.exists(LOG_FILE) or os.remove(LOG_FILE)
