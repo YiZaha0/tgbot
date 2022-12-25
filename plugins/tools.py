@@ -263,16 +263,6 @@ async def _mid(client, event):
 	if "RELEASING" in event.caption:
 		await update_plist()
 	if "Status" in event.caption:
-		from pymongo import MongoClient
-		ClientDb = MongoClient(Config.MONGO_URL1)
-		Db = ClientDb["RequestTrackerBot"]
-		Db_Bot = Db["DATA"]
-		data = {}
-		for i in Db_Bot.find():
-			data = i["PDATA"]
-		Db_Bot.delete_one({"PDATA": data})
-		data[event.caption.split("\n")[0].strip()] = event.link
-		Db_Bot.insert_one({"PDATA": data})
 		await update_pindex()
 
 @app.on_message(filters.chat(-1001666665549) & filters.linked_channel & ~filters.sticker)
