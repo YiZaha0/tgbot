@@ -18,22 +18,6 @@ from telethon.tl.types import MessageService
 from telethon.errors import MessageDeleteForbiddenError, MessageNotModifiedError
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-#CLIENTS
-bot = TelegramClient("TestBot", Config.API_ID, Config.API_HASH).start(bot_token=Config.BOT_TOKEN)
-
-app = Client("TestBot-Pyro", Config.API_ID, Config.API_HASH, bot_token=Config.BOT_TOKEN)
-
-uB = None
-if Config.PYRO_SESSION and Config.UB:
-	uB = Client("TestUser", Config.API_ID, Config.API_HASH, sesson_string=Config.PYRO_SESSION)
-
-
-#DB
-mongo = MongoClient(Config.MONGO_URL)
-mongodb = mongo["TESTDB"]
-db = mongodb["MAIN"]
-
-
 #VARS
 bot_start_time = time.time()
 logger = logging.getLogger("Bot")
@@ -51,7 +35,36 @@ agents = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 
 scheduler = AsyncIOScheduler()
 
 
+#CLIENTS
+bot = TelegramClient("TestBot", Config.API_ID, Config.API_HASH)
+
+app = Client("TestBot-Pyro", Config.API_ID, Config.API_HASH, bot_token=Config.BOT_TOKEN)
+
+uB = None
+if Config.PYRO_SESSION and Config.UB:
+	uB = Client("TestUser", Config.API_ID, Config.API_HASH, sesson_string=Config.PYRO_SESSION)
+
+
+#DB
+mongo = MongoClient(Config.MONGO_URL)
+mongodb = mongo["TESTDB"]
+db = mongodb["MAIN"]
+
+
 #FUNCs
+def main():
+	bot = bot.start(bot_token=Config.BOT_TOKEN)
+	logger.info("»Telethon Client started successfully.")
+	
+	if uB:
+		uB.start()
+		logger.info("»Pyrogram User Client started successfully.")
+		
+	app.start()
+	logger.info("»Pyrogram Bot Client started successfully.")
+	
+	bot.run_until_disconnected()
+		
 def get_db(variable, cn="MAIN"):
 	if mongodb[cn].find_one():
 		for var in mongodb[cn].find({variable: {"$exists": 1}}):
