@@ -73,19 +73,6 @@ db = mongodb["MAIN"]
 
 
 #FUNCs
-def main():
-	bot.start(bot_token=Config.BOT_TOKEN)
-	logger.info("»Telethon Client started successfully.")
-	
-	if uB:
-		uB.start()
-		logger.info("»Pyrogram User Client started successfully.")
-		
-	app.start()
-	logger.info("»Pyrogram Bot Client started successfully.")
-	
-	bot.run_until_disconnected()
-		
 def get_db(variable, cn="MAIN"):
 	if mongodb[cn].find_one():
 		for var in mongodb[cn].find({variable: {"$exists": 1}}):
