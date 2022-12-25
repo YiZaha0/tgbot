@@ -46,6 +46,7 @@ if uB:
 	logger.info("»Pyrogram User Client started successfully.")
 app.start()
 logger.info("»Pyrogram Bot Client started successfully.")
+app.send_message(LOG_CHAT, "<b>Bot is Online!</b>")
 logger.info("»Deployed Successfully!")
 bot.run_until_disconnected()
 
