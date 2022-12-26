@@ -174,8 +174,8 @@ async def dl_chapter(url, title, mode):
 		images_list = soup.find("div", "container-chapter-reader").find_all("img")
 		images_list = [(i.get("src") or i.get("data-src")).strip() for i in images_list]
 	elif "mangabuddy" in url:
-		images_list = soup.find("div", "chapter-image load-first spinner")
-		images_list = [i.get("data-src").strip() for i in images_list]
+		images_list = soup.find_all("div", "chapter-image load-first spinner")
+		images_list = ["https:" + i.find("img").get("data-src").strip() for i in images_list]
 	else:
 		raise ValueError("Invalid Url : {!r}".format(url))
 	n = 0
