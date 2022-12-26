@@ -315,8 +315,16 @@ async def iter_chapters_ps(link, ps=None):
 		manga = Minfo(manga_id)
 		for ch_url in reversed(manga.chapters.values()):
 			yield ch_url
+
+	elif ps == "Mangabuddy":
+		base = "https://mangabuddy.com/"
+		bs = get_soup(ps)
+		for item in bs.find_all("ul", "chapter-list"):
+			yield urljoin(base, item.a["href"])
+
 	else:
-		raise ValueError(f"Invalid Site: {ps}")
+		raise ValueError("Invalid Site: {!r}".format(ps))
+
 async def updates_from_ps(ps=None):
 	if ps == "Manhwa18":
 		base = "https://manhwa18.cc/"
@@ -355,8 +363,9 @@ async def updates_from_ps(ps=None):
 			data[manga_url] = chapter_url
 	
 	elif ps == "Mangabuddy":
-		base = "https://mangabuddy.com/home-page"
-		content = await req_content(base, headers=session.headers)
+		base = "https://mangabuddy.com/"
+		home = "https://mangabuddy.com/home-page"
+		content = await req_content(home, headers=session.headers)
 		soup = BeautifulSoup(content, "html.parser")
 		items = soup.find_all("div", "book-item latest-item")
 		data = dict()
