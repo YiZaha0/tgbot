@@ -3,9 +3,7 @@ FROM python:latest
 ENV TZ=Asia/Kolkata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt -y update && apt -y upgrade \
-    apt install -y --no-install-recommends ffmpeg wkhtmltopdf && \
-    rm -rf /var/lib/apt/lists/* \
+RUN apt -y update && apt -y upgrade 
 
 RUN git clone https://github.com/YiZaha0/tgbot /root/tgbot-rep
 
