@@ -317,7 +317,6 @@ async def iter_chapters_ps(link, ps=None):
 			yield ch_url
 	else:
 		raise ValueError(f"Invalid Site: {ps}")
-
 async def updates_from_ps(ps=None):
 	if ps == "Manhwa18":
 		base = "https://manhwa18.cc/"
@@ -354,8 +353,25 @@ async def updates_from_ps(ps=None):
 				continue
 			chapter_url = chapter_item.findNext("a")["href"]
 			data[manga_url] = chapter_url
+	
+	elif ps == "Manganato":
+		base = "https://mangabuddy.com/home-page"
+		content = await req_content(base, headers=session.headers)
+		soup = BeautifulSoup(content, "html.parser")
+		items = soup.find_all("div", "book-item latest-item")
+		data = dict()
+		for item in items:
+			manga_url = urljoin(base, item.a["href"])
+			chapter_item = item.findNext("div", "chap-item")
+			if not (chapter_item or chapter_item.a):
+				continue
+			chapter_url = urljoin(base, chapter_item.a["href"])
+			if manga_url not in data:
+				data[manga_url] = chapter_url
+				
 	else:
-		raise ValueError(f"Inavlid Site: {ps}")
+		raise ValueError(f"Inavlid Site: {!r}".format(ps))
 	
 	return data
+
           
