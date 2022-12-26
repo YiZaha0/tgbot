@@ -45,7 +45,7 @@ def ppost(name):
 	status = manga.get("release_status")
 	chno = manga.get("chapters") or "N/A"
 	genres = ", ".join(natsorted(manga.get("genres")))
-	post = f"<b>{en_name} | {ja_name}</b>\n\n➤ <b>Type :</b> {type}\n➤ <b>Average Rating :</b> {ar}\n➤ <b>Status :</b> {status}\n➤ <b>No of Chapters :</b> {chno}\n➤ <b>Genres :</b> {genres}"
+	post = f"<b>{en_name} | {ja_name}</b>\n\n━━━━━━━━━━━━━━━━━━━━━━\n➤ <b>Type :</b> {type}\n➤ <b>Average Rating :</b> {ar}\n➤ <b>Status :</b> {status}\n➤ <b>No of Chapters :</b> {chno}\n➤ <b>Genres :</b> {genres}\n━━━━━━━━━━━━━━━━━━━━━━"
 	return post
 
 def get_names():
