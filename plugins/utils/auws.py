@@ -354,7 +354,7 @@ async def updates_from_ps(ps=None):
 			chapter_url = chapter_item.findNext("a")["href"]
 			data[manga_url] = chapter_url
 	
-	elif ps == "Manganato":
+	elif ps == "Mangabuddy":
 		base = "https://mangabuddy.com/home-page"
 		content = await req_content(base, headers=session.headers)
 		soup = BeautifulSoup(content, "html.parser")
