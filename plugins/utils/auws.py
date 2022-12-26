@@ -165,18 +165,26 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 	return path
 
 
+
 async def dl_chapter(url, title, mode):
 	dir = tempfile.mkdtemp()
 
 	soup = get_soup(url)
-	images_list = soup.find("div", "container-chapter-reader").find_all("img")
+	if "manganato" in url:
+		images_list = soup.find("div", "container-chapter-reader").find_all("img")
+		images_list = [(i.get("src") or i.get("data-src")).strip() for i in images_list]
+	elif "mangabuddy" in url:
+		images_list = soup.find("div", "chapter-image load-first spinner")
+		images_list = [i.get("data-src").strip() for i in images_list]
+	else:
+		raise ValueError("Invalid Url : {!r}".format(url))
 	n = 0
 	process = list()
 	images = list()
+	headers = dict(session.headers)
+	headers["Referer"] = url
 	for link in images_list:
-		link = link.get("src") or link.get("data-src") # for manganelo
 		filename = f"{dir}/{n}.jpg"
-		headers = dict(Referer=url)
 		process.append(req_download(link, filename=filename, headers=headers))
 		images.append(filename)
 		n += 1
