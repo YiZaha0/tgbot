@@ -370,7 +370,7 @@ async def updates_from_ps(ps=None):
 				data[manga_url] = chapter_url
 				
 	else:
-		raise ValueError(f"Inavlid Site: {!r}".format(ps))
+		raise ValueError("Inavlid Site: {!r}".format(ps))
 	
 	return data
 
