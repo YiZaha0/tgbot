@@ -319,7 +319,7 @@ async def iter_chapters_ps(link, ps=None):
 	elif ps == "Mangabuddy":
 		base = "https://mangabuddy.com/"
 		bs = get_soup(link)
-		for item in bs.find_all("ul", "chapter-list"):
+		for item in bs.find("ul", "chapter-list").findAll("a"):
 			yield urljoin(base, item.a["href"])
 
 	else:
