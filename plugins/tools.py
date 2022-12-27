@@ -287,6 +287,10 @@ def get_title(link, ps=None):
 	
 	elif ps == "Manganato":
 		return bs.find(class_="story-info-right").find("h1").text.strip()
+
+	elif ps == "Mangabuddy":
+		return bs.find("div", "name box").find("h1").text
+
 	else:
 		raise ValueError(f"Invalid Site: {ps}")
 
@@ -297,6 +301,8 @@ def get_ps(link):
 		return "Manhwa18"
 	elif "chapmanganato.com" in link:
 		return "Manganato"
+	elif "mangabuddy.com" in link:
+		return "Mangabuddy"
 	else:
 		raise ValueError("Invalid Ps Link: {link}")
 
