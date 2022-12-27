@@ -180,6 +180,7 @@ async def dl_chapter(url, title, mode):
 		images_list = [img_base + i.strip() for i in images_list]
 	else:
 		raise ValueError("Invalid Url : {!r}".format(url))
+	logger.info("#DEBUG\n"+str(images_list))
 	n = 0
 	process = list()
 	images = list()
