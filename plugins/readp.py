@@ -330,7 +330,7 @@ async def update_manhwas():
 					except Exception as e:
 						logger.info(f"»{ps} Feed: Got Error while sending {ch_link} in {chat}\n→{e}")
 						
-					if ps != "Manganato":
+					if ps not in ["Manganato", "Mangabuddy"]:
 						await app.send_message(-1001848617769, chapter_log_msg.format(title, ch), reply_markup=reply_markup)
 
 				os.remove(chapter_file)
