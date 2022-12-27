@@ -294,7 +294,7 @@ async def update_manhwas():
 			
 			for ch_link in new_chapters:
 				ch = (ch_link.split("/")[-1] or ch_link.split("/")[-2]).replace("chapter-", "").strip()
-				ch = ch.replace("-", ".", 1).replace("-", "", 1).replace("-", " ")
+				ch = ch.replace("-", ".", 1).replace("-", " ").title() if ch.replace("-", "").isdigit() else ch.replace("-", " ").title()
 				pdfname = f"Ch - {ch} {title} @Adult_Mangas.pdf"
 				thumb = None
 				try:
@@ -304,6 +304,11 @@ async def update_manhwas():
 						thumb = await dl_mgn_thumb(manga)
 						pdfname = pdfname.replace(" @Adult_Mangas.pdf", " @Manga_Universe")
 						chapter_file = await dl_chapter(ch_link, pdfname, "pdf")
+
+					elif ps == "Mangabuddy":
+						pdfname = pdfname.replace(" @Adult_Mangas.pdf", " @Manga_Universe")
+						chapter_file = await dl_chapter(ch_link, pdfname, "pdf")
+
 					else:
 						chapter_file = await post_ws(ch_link, pdfname, **iargs(ps_iargs(ps)), fpdf=True)
 				except Exception as e:
