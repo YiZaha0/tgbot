@@ -320,7 +320,7 @@ async def iter_chapters_ps(link, ps=None):
 		base = "https://mangabuddy.com/"
 		bs = get_soup(link)
 		for item in bs.find("ul", "chapter-list").findAll("a"):
-			yield urljoin(base, item.a["href"])
+			yield urljoin(base, item["href"])
 
 	else:
 		raise ValueError("Invalid Site: {!r}".format(ps))
