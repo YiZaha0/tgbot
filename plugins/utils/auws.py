@@ -168,9 +168,9 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 
 async def dl_chapter(url, title, mode):
 	dir = tempfile.mkdtemp()
-
-	soup = get_soup(url)
-	if "manganato" in url:
+	content = await req_content(url, headers=session.headers)
+	soup = BeautifulSoup(content, "html.parser")
+	if "manganato" in url or "manganelo" in url:
 		images_list = soup.find("div", "container-chapter-reader").find_all("img")
 		images_list = [(i.get("src") or i.get("data-src")).strip() for i in images_list]
 	elif "mangabuddy" in url:
