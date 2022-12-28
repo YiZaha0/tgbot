@@ -1,8 +1,10 @@
 import os
 import glob
 import asyncio
+import uvloop
 import logging
-import threading
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
 
 from pathlib import Path 
 from plugins import *
