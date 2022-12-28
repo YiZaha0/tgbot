@@ -257,3 +257,14 @@ async def get_chat_pic(chat_id: int):
 			return photo 
 	except:
 		pass
+
+invitation_links = dict()
+async def get_chat_invite_link(chat_id: int):
+	if chat_id in invitation_links:
+		return invitation_links[chat_id]
+	try:
+		link = (await bot(functions.channels.GetFullChannelRequest(chat_id))).full_chat.exported_invite.link 
+		invitation_links[chat_id] = link 
+		return link 
+	except:
+		return None
