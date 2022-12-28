@@ -263,7 +263,8 @@ async def get_chat_invite_link(chat_id: int, refresh: bool = None):
 	if not refresh and chat_id in invitation_links:
 		return invitation_links[chat_id]
 	try:
-		link = (await bot(functions.channels.GetFullChannelRequest(chat_id))).full_chat.exported_invite.link 
+		chat = await app.get_chat(chat_id)
+		link = f"https://t.me/{chat.username}" if chat.username else chat.invite_link
 		invitation_links[chat_id] = link 
 		return link 
 	except:
