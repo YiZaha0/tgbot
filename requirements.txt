@@ -26,3 +26,4 @@ search-engine-parser
 telegraph
 telethon
 tgcrypto
+uvloop
