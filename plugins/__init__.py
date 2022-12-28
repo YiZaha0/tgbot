@@ -199,7 +199,7 @@ def post_telegraph(title, content, author, author_url=None):
     return post_page["url"]
 
 async def req_content(url, method="GET", data=None, *args, **kwargs):
-	async with aiohttp.ClientSession() as session:
+	async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
 		if method.lower() == "get":
 			response = await session.get(url, *args, **kwargs)
 		elif method.lower() == "post":
@@ -214,7 +214,7 @@ async def req_content(url, method="GET", data=None, *args, **kwargs):
 	return content
 
 async def req_url(url, method="GET", data=None, *args, **kwargs):
-	session = aiohttp.ClientSession() 
+	session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) 
 	if method.lower() == "get":
 		response = await session.get(url, *args, **kwargs)
 	elif method.lower() == "post":
@@ -226,7 +226,7 @@ async def req_url(url, method="GET", data=None, *args, **kwargs):
 
 async def req_download(download_url, filename=None, progress_callback=None, headers=None):
     await asyncio.sleep(0.1)
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
         async with session.get(download_url, headers=headers, timeout=None) as response:
             if not filename:
                 filename = unquote(download_url.rpartition("/")[-1])
