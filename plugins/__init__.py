@@ -251,7 +251,7 @@ async def get_chat_pic(chat_id: int, refresh: bool = None):
 		
 	try:
 		chat = await app.get_chat(chat_id)
-		if hassattr(chat, "photo") and chat.photo:
+		if hasattr(chat, "photo") and chat.photo:
 			photo = await app.download_media(chat.photo.big_file_id)
 			chat_photos[chat_id] = photo 
 			return photo 
