@@ -245,8 +245,8 @@ async def req_download(download_url, filename=None, progress_callback=None, head
             return filename, time.time() - start_time
 
 chat_photos = dict()
-async def get_chat_pic(chat_id: int):
-	if chat_id in chat_photos:
+async def get_chat_pic(chat_id: int, refresh: bool = None):
+	if not refresh and chat_id in chat_photos:
 		return chat_photos[chat_id]
 		
 	try:
@@ -259,8 +259,8 @@ async def get_chat_pic(chat_id: int):
 		pass
 
 invitation_links = dict()
-async def get_chat_invite_link(chat_id: int):
-	if chat_id in invitation_links:
+async def get_chat_invite_link(chat_id: int, refresh: bool = None):
+	if not refresh and chat_id in invitation_links:
 		return invitation_links[chat_id]
 	try:
 		link = (await bot(functions.channels.GetFullChannelRequest(chat_id))).full_chat.exported_invite.link 
