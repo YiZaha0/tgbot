@@ -310,7 +310,7 @@ async def iter_chapters_ps(link, ps=None):
 		bs = get_soup(link)
 		urls = dict()
 		for item in bs.find_all("li", "wp-manga-chapter"):
-			yield item.a["href"]
+			yield item.find("a")["href"]
 	
 	elif ps == "Manganato":
 		manga_id = link.split("/")[-1]
@@ -321,8 +321,8 @@ async def iter_chapters_ps(link, ps=None):
 	elif ps == "Mangabuddy":
 		base = "https://mangabuddy.com/"
 		bs = get_soup(link)
-		for item in bs.find("ul", "chapter-list").findAll("a"):
-			yield urljoin(base, item["href"])
+		for item in bs.find("ul", "chapter-list").findAll("li"):
+			yield urljoin(base, item.find("a")["href"])
 
 	else:
 		raise ValueError("Invalid Site: {!r}".format(ps))
