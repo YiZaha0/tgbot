@@ -243,3 +243,17 @@ async def req_download(download_url, filename=None, progress_callback=None, head
                             progress_callback(downloaded_size, total_size)
                         )
             return filename, time.time() - start_time
+
+chat_photos = dict()
+async def get_chat_pic(chat_id: int):
+	if chat_id in chat_photos:
+		return chat_photos[chat_id]
+		
+	try:
+		chat = await app.get_chat(chat_id)
+		if hassattr(chat, "photo") and chat.photo:
+			photo = await app.download_media(chat.photo.big_file_id)
+			chat_photos[chat_id] = photo 
+			return photo 
+	except:
+		pass
