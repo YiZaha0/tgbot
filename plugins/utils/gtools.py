@@ -24,7 +24,7 @@ class Entry:
 		required_qualities = {"480p", "720p", "1080p"}
 		result = await extract_download_urls(self.link)
 		urls = result["urls"]
-		if not urls and not required_qualities.issubset(set(urls)):
+		if not urls or not required_qualities.issubset(set(urls)):
 			try:
 				result = await extract_xstream_urls(self.link)
 			except:
