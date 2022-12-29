@@ -32,13 +32,13 @@ async def post_to_telegraph(page_title, html_format_content):
     return post_page["url"]
 
 async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False, referer=None):
-	pdf_path = os.path.join("./nhentai_cache", filename + ".pdf")
-	cbz_path = os.path.join("./nhentai_cache", filename + ".cbz")
+	pdf_path = os.path.join("./cache/nhentai", filename + ".pdf")
+	cbz_path = os.path.join("./cache/nhentai", filename + ".cbz")
 	if os.path.exists(pdf_path):
 		return ((pdf_path, cbz_path) if alsocbz else pdf_path)
-	os.path.exists("nhentai_cache") or os.mkdir("nhentai_cache")
-	dir = os.path.join("./nhentai_cache", code)
-	os.path.exists(dir) or os.mkdir(dir)
+	os.path.isdir("cache/nhentai") or os.mkdir("cache/nhentai")
+	dir = os.path.join("./cache/nhentai", code)
+	os.path.isdir(dir) or os.mkdir(dir)
 	process = list()
 	n = 0
 	image_list = list()
