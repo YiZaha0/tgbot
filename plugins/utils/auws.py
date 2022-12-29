@@ -235,13 +235,13 @@ class nhentai:
 				self.tags.append("#"+t.text.strip().split("\n")[0].replace(" ", "_").replace("-", "_"))
 			elif "artist" in t["href"]:
 				t = t.find(class_="name") if "xxx" in self.url else t
-				self.artists.append(t.text.strip().split("\n")[0].replace(" ", "_"))
+				self.artists.append("#"+t.text.strip().split("\n")[0].replace(" ", "_"))
 			elif "parody" in t["href"]:
 				t = t.find(class_="name") if "xxx" in self.url else t
-				self.parodies.append(t.text.strip().split("\n")[0].replace(" ", "_"))
+				self.parodies.append("#"+t.text.strip().split("\n")[0].replace(" ", "_"))
 			elif "language" in t["href"]:
 				t = t.find(class_="name") if "xxx" in self.url else t
-				self.languages.append(t.text.strip().split("\n")[0].replace(" " , "_"))
+				self.languages.append("#"+t.text.strip().split("\n")[0].replace(" " , "_"))
 			elif "category" in t["href"]:
 				t = t.find(class_="name") if "xxx" in self.url else t
 				self.categories.append("#"+t.text.strip().split("\n")[0].replace(" ", "_"))
