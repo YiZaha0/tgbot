@@ -97,7 +97,7 @@ async def _(bot, event):
 	if doujin.tags:
 		msg += "\n➤ **Tags : **"
 		msg += " ".join(natsorted(doujin.tags))
-	file = await _to_pdf(doujin.images, pdfname, doujin.code, doujin.url)
+	file = await _to_pdf(doujin.images, pdfname, doujin.code, referer=doujin.url)
 	graph_post = msg.split("\n")[0]
 	await m.edit(graph_post)
 	graph_link = await post_to_telegraph(title, imgs)
@@ -148,7 +148,7 @@ async def dn_(bot, event):
 		msg += "\n➤ **Tags : **"
 		msg += " ".join(natsorted(doujin.tags))
 	await m.edit(f"`Wait a bit... Downloading` [{title}]({doujin.url})")
-	pdf, cbz = await _to_pdf(doujin.images, pdfname, doujin.code, alsocbz=True, doujin.url)
+	pdf, cbz = await _to_pdf(doujin.images, pdfname, doujin.code, alsocbz=True, referer=doujin.url)
 	await bot.send_message(event.chat.id, msg, parse_mode=ParseMode.MARKDOWN)
 	await asyncio.gather(app.send_document(event.chat.id, pdf), app.send_document(event.chat.id, cbz))
 	await asyncio.gather(m.delete(), bot.send_message(-1001568226560, f"[{title}]({doujin.url})\n\nSuccessfully sent to {event.from_user.mention}"))
