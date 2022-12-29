@@ -322,7 +322,7 @@ async def iter_chapters_ps(link, ps=None):
 		base = "https://mangabuddy.com/"
 		splited = link.split("/")
 		manga_id = splited[-1] or splited[-2]
-		link = f"{base}manga/{manga_id}/chapters?source=detail"
+		link = f"{base}api/manga/{manga_id}/chapters?source=detail"
 		bs = get_soup(link)
 		for item in bs.find("ul", id="chapter-list").findAll("li"):
 			yield urljoin(base, item.find("a")["href"])
