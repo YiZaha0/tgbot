@@ -37,7 +37,7 @@ async def info_hentai(bot, update):
 	censor = "Censored" if result["is_censored"] else "Uncensored"
 	brand = result["brand"]
 	tags = ", ".join(natsorted(result["tags"]))
-	ides = await post_to_telegraph(name, result["description"])
+	ides = await post_to_telegraph(name, str(result["description"]))
 	des = f"<a href='{ides}'><b>Read More</b></a>"
 	poster_url = result["poster"]
 	caption = f"<b>{name}</b> [{censor}]\n\n<b>»Release Date -</b> <i>{rd}</i>\n<b>»Studio -</b> <i>{brand}</i>\n<b>»Genres -</b> <i>{tags}</i>\n\n{des}"
