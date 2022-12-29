@@ -12,7 +12,7 @@ async def search_hentai(bot, update):
 	text = update.text.split(" ", maxsplit=1)
 	if len(text) == 1:
 		return await update.reply("`What should i do? Give me a query to search for.`")
-	results = requests.get(f"{Api}/search?query={text[1]}&page=0").json()
+	results = await req_content(f"{Api}/search?query={text[1]}&page=0")
 	if not results["response"]:
 		return await update.reply("`No result found for the given query.`")
 	buttons = []
@@ -31,7 +31,7 @@ async def info_hentai(bot, update):
 		await update.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
 		return
 	message = update.message
-	result = requests.get(f"{Api}/details?id={query}").json()
+	result = await req_content(f"{Api}/details?id={query}")
 	name = result["name"]
 	rd = result["released_date"].replace(" ", "-")
 	censor = "Censored" if result["is_censored"] else "Uncensored"
@@ -56,7 +56,7 @@ async def info_hentai(bot, update):
 async def link_hentai(bot, update):
 	query = update.matches[0].group(1)
 	message = update.message
-	result = requests.get(f"{Api}/link?id={query}").json()
+	result = await req_content(f"{Api}/link?id={query}")
 	url = result["data"][0]["url"]
 	if not url == "":
 		url1 = result["data"][0]["url"]
