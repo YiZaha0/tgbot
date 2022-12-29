@@ -40,6 +40,9 @@ loop.run_until_complete(update_thumbnail())
 #CREATING TASKS
 loop.create_task(manhwa_updater())
 
+#CREATING CACHE DIRECTORY
+os.makedirs("cache", exist_ok=True)
+
 #STARTING
 bot.start(bot_token=Config.BOT_TOKEN)
 logger.info("»Telethon Client started successfully.")
