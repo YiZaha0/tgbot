@@ -13,7 +13,7 @@ from telethon import events
 from natsort import natsorted
 from pyrogram import filters
 from pyrogram.enums import ParseMode
-from .utils.auws import fld2pdf, nhentai, create_pdf, images_to_pdf
+from .utils.auws import fld2pdf, nhentai, create_pdf, images_to_pdf, session
 
 from . import *
 
@@ -31,7 +31,7 @@ async def post_to_telegraph(page_title, html_format_content):
     	return
     return post_page["url"]
 
-async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False):
+async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False, referer=None):
 	pdf_path = os.path.join("./nhentai_cache", filename + ".pdf")
 	cbz_path = os.path.join("./nhentai_cache", filename + ".cbz")
 	if os.path.exists(pdf_path):
@@ -42,10 +42,12 @@ async def _to_pdf(images: list, filename: str, code: str, alsocbz: bool = False)
 	process = list()
 	n = 0
 	image_list = list()
+	headers = dict(session.headers)
+	headers["Referer"] = referer
 	for i in images:
 		name = os.path.join(dir, i.split("/")[-1])
 		n += 1
-		process.append(req_download(i, filename=name))
+		process.append(req_download(i, filename=name, headers=headers))
 		image_list.append(name)
 	await asyncio.gather(*process)
 	try:
@@ -95,7 +97,7 @@ async def _(bot, event):
 	if doujin.tags:
 		msg += "\n➤ **Tags : **"
 		msg += " ".join(natsorted(doujin.tags))
-	file = await _to_pdf(doujin.images, pdfname, doujin.code)
+	file = await _to_pdf(doujin.images, pdfname, doujin.code, doujin.url)
 	graph_post = msg.split("\n")[0]
 	await m.edit(graph_post)
 	graph_link = await post_to_telegraph(title, imgs)
@@ -146,7 +148,7 @@ async def dn_(bot, event):
 		msg += "\n➤ **Tags : **"
 		msg += " ".join(natsorted(doujin.tags))
 	await m.edit(f"`Wait a bit... Downloading` [{title}]({doujin.url})")
-	pdf, cbz = await _to_pdf(doujin.images, pdfname, doujin.code, alsocbz=True)
+	pdf, cbz = await _to_pdf(doujin.images, pdfname, doujin.code, alsocbz=True, doujin.url)
 	await bot.send_message(event.chat.id, msg, parse_mode=ParseMode.MARKDOWN)
 	await asyncio.gather(app.send_document(event.chat.id, pdf), app.send_document(event.chat.id, cbz))
 	await asyncio.gather(m.delete(), bot.send_message(-1001568226560, f"[{title}]({doujin.url})\n\nSuccessfully sent to {event.from_user.mention}"))
