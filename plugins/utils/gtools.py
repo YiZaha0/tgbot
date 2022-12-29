@@ -34,7 +34,6 @@ class Entry:
 			return result
 	
 async def extract_download_urls(link:str) -> dict:
-	link = self.link
 	cookies = {"auth": "aplnqLxgJbgtaoyFayGHsnA8ndd8z0BnmuGGwYwDl8BgPk3udnmsQsbW%2B4jXcmkfayLPOTXcZHip799T%2FTkUyg%3D%3D", "gogoanime": "hg9f7phuvd6ccm79k51unu6c62"}
 	content = await req_content(link, cookies=cookies, headers={"User-Agent": random.choice(agents)})
 	soup = BeautifulSoup(content, "html.parser")
