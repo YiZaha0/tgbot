@@ -1,36 +1,51 @@
 import re
 import os
-import html 
-import tempfile
-import urllib
 import time
-from bs4 import BeautifulSoup
+import glob 
+import html
+import json
+import urllib
 import shutil
 import random
 import requests
+import tempfile
+import zipfile
 import cloudscraper
 import img2pdf
-import glob
-import logging
-import zipfile
 import fitz
+
+from pathlib import Path
+from urllib.parse import urljoin
+from natsort import natsorted
 from reportlab.pdfgen import canvas
 from AnilistPython import Anilist
-from natsort import natsorted
-from pathlib import Path 
-from urllib.parse import urljoin
-from plugins import *
-from .pdf import Image, fld2pdf, img2pdf as makefpdf
+from bs4 import BeautifulSoup
 
+from .pdf import Image, fld2pdf
+from .. import *
+
+# –––·Required Vars·–––
 session = requests.Session()
 session.headers["User-Agent"] = random.choice(agents)
-logger = logging.getLogger(__name__)
 
+
+# –––·Utilities·–––
 def get_soup(url, parser="html.parser"):
 	scraper = cloudscraper.create_scraper()
 	req = scraper.get(url)
 	req.raise_for_status()
 	return BeautifulSoup(req.text, parser)
+
+def get_names():
+	return get_db("PNAMES")
+
+def clean(name, length=-1):
+    while '  ' in name:
+        name = name.replace('  ', ' ')
+    name = name.replace(':', '')
+    if length != -1:
+        name = name[:length]
+    return name
 
 def ppost(name):
 	ani = Anilist()
@@ -48,17 +63,17 @@ def ppost(name):
 	post = f"<b>{en_name} | {ja_name}</b>\n\n━━━━━━━━━━━━━━━━━━━━━━\n➤ <b>Type :</b> {type}\n➤ <b>Average Rating :</b> {ar}\n➤ <b>Status :</b> {status}\n➤ <b>No. of Chapters :</b> {chno}\n➤ <b>Genres :</b> {genres}\n━━━━━━━━━━━━━━━━━━━━━━"
 	return post
 
-def get_names():
-	return get_db("PNAMES")
+def img_headers(url, referer):
+	return {
+            'Accept': 'image/png,image/svg+xml,image/*;q=0.8,video/*;q=0.8,*/*;q=0.5',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'User-Agent': random.choice(agents),
+            'Host': urllib.parse.urlparse(url).netloc, 'Accept-Language': 'en-ca', 'Referer': referer,
+            'Connection': 'keep-alive'
+        }
 
-def clean(name, length=-1):
-    while '  ' in name:
-        name = name.replace('  ', ' ')
-    name = name.replace(':', '')
-    if length != -1:
-        name = name[:length]
-    return name
 
+# –––·PDF Utilities·–––
 def convert_pdf(path, images: list):
 	doc = fitz.open()
 	for i, f in enumerate(images):
@@ -77,7 +92,6 @@ def create_pdf(path, images: list):
 
 	for image in images:
 
-		# noinspection PyBroadException
 		try:
 			with Image.open(image) as img:
 				w, h = img.size
@@ -85,11 +99,11 @@ def create_pdf(path, images: list):
 		except BaseException:
 			continue
 
-		pdf.setPageSize((w, h))  # Set the page dimensions to the image dimensions
+		pdf.setPageSize((w, h))  
 
-		pdf.drawImage(image, x=0, y=0)  # Insert the image onto the current page
+		pdf.drawImage(image, x=0, y=0)  
 
-		pdf.showPage()  # Create a new page ready for the next image
+		pdf.showPage()  
 
 	pdf.save()
 	return path
@@ -114,7 +128,9 @@ def images_to_pdf(path: Path, images):
 			create_pdf(full_path, images)
 	
 	return full_path
+	
 
+# –––·P-Downloader Utilities·–––
 async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=False):
 	req = requests.get(link, headers=session.headers)
 	if req.status_code != 200:
@@ -165,49 +181,8 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 	return path
 
 
-
-async def dl_chapter(url, title, mode):
-	dir = tempfile.mkdtemp()
-	content = await req_content(url, headers=session.headers)
-	soup = BeautifulSoup(content, "html.parser")
-	if "manganato" in url or "manganelo" in url:
-		images_list = soup.find("div", "container-chapter-reader").find_all("img")
-		images_list = [(i.get("src") or i.get("data-src")).strip() for i in images_list]
-	elif "mangabuddy" in url:
-		img_base = "https://s1.mbcdnv1.xyz/file/img-mbuddy/manga/"
-		regex = r"var chapImages = '(.*)'" 
-		images_list = re.findall(regex, soup.prettify())[0].split(",")
-		images_list = [img_base + i.strip() for i in images_list]
-	else:
-		raise ValueError("Invalid Url : {!r}".format(url))
-	n = 0
-	process = list()
-	images = list()
-	headers = dict(session.headers)
-	headers["Referer"] = url
-	for link in images_list:
-		filename = f"{dir}/{n}.jpg"
-		process.append(req_download(link, filename=filename, headers=headers))
-		images.append(filename)
-		n += 1
-	await asyncio.gather(*process)
-	if mode == "pdf":
-		file = os.path.join(os.getcwd(), title)
-		try:
-			pdf = fld2pdf(images, file)
-		except:
-			pdf = images_to_pdf(file+".pdf", images)
-		shutil.rmtree(dir)
-		return pdf
-	if mode == "cbz":
-		file = os.path.join(os.getcwd(), title+".cbz")
-		with zipfile.ZipFile(file, "w") as cbz:
-			for image in images:
-				cbz.write(image, compress_type=zipfile.ZIP_DEFLATED)
-		shutil.rmtree(dir)
-		return file
-	
-class nhentai:
+# –––·Nhentai Scraper·–––
+class Nhentai:
 	def __init__(self, link):
 		if not link.isdigit():
 			link = link
@@ -253,8 +228,10 @@ class nhentai:
 				continue 
 			self.images.append(i)
 		self.pages = len(self.images)
-
-class Minfo:
+		
+		
+# –––·Manga Utilities ·–––
+class Minfo: 
 	def __init__(self, id, nelo=False):
 		baseurl = "https://ww5.manganelo.tv/manga/" if nelo else "https://readmanganato.com/"
 		url = session.get(baseurl + id).url
@@ -288,17 +265,50 @@ class Minfo:
 		data = soup.find(class_="story-info-right").find("h2")
 		if data:
 			return data.text.strip()
+			
+async def dl_chapter(url, title, mode): 
+	dir = tempfile.mkdtemp()
+	content = await req_content(url, headers=session.headers)
+	soup = BeautifulSoup(content, "html.parser")
+	if "manganato" in url or "manganelo" in url:
+		images_list = soup.find("div", "container-chapter-reader").find_all("img")
+		images_list = [(i.get("src") or i.get("data-src")).strip() for i in images_list]
+	elif "mangabuddy" in url:
+		img_base = "https://s1.mbcdnv1.xyz/file/img-mbuddy/manga/"
+		regex = r"var chapImages = '(.*)'" 
+		images_list = re.findall(regex, soup.prettify())[0].split(",")
+		images_list = [img_base + i.strip() for i in images_list]
+	else:
+		raise ValueError("Invalid Url : {!r}".format(url))
+	n = 0
+	process = list()
+	images = list()
+	headers = dict(session.headers)
+	headers["Referer"] = url
+	for link in images_list:
+		filename = f"{dir}/{n}.jpg"
+		process.append(req_download(link, filename=filename, headers=headers))
+		images.append(filename)
+		n += 1
+	await asyncio.gather(*process)
+	if mode == "pdf":
+		file = os.path.join(os.getcwd(), title)
+		try:
+			pdf = fld2pdf(images, file)
+		except:
+			pdf = images_to_pdf(file+".pdf", images)
+		shutil.rmtree(dir)
+		return pdf
+	if mode == "cbz":
+		file = os.path.join(os.getcwd(), title+".cbz")
+		with zipfile.ZipFile(file, "w") as cbz:
+			for image in images:
+				cbz.write(image, compress_type=zipfile.ZIP_DEFLATED)
+		shutil.rmtree(dir)
+		return file
 
-def fetch_headers(url, rurl):
-	return {
-            'Accept': 'image/png,image/svg+xml,image/*;q=0.8,video/*;q=0.8,*/*;q=0.5',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) '
-                          'Version/13.1.2 Safari/605.1.15',
-            'Host': urllib.parse.urlparse(url).netloc, 'Accept-Language': 'en-ca', 'Referer': rurl,
-            'Connection': 'keep-alive'
-        }
 
+# –––·AutoManga Utilities·–––
 async def iter_chapters_ps(link, ps=None):
 	if ps == "Manhwa18":
 		bs = get_soup(link)
@@ -389,3 +399,6 @@ async def updates_from_ps(ps=None):
 	return data
 
           
+
+
+
