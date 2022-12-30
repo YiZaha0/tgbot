@@ -13,7 +13,7 @@ from telethon import events
 from natsort import natsorted
 from pyrogram import filters
 from pyrogram.enums import ParseMode
-from .utils.auws import fld2pdf, nhentai, create_pdf, images_to_pdf, session
+from .utils.auws import fld2pdf, Nhentai, create_pdf, images_to_pdf, session
 
 from . import *
 
@@ -68,7 +68,7 @@ async def _(bot, event):
 	if not input_str:
 		return await m.edit("`Give any Doujin to upload for...`")
 	try:
-		doujin = nhentai(input_str)
+		doujin = Nhentai(input_str)
 	except Exception as e:
 		await m.edit(f"**Error :** `{e}`")
 		return
@@ -119,7 +119,7 @@ async def dn_(bot, event):
 	if not input_str:
 		return await m.edit("`Sorry, give me any nuclear code first.`")
 	try:
-		doujin = nhentai(input_str)
+		doujin = Nhentai(input_str)
 	except Exception as e:
 		await m.edit(f"**Error :** `{e}`")
 		return
@@ -160,7 +160,7 @@ async def telegraphNhentai(bot, event):
 	if not input_str:
 		return await m.edit("`Sorry, give me any nuclear code first.`") and await asyncio.sleep(10) and await asyncio.gather(m.delete(), event.delete())
 	try:
-		doujin = nhentai(input_str)
+		doujin = Nhentai(input_str)
 	except Exception as e:
 		await m.edit(f"**Error :** `{e}`") and await asyncio.sleep(10) and await asyncio.gather(m.delete(), event.delete())
 		return
