@@ -15,7 +15,7 @@ async def upload_entry(entry: Entry):
 	Process = list()
 	Files = dict()
 	for quality, url in result["data"].items():
-		if not quality.endswith("p"):
+		if not quality.endswith("0p"):
 			continue 
 		filename = f"./cache/{entry.title} [{quality}] [@Ongoing_Anime_Seasons].mp4"
 		Process.append(
