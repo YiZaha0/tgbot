@@ -274,7 +274,7 @@ async def _(bot, update):
 async def logs(bot, update):
     response = await update.reply("`Processing...`")
     await response.delete()
-    await update.reply_document("LOGS.txt", quote=False)
+    await update.reply_document("Useless.log", quote=False)
 
 #SUBS
 def get_title(link, ps=None):
