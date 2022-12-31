@@ -27,7 +27,8 @@ class Entry:
 			f"https://api.consumet.org/anime/gogoanime/watch/{ep_id}",
 			headers={"User-Agent": random.choice(agents)},
 		)
-		sources = result["sources"]
+		sources = result.get("sources")
+		if not sources: return
 		qualities = {i["quality"] for i in sources}
 
 		if required_qualities.issubset(qualities):
