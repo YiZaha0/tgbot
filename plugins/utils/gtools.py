@@ -29,14 +29,16 @@ class Entry:
 		)
 		sources = result["sources"]
 		qualities = {i["quality"] for i in sources}
+
 		if required_qualities.issubset(qualities):
 			data = dict()
+			result["headers"]["User-Agent"] = random.choice(agents)
 			for item in sources:
 				data[item["quality"]] = item["url"] 
 			
 			return {
 				"data": data,
-				"headers": result["headers"] + {"User-Agent": random.choice(agents)}
+				"headers": result["headers"] 
 			}
 	
 async def extract_download_urls(link:str) -> dict:
