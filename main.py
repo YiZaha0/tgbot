@@ -3,6 +3,8 @@ import glob
 import asyncio
 import uvloop
 import logging
+
+#uvloop.install()
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
@@ -12,7 +14,7 @@ from plugins.tools import update_thumbnail
 from plugins.readp import manhwa_updater
 		
 #LOGGING
-LOG_FILE = "LOGS.txt"
+LOG_FILE = "Useless.log"
 not os.path.exists(LOG_FILE) or os.remove(LOG_FILE)
 logging.basicConfig(format='[%(levelname) 5s/%(asctime)s] %(name)s: %(message)s',
                     level=logging.INFO, handlers=[logging.FileHandler(LOG_FILE), logging.StreamHandler()])
