@@ -4,7 +4,7 @@ from . import *
 RCache = dict()
 GFEED = Config.GFEED or -1001633233596
 
-async def _upload_one_entry(entry: Entry):
+async def _upload_entry(entry: Entry):
 	result = await entry._download_urls()
 	Process = list()
 	Files = dict()
