@@ -63,9 +63,12 @@ async def auto_gfeed():
 		new_entries.append(entry)
 		
 	new_entries.reverse()
-	
-	logger.info("»GogoFeed: New Entries:\n" + "".join(f"→{e.title}\n" for e in new_entries))
-	
+
+	if new_entries:
+		logger.info("»GogoFeed: New Entries:\n" + "".join(f"→{e.title}\n" for e in new_entries))
+	else:
+		logger.info("»GogoFeed: No New Entries")
+
 	for entry in new_entries:
 		result = await entry.get_download_urls()
 		if not result:
