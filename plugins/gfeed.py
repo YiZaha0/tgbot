@@ -77,5 +77,5 @@ async def auto_RCache():
 		if result: 
 			await upload_entry(entry)
 			
-scheduler.add_job(auto_gfeed, "interval", minutes=5)
+scheduler.add_job(auto_gfeed, "interval", minutes=5, max_instances=1)
 	
