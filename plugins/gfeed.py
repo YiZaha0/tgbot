@@ -1,11 +1,11 @@
 from .utils.gtools import *
 from . import *
 
-RCache = list()
+ReCache = list()
 GFEED = Config.GFEED or -1001633233596
 
-async def _upload_entry(entry: Entry):
-	result = await entry._download_urls()
+async def upload_entry(entry: Entry):
+	result = await entry.get_download_urls()
 	Process = list()
 	Files = dict()
 	headers = dict()
@@ -39,10 +39,14 @@ async def _upload_entry(entry: Entry):
 			await app.send_video(
 				GFEED,
 				file,
-				caption=caption,
+				caption=caption.format(
+					entry.title,
+					quality,
+				),
 				duration=duration,
 				thumb=thumb,
 			)
+			os.remove(file)
 		except Exception as e:
 			logger.info(f"»GogoFeed: Got Error while uploading files of {entry.title}: {e.__class__.__name__}: {e}")
 
@@ -50,32 +54,40 @@ async def auto_gfeed():
 	feed = await GogoFeed()
 	logger.info("»GogoFeed: Started!")
 	last_entry = get_db("GFEED_last_entry")
-	entries = []
+	new_entries = []
 	for entry in feed:
 		if entry.title == last_entry:
 			break 
-		entries.append(entry)
+		new_entries.append(entry)
 		
-	entries.reverse()
+	new_entries.reverse()
 	
-	logger.info("»GogoFeed: New Entries:\n" + "".join(f"→{e.title}\n" for e in entries))
+	logger.info("»GogoFeed: New Entries:\n" + "".join(f"→{e.title}\n" for e in new_entries))
 	
-	for entry in entries:
-		result = await entry._download_urls()
+	for entry in new_entries:
+		result = await entry.get_download_urls()
 		if not result:
 			logger.info(f"»GogoFeed: No urls found for {entry.title}, adding to CACHE.")
 			RCache.append(entry)
 		else:
-			await _upload_entry(entry)
+			await upload_entry(entry)
 		add_db("GFEED_last_entry", entry.title)
-	await auto_RCache()
+	await auto_ReCache()
 	logger.info("»GogoFeed: Ended!")
 			
-async def auto_RCache():
+async def auto_ReCache():
+	logger.info("»GogoFeed (ReCache): Started!")
 	for entry in RCache:
-		result = await entry._download_urls()
+		result = await entry.get_download_urls()
 		if result: 
-			await upload_entry(entry)
+			await upload_entry(entry) 
+			ReCache_remove(entry)
+	logger.info("»GogoFeed (ReCache): Ended!")
+
+def ReCache_remove(entry):
+	for e in ReCache:
+		if entry == e:
+			ReCache.remove(e)
 			
 scheduler.add_job(auto_gfeed, "interval", minutes=5, max_instances=1)
 	
