@@ -22,16 +22,22 @@ class Entry:
 	
 	async def get_download_urls(self):
 		required_qualities = {"480p", "720p", "1080p"}
-		result = await extract_download_urls(self.link)
-		urls = result["urls"]
-		if not urls or not required_qualities.issubset(set(urls)):
-			try:
-				result = await extract_xstream_urls(self.link)
-			except:
-				return 
-			urls = result["urls"]
-		if urls and required_qualities.issubset(set(urls)):
-			return result
+		ep_id = self.link.split("/")[-1]
+		result = await req_content(
+			f"https://api.consumet.org/anime/gogoanime/watch/{ep_id}",
+			headers={"User-Agent": random.choice(agents)},
+		)
+		sources = result["sources"]
+		qualities = {i["quality"] for i in sources}
+		if required_qualities.issubset(qualities):
+			data = dict()
+			for item in sources:
+				data[item["quality"]] = item["url"] 
+			
+			return {
+				"data": data,
+				"headers": result["headers"] + {"User-Agent": random.choice(agents)}
+			}
 	
 async def extract_download_urls(link:str) -> dict:
 	cookies = {"auth": "aplnqLxgJbgtaoyFayGHsnA8ndd8z0BnmuGGwYwDl8BgPk3udnmsQsbW%2B4jXcmkfayLPOTXcZHip799T%2FTkUyg%3D%3D", "gogoanime": "hg9f7phuvd6ccm79k51unu6c62"}
@@ -47,7 +53,10 @@ async def extract_download_urls(link:str) -> dict:
 		quality = item.text.strip().split("x")[1] + "p"
 		urls[quality] = url 
 		
-	return {"urls": urls, "Referer": "https://gogoplay1.com/"}
+	return {
+		"urls": urls, 
+		"headers": {"Referer": "https://gogoplay1.com/"}
+	}
 	
 async def extract_source_urls(link: str) -> dict:
 	content = await req_content(link, headers={"User-Agent": random.choice(agents)})
@@ -79,7 +88,10 @@ async def extract_xstream_urls(link: str) -> dict:
 		url = i["file"]
 		urls[quality] = url
 		
-	return {"urls": urls, "Referer": xstream_url}
+	return {
+		"urls": urls,
+		"headers": {"Referer": xstream_url}
+	}
 		
 async def GogoFeed():
 	base = "https://gogoanime.dk/"
