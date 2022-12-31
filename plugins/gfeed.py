@@ -1,7 +1,7 @@
 from .utils.gtools import *
 from . import *
 
-RCache = dict()
+RCache = list()
 GFEED = Config.GFEED or -1001633233596
 
 async def _upload_entry(entry: Entry):
