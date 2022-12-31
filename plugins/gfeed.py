@@ -68,7 +68,7 @@ async def auto_gfeed():
 		result = await entry.get_download_urls()
 		if not result:
 			logger.info(f"»GogoFeed: No urls found for {entry.title}, adding to CACHE.")
-			RCache.append(entry)
+			ReCache.append(entry)
 		else:
 			await upload_entry(entry)
 		add_db("GFEED_last_entry", entry.title)
