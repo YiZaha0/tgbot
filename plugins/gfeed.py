@@ -77,7 +77,7 @@ async def auto_gfeed():
 			
 async def auto_ReCache():
 	logger.info("»GogoFeed (ReCache): Started!")
-	for entry in RCache:
+	for entry in ReCache:
 		result = await entry.get_download_urls()
 		if result: 
 			await upload_entry(entry) 
