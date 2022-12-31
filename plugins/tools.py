@@ -310,7 +310,6 @@ def get_ps(link):
 async def msub(_, update):
 	try:
 		cmd, link, chat = update.text.split()
-		link = get_link(link)
 		ps = get_ps(link)
 		chat = int(chat)
 		title = get_title(link, ps)
