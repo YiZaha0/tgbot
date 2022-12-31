@@ -4,7 +4,7 @@ ENV TZ=Asia/Kolkata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends git ffmpeg wget && \
+    apt-get install -y --no-install-recommends git ffmpeg sudo wkthtmltopdf && \
     rm -rf /var/lib/apt/lists/* 
 
 RUN git clone https://github.com/YiZaha0/tgbot /root/tgbot-rep
