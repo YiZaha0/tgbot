@@ -3,23 +3,24 @@ from . import *
 
 ReCache = list()
 GFEED = Config.GFEED or -1001633233596
+border_stickers = [
+    'CAACAgUAAx0CXXk9AANKxGNBnX8qYFetcrtuDshld0wS8jv2AAImBgACN83hViwucrfDIJViHgQ',
+    'CAACAgUAAx0CXXk9AANKw2NBnUaNd8iGX57AlfWiXn6NBwSZAAKXBAACkS3gVn24I44fU76JHgQ', 
+    'CAADBQADywUAAjIR4Va7IL3zu24i0gI',
+    'CAADBQADMgUAAtmH4FZaVf8VJYihogI',
+]
 
 async def upload_entry(entry: Entry):
 	result = await entry.get_download_urls()
 	Process = list()
 	Files = dict()
-	headers = dict()
-	headers["User-Agent"] = random.choice(agents)
-	headers["Referer"] = result["Referer"] 
-	for quality, url in result["urls"].items():
-		if quality == "360p":
+	for quality, url in result["data"].items():
+		if not quality.endswith("p"):
 			continue 
 		filename = f"./cache/{entry.title} [{quality}] [@Ongoing_Anime_Seasons].mp4"
 		Process.append(
-			req_download(
-				url,
-				filename=filename,
-				headers=headers,
+			run_cmd(
+				f'ffmpeg -i "{url}" -c copy -bsf:a aac_adtstoasc "{filename}"'
 			)
 		)
 		Files[quality] = filename
@@ -48,8 +49,9 @@ async def upload_entry(entry: Entry):
 			)
 			os.remove(file)
 		except Exception as e:
-			logger.info(f"»GogoFeed: Got Error while uploading files of {entry.title}: {e.__class__.__name__}: {e}")
-
+			logger.info(f"»GogoFeed: Got Error while uploading files of {entry.title}: {e.__class__.__name__}: {e}") 
+	await app.send_sticker(GFEED, random.choice(border_stickers))
+	
 async def auto_gfeed():
 	feed = await GogoFeed()
 	logger.info("»GogoFeed: Started!")
@@ -89,5 +91,5 @@ def ReCache_remove(entry):
 		if entry == e:
 			ReCache.remove(e)
 			
-#scheduler.add_job(auto_gfeed, "interval", minutes=5, max_instances=1)
+scheduler.add_job(auto_gfeed, "interval", minutes=5, max_instances=1)
 	
