@@ -1,11 +1,11 @@
-FROM ubuntu:22.04
+FROM python:latest 
 
 ENV TZ=Asia/Kolkata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt -y update && \
-    apt install -y --no-install-recommends python3.11  python3-pip git ffmpeg wget curl && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get -y update && \
+    apt-get install -y --no-install-recommends git ffmpeg wget && \
+    rm -rf /var/lib/apt/lists/* 
 
 RUN git clone https://github.com/YiZaha0/tgbot /root/tgbot-rep
 
