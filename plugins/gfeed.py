@@ -48,6 +48,7 @@ async def upload_entry(entry: Entry):
 				thumb=thumb,
 			)
 			os.remove(file)
+			os.remove(thumb)
 		except Exception as e:
 			logger.info(f"»GogoFeed: Got Error while uploading files of {entry.title}: {e.__class__.__name__}: {e}") 
 	await app.send_sticker(GFEED, random.choice(border_stickers))
