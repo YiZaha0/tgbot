@@ -57,7 +57,7 @@ async def cb_requests(client, update):
 	except:
 		sender = None
 
-	if not sender or sender.status != ChatMemberStatus.ADMINISTRATOR:
+	if not sender or sender.status not in [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]:
 		return await update.answer(
 			f"Not your place to click {update.from_user.first_name}", show_alert=True
 		)
