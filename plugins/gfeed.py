@@ -89,5 +89,5 @@ def ReCache_remove(entry):
 		if entry == e:
 			ReCache.remove(e)
 			
-scheduler.add_job(auto_gfeed, "interval", minutes=5, max_instances=1)
+#scheduler.add_job(auto_gfeed, "interval", minutes=5, max_instances=1)
 	
