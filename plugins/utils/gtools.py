@@ -20,7 +20,7 @@ class Entry:
 	def __repr__(self):
 		return json.dumps(self.__dict__, indent=4)
 	
-	async def _download_urls(self):
+	async def get_download_urls(self):
 		required_qualities = {"480p", "720p", "1080p"}
 		result = await extract_download_urls(self.link)
 		urls = result["urls"]
