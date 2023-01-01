@@ -17,7 +17,7 @@ natsort
 nhentai
 pillow
 pymongo[srv]
-pyrogram==2.0.60
+pyrogram
 pyromod
 python-dotenv
 reportlab
