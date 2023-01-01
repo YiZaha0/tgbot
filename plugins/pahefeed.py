@@ -88,7 +88,7 @@ async def autofeed():
 	if not entries:
 		logger.info("»PaheFeed: No Entries Found")
 	else:
-		logger.info("»PaheFeed: New Entries:" + "".join("→" + e["anime_title"] + " - " + str(e["episode"]) for e in entries))
+		logger.info("»PaheFeed: New Entries:" + "".join("\n→" + e["anime_title"] + " - " + str(e["episode"]) for e in entries))
 		for entry in entries:
 			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
 			try:
