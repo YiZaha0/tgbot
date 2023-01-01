@@ -137,7 +137,7 @@ def gen_video_ss(file):
 
 def get_video_duration(path: str):
     probe = ffmpeg.probe(path)
-    return int(float(probe['streams'][0]['duration']))async def get_anime_name(name: str) -> str:
+    return int(float(probe['streams'][0]['duration']))
 
 def get_anime_name(name: str) -> str:
 	Api = Anlilst()
