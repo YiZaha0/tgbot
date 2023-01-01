@@ -89,9 +89,7 @@ def del_db(variable, cn="MAIN"):
 			mongodb[cn].delete_one(var)
 
 def add_db(var, value, cn="MAIN"):
-	is_var = get_db(var)
-	if is_var:
-		del_db(var)
+	del_db(var)
 	mongodb[cn].insert_one({var: value})
 
 def load_plugin(plugin_name):
