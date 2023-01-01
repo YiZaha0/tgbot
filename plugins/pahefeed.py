@@ -1,3 +1,5 @@
+import random 
+
 from .utils.gtools import gen_video_ss, get_video_duration, get_anime_name
 from . import *
 
