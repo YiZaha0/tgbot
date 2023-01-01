@@ -21,7 +21,7 @@ async def get_entries():
 	for entry in page["data"]:
 		if entry["completed"]:
 			continue 
-		entry_id = entry["anime_title"] + " - " + entry["episode"]
+		entry_id = entry["anime_title"] + " - " + str(entry["episode"])
 		if entry_id == last_entry:
 			break 
 		new_entries.append(entry)
@@ -88,9 +88,9 @@ async def autofeed():
 	if not entries:
 		logger.info("»PaheFeed: No Entries Found")
 	else:
-		logger.info("»PaheFeed: New Entries:" + "".join(e["anime_title"] + " - " + e["episode"] for e in entries))
+		logger.info("»PaheFeed: New Entries:" + "".join(e["anime_title"] + " - " + str(e["episode"]) for e in entries))
 		for entry in entries:
-			entry_id = entry["anime_title"] + " - " + entry["episode"]
+			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
 			try:
 				await upload_entry(entry)
 			except:
