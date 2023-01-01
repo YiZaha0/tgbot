@@ -21,7 +21,7 @@ async def get_entries():
 	for entry in page["data"]:
 		if entry["completed"]:
 			continue 
-		entry_id = entry["anime_name"] + " - " + entry["episode"]
+		entry_id = entry["anime_title"] + " - " + entry["episode"]
 		if entry_id == last_entry:
 			break 
 		new_entries.append(entry)
@@ -35,7 +35,7 @@ async def upload_entry(entry: dict):
 		f"{api}{epi_id}"
 	)
 	
-	name = entry["anime_name"]
+	name = entry["anime_title"]
 	eng_name = get_anime_name(name)
 	if eng_name and eng_name.lower() != name.lower():
 		name = f"{eng_name} | {name}"
@@ -88,9 +88,9 @@ async def autofeed():
 	if not entries:
 		logger.info("»PaheFeed: No Entries Found")
 	else:
-		logger.info("»PaheFeed: New Entries:" + "".join(e["anime_name"] + " - " + e["episode"] for e in entries))
+		logger.info("»PaheFeed: New Entries:" + "".join(e["anime_title"] + " - " + e["episode"] for e in entries))
 		for entry in entries:
-			entry_id = entry["anime_name"] + " - " + entry["episode"]
+			entry_id = entry["anime_title"] + " - " + entry["episode"]
 			try:
 				await upload_entry(entry)
 			except:
