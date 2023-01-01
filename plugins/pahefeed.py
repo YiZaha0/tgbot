@@ -59,7 +59,7 @@ async def upload_entry(entry: dict):
 		try:
 			thumb = gen_video_ss(file)
 			duration = get_video_duration(file)
-			caption = f"<b>{name}</b>\n\n<b>♤ Episode:</b> <i>{ep}</i>\n<b>♤ Quality:</b> <i>{quality></i>"
+			caption = f"<b>{name}</b>\n\n<b>♤ Episode:</b> <i>{ep}</i>\n<b>♤ Quality:</b> <i>{quality}</i>"
 			await app.send_video(
 				FEED_CHAT,
 				file,
