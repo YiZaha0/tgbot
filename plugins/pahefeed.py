@@ -94,7 +94,7 @@ async def autofeed():
 			try:
 				await upload_entry(entry)
 			except:
-				logger.info("»PaheFeed: Got Error while upload entry: {entry_id}")
+				logger.info(f"»PaheFeed: Got Error while upload entry: {entry_id}")
 			add_db("Last_PaheFeed_Entry", entry_id)
 	logger.info("»PaheFeed: Ended!")
 
