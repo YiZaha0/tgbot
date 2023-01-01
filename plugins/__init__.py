@@ -77,9 +77,11 @@ def get_db(key, cn="MAIN"):
 	if not mongodb[cn].find_one():
 		return 
 	for item in mongodb[cn].find():
-		if item.get(key):
+		try:
 			return item[key]
 			break
+		except:
+			continue 
 
 def del_db(variable, cn="MAIN"):
 	if mongodb[cn].find_one():
