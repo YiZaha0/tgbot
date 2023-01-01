@@ -48,7 +48,7 @@ async def upload_entry(entry: dict):
 		url = source["url"]
 		Process.append(
 			run_cmd(
-				f'ffmpeg -headers "Referer: {dl_data["headers"]["Referer"]}" -i "{url}" "{filename}"'
+				f'ffmpeg -y -headers "Referer: {dl_data["headers"]["Referer"]}" -i "{url}" -c copy -bsf:a aac_adtstoasc "{filename}"'
 			)
 		)
 		Files[quality] = filename 
@@ -93,8 +93,8 @@ async def autofeed():
 			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
 			try:
 				await upload_entry(entry)
-			except:
-				logger.info(f"»PaheFeed: Got Error while upload entry: {entry_id}")
+			except Exception as e:
+				logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
 			add_db("Last_PaheFeed_Entry", entry_id)
 	logger.info("»PaheFeed: Ended!")
 
