@@ -32,7 +32,7 @@ async def upload_entry(entry: dict):
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
 	dl_data = await req_content(
-		f"{api}{epi_id}"
+		f"{api}{ep_id}"
 	)
 	
 	name = entry["anime_title"]
