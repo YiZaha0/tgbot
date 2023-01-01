@@ -8,6 +8,7 @@ import aiohttp
 
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup 
+from AnilistPython import Anilist
 from plugins import agents, run_cmd, req_content
 
 class Entry:
@@ -136,6 +137,9 @@ def gen_video_ss(file):
 
 def get_video_duration(path: str):
     probe = ffmpeg.probe(path)
-    return int(float(probe['streams'][0]['duration']))
-	
-	
+    return int(float(probe['streams'][0]['duration']))async def get_anime_name(name: str) -> str:
+
+def get_anime_name(name: str) -> str:
+	Api = Anlilst()
+	anime = Api.get_anime(name)
+	return anime["name_english"]
