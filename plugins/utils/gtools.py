@@ -84,7 +84,7 @@ async def extract_xstream_urls(link: str) -> dict:
 	code = f'''curl -A "uwu" -s -X POST "https://fembed9hd.com/api/source/{url_id}" -H "x-requested-with:XMLHttpRequest"'''
 	result = (await run_cmd(code))[0]
 	result = json.loads(result)["data"]
-		
+	if not isinstance(result, dict): return
 	urls = dict()
 	for i in result:
 		quality = i["label"]
