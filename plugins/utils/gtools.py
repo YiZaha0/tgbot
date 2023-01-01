@@ -140,6 +140,9 @@ def get_video_duration(path: str):
     return int(float(probe['streams'][0]['duration']))
 
 def get_anime_name(name: str) -> str:
-	Api = Anilist()
-	anime = Api.get_anime(name)
-	return anime["name_english"]
+    Api = Anilist()
+    try:
+        anime = Api.get_anime(name)
+    except:
+        anime = dict()
+    return anime.get("name_english", None)
