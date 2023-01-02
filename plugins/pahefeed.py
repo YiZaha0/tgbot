@@ -3,6 +3,7 @@ import random
 from .utils.gtools import gen_video_ss, get_video_duration, get_anime_name
 from . import *
 
+ReCache = list()
 FEED_CHAT = -1001633233596
 border_stickers = [
     'CAACAgUAAx0CXXk9AANKxGNBnX8qYFetcrtuDshld0wS8jv2AAImBgACN83hViwucrfDIJViHgQ',
@@ -28,13 +29,17 @@ async def get_entries():
 	new_entries.reverse()
 	return new_entries 
 
-async def upload_entry(entry: dict):
+async def parse_dl(entry: dict) -> dict:
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
-	dl_data = await req_content(
+	data = await req_content(
 		f"{api}{ep_id}"
 	)
+	if len(data["sources"]) > 2:
+		return data
 	
+async def upload_entry(entry: dict):
+	dl_data = await parse_dl(entry)
 	name = entry["anime_title"]
 	eng_name = get_anime_name(name)
 	if eng_name and eng_name.lower() != name.lower():
@@ -91,12 +96,37 @@ async def autofeed():
 		logger.info("»PaheFeed: New Entries:" + "".join("\n→" + e["anime_title"] + " - " + str(e["episode"]) for e in entries))
 		for entry in entries:
 			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
+			parsed_dl = await parse_dl(entry)
+			if parsed_dl:
+				try:
+					await upload_entry(entry)
+				except Exception as e:
+					logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
+			else:
+				logger.info(f"»PaheFeed: Download Urls Not Found for entry {entry_id}, Adding to ReCache.")
+				ReCache.append(entry)
+			add_db("Last_PaheFeed_Entry", entry_id)
+	
+	logger.info("»PaheFeed (ReCache): Started!")
+	await auto_ReCache()
+	logger.info("»PaheFee (ReCache): Ended!")
+	
+	logger.info("»PaheFeed: Ended!")
+
+async def auto_ReCache():
+	for entry in ReCache:
+		parsed_dl = await parse_dl(entry)
+		if parsed_dl:
 			try:
 				await upload_entry(entry)
 			except Exception as e:
-				logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
-			add_db("Last_PaheFeed_Entry", entry_id)
-	logger.info("»PaheFeed: Ended!")
-
+				logger.info(f"»PaheFeed (ReCache): Got Error While Uploading Entry {entry_id}: {e}")
+			ReCache_remove(entry)
+			
+async def ReCache_remove(entry):
+	for e in ReCache:
+		if e == entry:
+			ReCache.remove(e)
+			
 scheduler.add_job(autofeed, "interval", minutes=1, max_instances=1)
 		
