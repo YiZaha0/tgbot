@@ -265,10 +265,15 @@ async def _mid(client, event):
 	if "Status" in event.caption:
 		await update_pindex()
 
-@app.on_message(filters.chat(-1001666665549) & filters.linked_channel & ~filters.sticker)
+@app.on_message(filters.linked_channel)
 async def _(bot, update):
-	await update.unpin()
-	await update.delete()
+	if update.chat.id == -1001817093909 and update.photo and "➤ No. of Chapters" in update.caption:
+		await update.unpin()
+		await update.delete()
+
+	if update.chat.id == -1001666665549 and update.document or "➤ Code" in update.text:
+		await update.unpin() 
+		await update.delete()
 
 @app.on_message(filters.command("logs") & filters.user(SUDOS))
 async def logs(bot, update):
