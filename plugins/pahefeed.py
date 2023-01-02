@@ -115,6 +115,7 @@ async def autofeed():
 
 async def auto_ReCache():
 	for entry in ReCache:
+		entry_id = entry["anime_title"] + " - " + str(entry["episode"])
 		parsed_dl = await parse_dl(entry)
 		if parsed_dl:
 			try:
