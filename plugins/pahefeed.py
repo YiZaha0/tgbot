@@ -103,7 +103,7 @@ async def autofeed():
 				except Exception as e:
 					logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
 			else:
-				logger.info(f"»PaheFeed: Download Urls Not Found for entry {entry_id}, Adding to ReCache.")
+				logger.info(f"»PaheFeed: Download Urls Not Found for Entry {entry_id}, Adding it to ReCache.")
 				ReCache.append(entry)
 			add_db("Last_PaheFeed_Entry", entry_id)
 	
