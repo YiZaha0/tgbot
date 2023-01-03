@@ -3,8 +3,9 @@ import glob
 from pathlib import Path 
 from datetime import datetime
 
-from pyrogram import filters
+from pyrogram import filtersfilters
 
+from .utils.gtools import gen_video_ss, get_video_duration
 from . import *
 
 
@@ -131,13 +132,19 @@ async def up_upload(client, update):
 		try:
 			c_time = time.time()
 			if stream:
+			    ss, duration = get_ss_and_duration(file)
+			    if not thumb:
+				thumb = ss
 			    await app.send_video(
 			        chat,
 			        file,
 			        thumb=thumb,
+			        duration=duration,
 			        progress=progress,
 			        progress_args=(msg, c_time, "Uploading...", file)
 				)
+			    if ss:
+			        os.remove(ss)
 			else:
 			    await app.send_document(
 			        chat,
@@ -162,3 +169,14 @@ async def up_upload(client, update):
 			f"Successfully uploaded <code>{input_str}</code> in <code>{time_taken}</code> seconds." 
 		)
 		
+async def get_ss_and_duration(video_path: str):
+	thumb, duration = None, None 
+	try:
+		thumb = gen_video_ss(video_path)
+	except:
+		pass 
+	try:
+		duration = get_video_duration(video_path)
+	except:
+		pass 
+	return thumb, duration
