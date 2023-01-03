@@ -169,7 +169,7 @@ async def up_upload(client, update):
 			f"Successfully uploaded <code>{input_str}</code> in <code>{time_taken}</code> seconds." 
 		)
 		
-async def get_ss_and_duration(video_path: str):
+def get_ss_and_duration(video_path: str):
 	thumb, duration = None, None 
 	try:
 		thumb = gen_video_ss(video_path)
