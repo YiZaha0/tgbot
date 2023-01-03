@@ -127,7 +127,7 @@ async def up_upload(client, update):
 		)
 	start_time = datetime.now()
 	for file in files:
-		if os.path.isdir(file):
+		if os.path.isdir(file) or not os.path.exists(file):
 			continue 
 		try:
 			c_time = time.time()
