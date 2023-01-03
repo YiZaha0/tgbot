@@ -36,14 +36,15 @@ def humanbytes(size):
 No_Flood = dict()
 async def progress(current, total, message, start, ps_type, file_name=None):
     now = time.time()
-    if No_Flood.get(message.chat.id):
-        if No_Flood[message.chat.id].get(message.id):
-            if (now - No_Flood[message.chat.id][message.id]) < 1.1:
+    chat_id = getatrr(message.chat, "id", message.peer_id.user_id)
+    if No_Flood.get(chat):
+        if No_Flood[chat].get(message.id):
+            if (now - No_Flood[chat][message.id]) < 1.1:
                 return
         else:
-            No_Flood[message.chat.id].update({message.id: now})
+            No_Flood[chat].update({message.id: now})
     else:
-        No_Flood.update({message.chat.id: {message.id: now}})
+        No_Flood.update({chat: {message.id: now}})
     diff = time.time() - start
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
