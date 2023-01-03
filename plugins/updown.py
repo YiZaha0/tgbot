@@ -134,7 +134,7 @@ async def up_upload(client, update):
 			if stream:
 			    ss, duration = get_ss_and_duration(file)
 			    if not thumb:
-				thumb = ss
+			        thumb = ss
 			    await app.send_video(
 			        chat,
 			        file,
