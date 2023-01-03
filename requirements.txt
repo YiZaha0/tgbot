@@ -11,6 +11,7 @@ gunicorn
 html-telegraph-poster
 img2pdf
 jikanpy
+lbry-libtorrent
 markdown
 mautrix
 natsort 
