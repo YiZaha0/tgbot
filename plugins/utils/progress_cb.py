@@ -36,7 +36,7 @@ def humanbytes(size):
 No_Flood = dict()
 async def progress(current, total, message, start, ps_type, file_name=None):
     now = time.time()
-    chat_id = getatrr(message.chat, "id", message.peer_id.user_id)
+    chat = getatrr(message.chat, "id", message.peer_id.user_id)
     if No_Flood.get(chat):
         if No_Flood[chat].get(message.id):
             if (now - No_Flood[chat][message.id]) < 1.1:
