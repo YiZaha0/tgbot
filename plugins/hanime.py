@@ -45,10 +45,10 @@ async def info_hentai(bot, update):
 		await update.edit_message_caption(caption, reply_markup=InlineKeyboardMarkup(buttons))
 		return
 	try:
-		await message.reply_photo(poster_url, caption=caption, reply_markup=InlineKeyboardMarkup(buttons))
+		await message.reply_photo(poster_url, caption=caption, reply_markup=InlineKeyboardMarkup(buttons), quote=False)
 	except BaseException:
 		file = await req_download(poster_url)
-		await message.reply_photo(file[0], caption=caption, reply_markup=InlineKeyboardMarkup(buttons))
+		await message.reply_photo(file[0], caption=caption, reply_markup=InlineKeyboardMarkup(buttons), quote=False)
 		os.remove(file[0])
 	await update.answer()
 		
