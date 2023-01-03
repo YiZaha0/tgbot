@@ -3,7 +3,7 @@ import glob
 from pathlib import Path 
 from datetime import datetime
 
-from pyrogram import filtersfilters
+from pyrogram import filters
 
 from .utils.gtools import gen_video_ss, get_video_duration
 from . import *
