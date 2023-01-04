@@ -124,7 +124,7 @@ async def auto_ReCache():
 				logger.info(f"»PaheFeed (ReCache): Got Error While Uploading Entry {entry_id}: {e}")
 			ReCache_remove(entry)
 			
-async def ReCache_remove(entry):
+def ReCache_remove(entry):
 	for e in ReCache:
 		if e == entry:
 			ReCache.remove(e)
