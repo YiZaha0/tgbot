@@ -37,7 +37,7 @@ async def update_plist():
 	data = dict()
 	mess = await get_amessages()
 	for m in mess:
-		if m and m.captiom and "releasing" in m.caption.lower() and "+" in m.caption:
+		if m and m.caption and "releasing" in m.caption.lower() and "+" in m.caption:
 			name = m.caption.split("\n")[0].split(" | ")[0].strip()
 			link = m.caption_entities[-1].url
 			data[name] = link
