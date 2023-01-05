@@ -7,26 +7,39 @@ from telethon.utils import pack_bot_file_id
 from .readp import get_names, get_soup, get_link, anext, iter_chapters_ps
 from . import *
 
+def _split_list(li, num=0):
+	li = li.copy(),
+	splited = list()
+	while li:
+		_li = li[:num or 1]
+		splited.append(_li)
+		[li.remove(_l) for _l in _li]
+	return splited 
 
 async def get_amessages():
- mid = get_db("MID")
- try:
-  if globals()["messages"][-1].id +1 == mid: 
-   return globals()["messages"]
-  else:
-   raise KeyError
- except:
-  global messages
-  messages = await bot.get_messages("adult_mangas", ids=list(range(2, int(get_db("MID")))))
-  return messages
+	mid = get_db("MID")
+	if globals().get("amessages") and globals().get("amessages")[-1].id + 1 == mid:
+		return globals().get("amessages")
+	global amessages
+	amessages = await app.get_messages(:
+		"adult_mangas",
+		list(range(2, 201)),
+	)
+	ids_list = list(range(200, mid))
+	for ids in _split_list(ids_list, 200):
+		amessages += await app.get_messages(
+			-1001606385356,
+			ids,
+		)
+	return amessages
 
 async def update_plist():
 	data = dict()
 	mess = await get_amessages()
 	for m in mess:
-		if m and m.text and "releasing" in m.text.lower() and "+" in m.message:
-			name = m.raw_text.split("\n")[0].split(" | ")[0].strip()
-			link = m.entities[-1].url
+		if m and m.text and "releasing" in m.text.lower() and "+" in m.text:
+			name = m.text.split("\n")[0].split(" | ")[0].strip()
+			link = m.caption_entities[-1].url
 			data[name] = link
 	pp = sorted(data)
 	add_db("PNAMES", pp)
@@ -38,10 +51,11 @@ async def update_pindex():
     
     messages = [m for m in await get_amessages() if m and m.text and m.photo and "Type" in m.text]
     
-    messages = {m.message.split("\n")[0].split("|")[0].strip():m for m in messages}
+    messages = {m.text.split("\n")[0].split("|")[0].strip():m for m in messages}
     for name in sorted(messages):
         m = messages[name]
-        link = f"https://t.me/c/{m.chat.id}/{m.id}"
+        chat_id = str(m.chat.id).replace("-100", "")
+        link = f"https://t.me/c/{chat_id}/{m.id}"
         f = name[0].upper()
         if not f.isalpha():
             f = "#"
@@ -61,12 +75,12 @@ async def update_pindex():
     post_id = 62
     for p in posts:
         try:
-            await bot.edit_message(-1001749847496, post_id, p + posts[p], parse_mode="html")
+            await app.edit_message_text(-1001749847496, post_id, p+posts[p], parse_mode=ParseMode.HTML)
         except:
             pass
         post_id += 1
     mpost = "<i><b>✘ Index Of Manhwas in @Adult_Mangas ✘</i></b>\n\n<i>🔶 = Finished/Completed\n🔷 = Releasing/OnGoing\n\nLast Updated: {}</i>"
-    await bot.edit_message(-1001749847496, 36, mpost.format(datetime.datetime.now().__str__().split(".")[0] + f" ({time.tzname[time.daylight]})"), parse_mode="html")
+    await app.edit_message_text(-1001749847496, 36, mpost.format(datetime.datetime.now().__str__().split(".")[0] + f" ({time.tzname[time.daylight]})"), parse_mode=ParseMode.HTML)
 
 def hb(size):
     if not size:
