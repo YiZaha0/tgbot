@@ -34,9 +34,8 @@ async def exec_(client, event):
             await event.client.send_document(
                 event.chat.id,
                 out_file,
-                force_document=True,
                 caption=f"`{cmd}`" if len(cmd) < 998 else None,
-                reply_to=reply_to_id,
+                reply_to_message_id=reply_to_id,
             )
 
             await xx.delete()
@@ -87,7 +86,7 @@ async def eval_(client, event):
                 out_file,
                 force_document=True,
                 caption=f"```{cmd}```" if len(cmd) < 998 else None,
-                reply_to=reply_to_id
+                reply_to_message_id=reply_to_id
             )
             await e.delete()
     else:
