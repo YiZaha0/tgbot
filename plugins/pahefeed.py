@@ -37,10 +37,13 @@ async def parse_dl(entry: dict):
 		f"{api}{ep_id}",
 		headers={"User-Agent": random.choice(agents)}
 		)
-		if isinstance(data, dict) and data.get("sources") and len(data.get("sources")) > 2:
+		if not isinstance(data, dict):
+			continue
+			await asyncio.sleep(2)
+
+		if data.get("sources") and len(data.get("sources")) > 2:
 			return data
 			break
-		await asyncio.sleep(3)
 	
 async def upload_entry(entry: dict):
 	dl_data = await parse_dl(entry)
