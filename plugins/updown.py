@@ -94,9 +94,10 @@ async def up_upload(client, update):
 		)
 
 	chat = update.chat.id
-	thumb = "thumb.jpg" if "-t" in input_str.strip() else None
-	stream = True if "-s" in input_str.strip() else False
-	asdoc = True if "-f" in input_str.strip() else False
+	thumb = "thumb.jpg" if -t" in input_str.strip() else None
+	stream = "-s" in input_str.strip() 
+	asdoc = "-f" in input_str.strip() 
+	protect_content = "-p" in input_str.strip()
 	
 	flags = ("-t", "-s", "-f")
 	for _f in flags:
@@ -139,6 +140,7 @@ async def up_upload(client, update):
 			        chat,
 			        file,
 			        thumb=thumb,
+			        protect_content=protect_content,
 			        duration=duration,
 			        progress=progress,
 			        progress_args=(msg, c_time, "Uploading...", file)
@@ -151,6 +153,7 @@ async def up_upload(client, update):
 			        file,
 			        force_document=asdoc,
 			        thumb=thumb,
+			        protect_content=protect_content,
 			        progress=progress,
 			        progress_args=(msg, c_time, "Uploading...", file)
 				)
