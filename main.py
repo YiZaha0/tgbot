@@ -9,6 +9,7 @@ asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 from pathlib import Path 
+from pyrogram import idle 
 from plugins import *
 from plugins.tools import update_thumbnail
 from plugins.readp import manhwa_updater
@@ -54,6 +55,7 @@ app.start()
 logger.info("»Pyrogram Bot Client started successfully.")
 app.send_message(LOG_CHAT, "<b>Bot is Online!</b>")
 logger.info("»Deployed Successfully!")
-bot.run_until_disconnected()
-
+idle()
+app.send_message(LOG_CHAT, "<b>Bot is going Offline!</b>")
+bot.stop()
 
