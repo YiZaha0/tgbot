@@ -29,18 +29,21 @@ async def get_entries():
 	new_entries.reverse()
 	return new_entries 
 
-async def parse_dl(entry: dict) -> dict:
+def parse_dl(entry: dict) -> dict:
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
-	data = await req_content(
+	try:
+		data = requests.get(
 		f"{api}{ep_id}",
 		headers={"User-Agent": random.choice(agents)}
-	)
+		).json()
+	except:
+		return
 	if isinstance(data, dict) and data.get("sources") and len(data.get("sources")) > 2:
 		return data
 	
 async def upload_entry(entry: dict):
-	dl_data = await parse_dl(entry)
+	dl_data = parse_dl(entry)
 	og_name = entry["anime_title"]
 	eng_name = get_anime_name(name)
 	if eng_name and eng_name.lower() != og_name.lower():
@@ -97,7 +100,7 @@ async def autofeed():
 		logger.info("»PaheFeed: New Entries:" + "".join("\n→" + e["anime_title"] + " - " + str(e["episode"]) for e in entries))
 		for entry in entries:
 			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
-			parsed_dl = await parse_dl(entry)
+			parsed_dl = parse_dl(entry)
 			if parsed_dl:
 				try:
 					await upload_entry(entry)
@@ -117,7 +120,7 @@ async def autofeed():
 async def auto_ReCache():
 	for entry in ReCache:
 		entry_id = entry["anime_title"] + " - " + str(entry["episode"])
-		parsed_dl = await parse_dl(entry)
+		parsed_dl = parse_dl(entry)
 		if parsed_dl:
 			try:
 				await upload_entry(entry)
