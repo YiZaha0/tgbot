@@ -5,17 +5,10 @@ from urllib.parse import unquote
 from pathlib import Path
 from asyncio import sleep
 from config import Config
-from .utils.fast_telethon import uploader, downloader
 from .utils.progress_cb import progress
 from html_telegraph_poster import TelegraphPoster
 from pymongo import MongoClient
-from telethon import TelegramClient
 from pyrogram import Client 
-from telethon import events
-from telethon.helpers import _maybe_await
-from telethon.tl.custom import Message
-from telethon.tl.types import MessageService
-from telethon.errors import MessageDeleteForbiddenError, MessageNotModifiedError
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
@@ -153,43 +146,6 @@ async def run_cmd(cmd, run_code=0):
     error = stderr.decode().strip() or None
     output = stdout.decode().strip()
     return output, error
-   
-async def eor(event, text=None, **args):
-    time = args.get("time", None)
-    edit_time = args.get("edit_time", None)
-    if "edit_time" in args:
-        del args["edit_time"]
-    if "time" in args:
-        del args["time"]
-    if "link_preview" not in args:
-        args["link_preview"] = False
-    args["reply_to"] = event.reply_to_msg_id or event
-    if event.out and not isinstance(event, MessageService):
-        if edit_time:
-            await sleep(edit_time)
-        if "file" in args and args["file"] and not event.media:
-            await event.delete()
-            ok = await event.client.send_message(event.chat_id, text, **args)
-        else:
-            try:
-                try:
-                    del args["reply_to"]
-                except KeyError:
-                    pass
-                ok = await event.edit(text, **args)
-            except MessageNotModifiedError:
-                ok = event
-    else:
-        ok = await event.client.send_message(event.chat_id, text, **args)
-
-    if time:
-        await sleep(time)
-        return await ok.delete()
-    return ok
-
-async def eod(event, text=None, **kwargs):
-    kwargs["time"] = kwargs.get("time", 8)
-    return await eor(event, text, **kwargs)
 
 def post_telegraph(title, content, author, author_url=None):
     post_client = TelegraphPoster(use_api=True, telegraph_api_url='https://api.graph.org')
@@ -246,6 +202,11 @@ async def req_download(download_url, filename=None, progress_callback=None, head
                             progress_callback(downloaded_size, total_size)
                         )
             return filename, time.time() - start_time
+
+async def _maybe_await(value):
+    if inspect.isawaitable(value):
+        return await value
+    return value
 
 chat_photos = dict()
 async def get_chat_pic(chat_id: int, refresh: bool = None):
