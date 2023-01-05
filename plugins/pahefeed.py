@@ -38,8 +38,8 @@ async def parse_dl(entry: dict):
 		headers={"User-Agent": random.choice(agents)}
 		)
 		if not isinstance(data, dict):
-			continue
 			await asyncio.sleep(2)
+			continue 
 
 		if data.get("sources") and len(data.get("sources")) > 2:
 			return data
