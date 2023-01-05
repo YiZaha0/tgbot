@@ -18,14 +18,14 @@ async def exec_(client, event):
     xx = await event.reply("`Processing...`")
     reply_to_id = event.reply_to_message_id or event.id
     stdout, stderr = await run_cmd(cmd, run_code=1)
-    OUT = f"**✦ COMMAND:**\n```{cmd}``` \n\n"
+    OUT = f"**✦ COMMAND:**\n`{cmd}` \n\n"
     err, out = "", ""
     if stderr:
-        err = f"**✦ STDERR:** \n```{stderr}```\n\n"
+        err = f"**✦ STDERR:** \n`{stderr}`\n\n"
     if stdout:
-        out = f"**✦ STDOUT:**\n```{stdout}```"
+        out = f"**✦ STDOUT:**\n`{stdout}`"
     if not stderr and not stdout:
-        out = "**✦ STDOUT:**\n```Success```"
+        out = "**✦ STDOUT:**\n`Success`"
     OUT += err + out
     if len(OUT) > 4096:
         ultd = err + out
@@ -78,7 +78,7 @@ async def eval_(client, event):
     else:
         evaluation = "Success"
 
-    final_output = "**✦ Code :**\n```{}``` \n\n **✦ Result :** \n```{}``` \n".format(cmd, evaluation)
+    final_output = "**✦ Code :**\n`{}` \n\n **✦ Result :** \n`{}` \n".format(cmd, evaluation)
     if len(final_output) > 4096:
         with io.BytesIO(str.encode(evaluation)) as out_file:
             out_file.name = "eval.txt"
@@ -86,7 +86,7 @@ async def eval_(client, event):
                 event.chat.id,
                 out_file,
                 force_document=True,
-                caption=f"```{cmd}```" if len(cmd) < 998 else None,
+                caption=f"`{cmd}`" if len(cmd) < 998 else None,
                 parse_mode=ParseMode.MARKDOWN,
                 reply_to_message_id=reply_to_id
             )
