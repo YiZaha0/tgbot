@@ -47,8 +47,6 @@ os.makedirs("cache", exist_ok=True)
 
 #STARTING
 scheduler.start() #AsyncIOScheduler
-bot.start(bot_token=Config.BOT_TOKEN)
-logger.info("»Telethon Client started successfully.")
 if uB:
 	uB.start()
 	logger.info("»Pyrogram User Client started successfully.")
