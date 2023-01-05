@@ -1,15 +1,12 @@
 import os, io, glob, string, datetime
 
-from telethon.tl.types import MessageEntityPre
-from telethon.utils import add_surrogate
-from telethon.sync import events
-from telethon.errors.rpcerrorlist import MessageTooLongError
 from pyrogram import filters, errors
 from pyrogram.enums import ParseMode
 from telegraph import upload_file
 from telethon.utils import pack_bot_file_id
 from .readp import get_names, get_soup, get_link, anext, iter_chapters_ps
 from . import *
+
 
 async def get_amessages():
  mid = get_db("MID")
