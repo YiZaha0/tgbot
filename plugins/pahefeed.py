@@ -33,7 +33,7 @@ async def parse_dl(entry: dict) -> dict:
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
 	try:
-		data = await requests.get(
+		data = await req_content(
 		f"{api}{ep_id}",
 		headers={"User-Agent": random.choice(agents)}
 		)
