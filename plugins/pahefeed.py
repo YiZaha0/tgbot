@@ -40,6 +40,7 @@ async def parse_dl(entry: dict):
 		if isinstance(data, dict) and data.get("sources") and len(data.get("sources")) > 2:
 			return data
 			break
+		await asyncio.sleep(3)
 	
 async def upload_entry(entry: dict):
 	dl_data = await parse_dl(entry)
