@@ -42,7 +42,7 @@ async def upload_entry(entry: dict):
 	dl_data = await parse_dl(entry)
 	og_name = entry["anime_title"]
 	eng_name = get_anime_name(name)
-	if eng_name and eng_name.lower() != name.lower():
+	if eng_name and eng_name.lower() != og_name.lower():
 		name = f"{eng_name} | {og_name}"
 	ep = entry["episode"]
 	Process = list()
