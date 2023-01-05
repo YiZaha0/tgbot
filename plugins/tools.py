@@ -59,9 +59,9 @@ async def update_pindex():
         f = name[0].upper()
         if not f.isalpha():
             f = "#"
-        if "RELEASING" in m.text:
+        if "RELEASING" in m.caption:
             tick = "🔷"
-        elif "FINISHED" in m.text:
+        elif "FINISHED" in m.caption:
             tick = "🔶"
         data = f"{tick} <a href='{link}'>{name}</a>\n"
         az_dict[f].append(data)
