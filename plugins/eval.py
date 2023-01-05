@@ -31,7 +31,7 @@ async def exec_(client, event):
         ultd = err + out
         with io.BytesIO(str.encode(ultd)) as out_file:
             out_file.name = "exec.txt"
-            await event.client.send_document(
+            await app.send_document(
                 event.chat.id,
                 out_file,
                 caption=f"`{cmd}`" if len(cmd) < 998 else None,
@@ -82,7 +82,7 @@ async def eval_(client, event):
     if len(final_output) > 4096:
         with io.BytesIO(str.encode(evaluation)) as out_file:
             out_file.name = "eval.txt"
-            await event.client.send_file(
+            await app.send_file(
                 event.chat.id,
                 out_file,
                 force_document=True,
