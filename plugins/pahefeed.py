@@ -15,7 +15,7 @@ border_stickers = [
 async def get_entries():
 	page = await req_content(
 		"https://animepahe.com/api?m=airing",
-		headers={"User-Agent": random.choice(agents)}
+		headers={"User-Agent": random.choice(agents)},
 	)
 	last_entry = get_db("Last_PaheFeed_Entry")
 	new_entries = list()
@@ -33,9 +33,10 @@ async def parse_dl(entry: dict) -> dict:
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
 	data = await req_content(
-		f"{api}{ep_id}"
+		f"{api}{ep_id}",
+		headers={"User-Agent": random.choice(agents)}
 	)
-	if isinstance(data, dict) and len(data.get("sources", "")) > 2:
+	if isinstance(data, dict) and data.get("sources") and len(data.get("sources")) > 2:
 		return data
 	
 async def upload_entry(entry: dict):
