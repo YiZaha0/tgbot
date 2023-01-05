@@ -95,7 +95,7 @@ def load_plugin(plugin_name):
 def restart_bot():
 	os.system("git pull -f && pip3 install --quiet -U -r requirements.txt")
 	os.execl(sys.executable, "python3", "main.py")
-bot.restart = restart_bot
+app.reboot = restart_bot
 
 def check(inp):
     if len(str(inp)) == 1:
