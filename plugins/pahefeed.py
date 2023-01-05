@@ -29,18 +29,17 @@ async def get_entries():
 	new_entries.reverse()
 	return new_entries 
 
-async def parse_dl(entry: dict) -> dict:
+async def parse_dl(entry: dict):
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
-	try:
+	for_  in range(6):
 		data = await req_content(
 		f"{api}{ep_id}",
 		headers={"User-Agent": random.choice(agents)}
 		)
-	except:
-		return
-	if isinstance(data, dict) and data.get("sources") and len(data.get("sources")) > 2:
-		return data
+		if isinstance(data, dict) and data.get("sources") and len(data.get("sources")) > 2:
+			return data
+			break
 	
 async def upload_entry(entry: dict):
 	dl_data = await parse_dl(entry)
