@@ -99,8 +99,8 @@ async def aexec(code, event):
             "async def __aexec(e, client): "
             + "\n p = print "
             + "\n m = e"
-            + "\n reply = event.reply_to_message"
-            + "\n chat = event.chat.id"
+            + "\n reply = m.reply_to_message"
+            + "\n chat = m.chat.id"
         )
         + "".join(f"\n {l}" for l in code.split("\n"))
     )
