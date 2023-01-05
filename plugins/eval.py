@@ -82,7 +82,7 @@ async def eval_(client, event):
     if len(final_output) > 4096:
         with io.BytesIO(str.encode(evaluation)) as out_file:
             out_file.name = "eval.txt"
-            await app.send_file(
+            await app.send_document(
                 event.chat.id,
                 out_file,
                 force_document=True,
