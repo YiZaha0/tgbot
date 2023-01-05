@@ -8,7 +8,7 @@ from .readp import get_names, get_soup, get_link, anext, iter_chapters_ps
 from . import *
 
 def _split_list(li, num=0):
-	li = li.copy(),
+	li = li.copy()
 	splited = list()
 	while li:
 		_li = li[:num or 1]
