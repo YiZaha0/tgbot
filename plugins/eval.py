@@ -14,7 +14,7 @@ async def exec_(client, event):
     try:
         cmd = event.text.split(" ", maxsplit=1)[1]
     except IndexError:
-        return await eod(event, "`Give Something To Execute...`")
+        return await event.reply("`Give Something To Execute...`")
     xx = await event.reply("`Processing...`")
     reply_to_id = event.reply_to_message_id or event.id
     stdout, stderr = await run_cmd(cmd, run_code=1)
@@ -48,7 +48,7 @@ async def eval_(client, event):
     try:
         cmd = event.text.split(" ", maxsplit=1)[1]
     except IndexError:
-        return await eod(event, "`Give something to execute...`")
+        return await event.reply("`Give something to execute...`")
     e = await event.reply("`Processing ...`")
     reply_to_id = event.reply_to_message_id or event.id
 
