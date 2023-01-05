@@ -33,10 +33,10 @@ def parse_dl(entry: dict) -> dict:
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
 	try:
-		data = requests.get(
+		data = await requests.get(
 		f"{api}{ep_id}",
 		headers={"User-Agent": random.choice(agents)}
-		).json()
+		)
 	except:
 		return
 	if isinstance(data, dict) and data.get("sources") and len(data.get("sources")) > 2:
