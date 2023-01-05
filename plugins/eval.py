@@ -12,7 +12,7 @@ from . import *
 @app.on_message(filters.command("exec") & filters.user(SUDOS))
 async def exec_(client, event):
     try:
-        cmd = event.text.split(" ", maxsplit=1)[1]
+        cmd = event.text.markdown.split(" ", maxsplit=1)[1]
     except IndexError:
         return await event.reply("`Give Something To Execute...`")
     xx = await event.reply("`Processing...`")
@@ -46,7 +46,7 @@ async def exec_(client, event):
 @app.on_message(filters.command("eval") & filters.user(SUDOS+[5591954930]))
 async def eval_(client, event):
     try:
-        cmd = event.text.split(" ", maxsplit=1)[1]
+        cmd = event.text.markdown.split(" ", maxsplit=1)[1]
     except IndexError:
         return await event.reply("`Give something to execute...`")
     e = await event.reply("`Processing ...`")
