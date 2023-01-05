@@ -29,7 +29,7 @@ async def get_entries():
 	new_entries.reverse()
 	return new_entries 
 
-def parse_dl(entry: dict) -> dict:
+async def parse_dl(entry: dict) -> dict:
 	api = "https://api.consumet.org/anime/animepahe/watch/"
 	ep_id = entry["session"]
 	try:
