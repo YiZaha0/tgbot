@@ -373,3 +373,8 @@ async def listsubs(_, update):
 				await update.reply_document(f)
 		else:
 			await update.reply(text)
+
+@app.on_message(filters.command("restart") & filters.user(SUDOS))
+async def restart_(client, update):
+	await update.reply("`Updating and restarting the bot...`")
+	app.reboot()
