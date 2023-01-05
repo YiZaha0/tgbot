@@ -37,12 +37,6 @@ scheduler = AsyncIOScheduler()
 
 
 #CLIENTS
-bot = TelegramClient(
-	"TestBot",
-	api_id=Config.API_ID,
-	api_hash=Config.API_HASH 
-)
-
 app = Client(
 	"TestBot-Pyro",
 	api_id=Config.API_ID,
