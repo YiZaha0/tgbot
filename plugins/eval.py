@@ -6,53 +6,48 @@ import sys
 import io
 from . import *
 
-@bot.on(events.NewMessage(pattern="^/exec ?(.*)", from_users=SUDOS))
-async def _(event):
+@app.on_message(filters.command("exec") & filters.user(SUDOS))
+async def exec_(client, event):
     try:
         cmd = event.text.split(" ", maxsplit=1)[1]
     except IndexError:
         return await eod(event, "`Give Something To Execute...`")
-    xx = await eor(event, "`Processing...`")
-    reply_to_id = event.reply_to_msg_id or event.id
+    xx = await event.reply("`Processing...`")
+    reply_to_id = event.reply_to_message_id or event.id
     stdout, stderr = await run_cmd(cmd, run_code=1)
-    OUT = f"**✦ COMMAND:**\n`{cmd}` \n\n"
+    OUT = f"**✦ COMMAND:**\n```{cmd}``` \n\n"
     err, out = "", ""
     if stderr:
-        err = f"**✦ STDERR:** \n`{stderr}`\n\n"
+        err = f"**✦ STDERR:** \n```{stderr}```\n\n"
     if stdout:
-        out = f"**✦ STDOUT:**\n`{stdout}`"
+        out = f"**✦ STDOUT:**\n```{stdout}```"
     if not stderr and not stdout:
-        out = "**✦ STDOUT:**\n`Success`"
+        out = "**✦ STDOUT:**\n```Success```"
     OUT += err + out
     if len(OUT) > 4096:
         ultd = err + out
         with io.BytesIO(str.encode(ultd)) as out_file:
             out_file.name = "exec.txt"
-            await event.client.send_file(
-                event.chat_id,
+            await event.client.send_document(
+                event.chat.id,
                 out_file,
                 force_document=True,
-                thumb=None,
-                allow_cache=False,
                 caption=f"`{cmd}`" if len(cmd) < 998 else None,
                 reply_to=reply_to_id,
             )
 
             await xx.delete()
     else:
-        await eor(xx, OUT, link_preview=False)
+        await xx.edit(OUT, disable_web_page_preview=True)
 
-@bot.on(events.NewMessage(pattern="^/eval ?(.*)", from_users=SUDOS+[5591954930]))
-async def _(event):
-    if event.fwd_from:
-        return
-    if not event.pattern_match.group(1):
+@app.on_message(filters.command("eval") & filters.user(SUDOS+[5591954930]))
+async def eval_(client, event):
+    try:
+        cmd = event.text.split(" ", maxsplit=1)[1]
+    except IndexError:
         return await eod(event, "`Give something to execute...`")
-    e = await eor(event, "`Processing ...`")
-    cmd = event.text.split(" ", maxsplit=1)[1]
-    reply_to_id = event.message.id
-    if event.reply_to_msg_id:
-        reply_to_id = event.reply_to_msg_id
+    e = await event.reply("`Processing ...`")
+    reply_to_id = event.reply_to_message_id or event.id
 
     old_stderr = sys.stderr
     old_stdout = sys.stdout
@@ -80,31 +75,31 @@ async def _(event):
     else:
         evaluation = "Success"
 
-    final_output = "**✦ Code :**\n`{}` \n\n **✦ Result :** \n`{}` \n".format(cmd, evaluation)
+    final_output = "**✦ Code :**\n```{}``` \n\n **✦ Result :** \n```{}``` \n".format(cmd, evaluation)
     if len(final_output) > 4096:
         with io.BytesIO(str.encode(evaluation)) as out_file:
             out_file.name = "eval.txt"
             await event.client.send_file(
-                event.chat_id,
+                event.chat.id,
                 out_file,
                 force_document=True,
-                allow_cache=False,
                 caption=f"```{cmd}```" if len(cmd) < 998 else None,
                 reply_to=reply_to_id
             )
             await e.delete()
     else:
-        await eor(e, final_output)
+        await e.edit(final_output, disable_web_page_preview=True)
+
 async def aexec(code, event):
     exec(
         (
             "async def __aexec(e, client): "
             + "\n p = print "
-            + "\n message = event = e"
-            + "\n reply = await event.get_reply_message()"
-            + "\n chat = event.chat_id"
+            + "\n m = e"
+            + "\n reply = event.reply_to_message"
+            + "\n chat = event.chat.id"
         )
         + "".join(f"\n {l}" for l in code.split("\n"))
     )
 
-    return await locals()["__aexec"](event, event.client)
+    return await locals()["__aexec"](event, event._client)
