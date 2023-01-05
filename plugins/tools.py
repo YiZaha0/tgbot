@@ -21,7 +21,7 @@ async def get_amessages():
 	if globals().get("amessages") and globals().get("amessages")[-1].id + 1 == mid:
 		return globals().get("amessages")
 	global amessages
-	amessages = await app.get_messages(:
+	amessages = await app.get_messages(
 		"adult_mangas",
 		list(range(2, 201)),
 	)
