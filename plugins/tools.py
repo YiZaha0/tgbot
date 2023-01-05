@@ -59,9 +59,9 @@ async def update_pindex():
         f = name[0].upper()
         if not f.isalpha():
             f = "#"
-        if "RELEASING" in m.message:
+        if "RELEASING" in m.text:
             tick = "🔷"
-        elif "FINISHED" in m.message:
+        elif "FINISHED" in m.text:
             tick = "🔶"
         data = f"{tick} <a href='{link}'>{name}</a>\n"
         az_dict[f].append(data)
@@ -75,12 +75,12 @@ async def update_pindex():
     post_id = 62
     for p in posts:
         try:
-            await app.edit_message_text(-1001749847496, post_id, p+posts[p], parse_mode=ParseMode.HTML)
+            await app.edit_message_text(-1001749847496, post_id, p+posts[p])
         except:
             pass
         post_id += 1
     mpost = "<i><b>✘ Index Of Manhwas in @Adult_Mangas ✘</i></b>\n\n<i>🔶 = Finished/Completed\n🔷 = Releasing/OnGoing\n\nLast Updated: {}</i>"
-    await app.edit_message_text(-1001749847496, 36, mpost.format(datetime.datetime.now().__str__().split(".")[0] + f" ({time.tzname[time.daylight]})"), parse_mode=ParseMode.HTML)
+    await app.edit_message_text(-1001749847496, 36, mpost.format(datetime.datetime.now().__str__().split(".")[0] + f" ({time.tzname[time.daylight]})"))
 
 def hb(size):
     if not size:
