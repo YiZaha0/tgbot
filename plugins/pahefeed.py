@@ -35,7 +35,7 @@ async def parse_dl(entry: dict) -> dict:
 	data = await req_content(
 		f"{api}{ep_id}"
 	)
-	if len(data["sources"]) > 2:
+	if len(data.get("sources", "")) > 2:
 		return data
 	
 async def upload_entry(entry: dict):
