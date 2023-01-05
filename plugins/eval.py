@@ -3,7 +3,11 @@ import traceback
 import asyncio
 import sys
 import io
+
+from pyrogram import filters
+
 from . import *
+
 
 @app.on_message(filters.command("exec") & filters.user(SUDOS))
 async def exec_(client, event):
