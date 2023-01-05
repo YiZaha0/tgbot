@@ -37,8 +37,8 @@ async def update_plist():
 	data = dict()
 	mess = await get_amessages()
 	for m in mess:
-		if m and m.text and "releasing" in m.text.lower() and "+" in m.text:
-			name = m.text.split("\n")[0].split(" | ")[0].strip()
+		if m and m.captiom and "releasing" in m.caption.lower() and "+" in m.caption:
+			name = m.caption.split("\n")[0].split(" | ")[0].strip()
 			link = m.caption_entities[-1].url
 			data[name] = link
 	pp = sorted(data)
@@ -49,9 +49,9 @@ async def update_pindex():
     az_dict = {"#": list()}
     [az_dict.update({i: list()}) for i in string.ascii_uppercase]
     
-    messages = [m for m in await get_amessages() if m and m.text and m.photo and "Type" in m.text]
+    messages = [m for m in await get_amessages() if m and m.caption and m.photo and "Type" in m.caption]
     
-    messages = {m.text.split("\n")[0].split("|")[0].strip():m for m in messages}
+    messages = {m.caption.split("\n")[0].split("|")[0].strip():m for m in messages}
     for name in sorted(messages):
         m = messages[name]
         chat_id = str(m.chat.id).replace("-100", "")
