@@ -94,12 +94,12 @@ async def up_upload(client, update):
 		)
 
 	chat = update.chat.id
-	thumb = "thumb.jpg" if -t" in input_str.strip() else None
+	thumb = "thumb.jpg" if "-t" in input_str.strip() else None
 	stream = "-s" in input_str.strip() 
 	asdoc = "-f" in input_str.strip() 
 	protect_content = "-p" in input_str.strip()
 	
-	flags = ("-t", "-s", "-f")
+	flags = ("-t", "-s", "-f", "-p")
 	for _f in flags:
 		input_str = input_str.replace(_f, "").strip()
 	
