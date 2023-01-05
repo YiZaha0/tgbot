@@ -43,7 +43,7 @@ def parse_dl(entry: dict) -> dict:
 		return data
 	
 async def upload_entry(entry: dict):
-	dl_data = parse_dl(entry)
+	dl_data = await parse_dl(entry)
 	og_name = entry["anime_title"]
 	eng_name = get_anime_name(name)
 	if eng_name and eng_name.lower() != og_name.lower():
@@ -100,7 +100,7 @@ async def autofeed():
 		logger.info("»PaheFeed: New Entries:" + "".join("\n→" + e["anime_title"] + " - " + str(e["episode"]) for e in entries))
 		for entry in entries:
 			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
-			parsed_dl = parse_dl(entry)
+			parsed_dl = await parse_dl(entry)
 			if parsed_dl:
 				try:
 					await upload_entry(entry)
@@ -120,7 +120,7 @@ async def autofeed():
 async def auto_ReCache():
 	for entry in ReCache:
 		entry_id = entry["anime_title"] + " - " + str(entry["episode"])
-		parsed_dl = parse_dl(entry)
+		parsed_dl = await parse_dl(entry)
 		if parsed_dl:
 			try:
 				await upload_entry(entry)
