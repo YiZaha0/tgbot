@@ -40,16 +40,16 @@ async def parse_dl(entry: dict) -> dict:
 	
 async def upload_entry(entry: dict):
 	dl_data = await parse_dl(entry)
-	name = entry["anime_title"]
+	og_name = entry["anime_title"]
 	eng_name = get_anime_name(name)
 	if eng_name and eng_name.lower() != name.lower():
-		name = f"{eng_name} | {name}"
+		name = f"{eng_name} | {og_name}"
 	ep = entry["episode"]
 	Process = list()
 	Files = dict()
 	for source in dl_data["sources"]:
 		quality = source["quality"] + "p"
-		filename = f"cache/{name} [Ep - {ep}] [{quality}] [@Ongoing_Anime_Seasons].mp4"
+		filename = f"cache/{eng_name or og_name} [Ep - {ep}] [{quality}] [@Ongoing_Anime_Seasons].mp4"
 		url = source["url"]
 		Process.append(
 			run_cmd(
