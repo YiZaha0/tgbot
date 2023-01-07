@@ -122,7 +122,7 @@ async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT):
 		os.remove(file)
 		os.remove(thumb)
 	
-	await app.send_cached_media(FEED_CHAT, random.choice(border_stickers))
+	await app.send_cached_media(chat, random.choice(border_stickers))
 	
 async def update_feed():
 	entries = await get_entries()
