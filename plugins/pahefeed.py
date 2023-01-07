@@ -1,4 +1,5 @@
 import random 
+import traceback
 
 from .utils.gtools import gen_video_ss, get_video_duration, get_anime_name
 from . import *
@@ -48,7 +49,7 @@ async def parse_dl(entry: dict):
 async def upload_entry(entry: dict):
 	dl_data = await parse_dl(entry)
 	og_name = entry["anime_title"]
-	eng_name = get_anime_name(name)
+	eng_name = get_anime_name(og_name)
 	name = og_name
 	if eng_name and eng_name.lower() != og_name.lower():
 		name = f"{eng_name} | {og_name}"
@@ -110,6 +111,7 @@ async def autofeed():
 					await upload_entry(entry)
 				except Exception as e:
 					logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
+					traceback.print_exc()
 			else:
 				logger.info(f"»PaheFeed: Download Urls Not Found for Entry {entry_id}, Adding it to ReCache.")
 				ReCache.append(entry)
@@ -130,6 +132,7 @@ async def auto_ReCache():
 				await upload_entry(entry)
 			except Exception as e:
 				logger.info(f"»PaheFeed (ReCache): Got Error While Uploading Entry {entry_id}: {e}")
+				traceback.print_exc()
 			ReCache_remove(entry)
 			
 def ReCache_remove(entry):
