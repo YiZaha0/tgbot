@@ -126,10 +126,6 @@ async def upload_entry(entry: dict, data: dict=None):
 async def update_feed():
 	entries = await get_entries()
 	last_entries = get_db("PaheFeed_Entries")
-	ReCache = get_db("Pahe_ReCache")
-	
-	if ReCache is None:
-		add_db("Pahe_ReCache", list())
 	if last_entries is None:
 		add_db("PaheFeed_Entries", list())
 		
