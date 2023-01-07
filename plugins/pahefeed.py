@@ -59,7 +59,7 @@ async def upload_entry(entry: dict, data: dict=None):
 	eng_name = get_anime_name(anime_name)
 	
 	try:
-		anime = get_anime_manga(anime_name, "anime_anime", author="Ongoing Anime Seasons", author_url="https://t.me/Ongoing_Anime_Seasons")
+		anime = await get_anime_manga(anime_name, "anime_anime", author="Ongoing Anime Seasons", author_url="https://t.me/Ongoing_Anime_Seasons")
 	except:
 		anime = None 
 		
