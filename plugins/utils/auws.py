@@ -286,8 +286,8 @@ async def dl_chapter(url, title, mode):
 	headers = dict(session.headers)
 	headers["Referer"] = url
 	for link in images_list:
-		filename = f"{dir}/{n}.jpg"
-	        await req_download(link, filename=filename, headers=headers)
+		filename = f"{dir}/{n}.{link.split('/')[-1].split('.')[-1] or 'jpg'}"
+		await req_download(link, filename=filename, headers=headers)
 		images.append(filename)
 		n += 1
 
