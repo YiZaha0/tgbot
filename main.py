@@ -13,6 +13,7 @@ from pyrogram import idle
 from plugins import *
 from plugins.tools import update_thumbnail
 from plugins.readp import manhwa_updater
+from plugins.pahefeed import autofeed
 		
 #LOGGING
 LOG_FILE = "Useless.log"
@@ -42,6 +43,7 @@ loop.run_until_complete(update_thumbnail())
 
 #CREATING TASKS
 loop.create_task(manhwa_updater())
+loop.create_task(autofeed())
 
 #CREATING CACHE DIRECTORY
 os.makedirs("cache", exist_ok=True)
