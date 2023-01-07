@@ -51,7 +51,7 @@ async def parse_dl(entry: dict):
 			return data
 			break
 
-async def upload_entry(entry: dict, data: dict=None):
+async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT):
 	dl_data = data or await parse_dl(entry)
 	anime_name = entry["anime_title"]
 	ep = entry["episode"]
@@ -82,7 +82,7 @@ async def upload_entry(entry: dict, data: dict=None):
 		anime_img = f"./cache/anilist_img-{anime_id}.jpg" if os.path.exists(f"./cache/anilist_img-{anime_id}.jpg") else (await req_download(anime_img, filename=f"./cache/anilist_img-{anime_id}.jpg"))[0]
 		anime_cover = get_anime_cover(anime_name)
 		anime_cover_path = f"./cache/anilist_cover_img-{anime_id}.jpg" if anime_cover else None
-		await app.send_photo(FEED_CHAT, anime_img, caption=anime_caption)
+		await app.send_photo(chat, anime_img, caption=anime_caption)
 		
 	for quality, file in Files.items():
 		if not os.path.exists(file):
@@ -98,7 +98,7 @@ async def upload_entry(entry: dict, data: dict=None):
 				thumb = (await req_download(anime_cover, filename=anime_cover_path))[0]
 			
 			await app.send_document(
-				FEED_CHAT,
+				chat,
 				file,
 				caption=f"<b>Episode {ep} • {quality}</b>",
 				thumb=thumb,
@@ -113,7 +113,7 @@ async def upload_entry(entry: dict, data: dict=None):
 			caption += f"<b>♤ Duation:</b> <code>{readable_time(duration)}</code>"
 			
 			await app.send_video(
-				FEED_CHAT, 
+				chat, 
 				file,
 				caption=caption,
 				duration=duration,
