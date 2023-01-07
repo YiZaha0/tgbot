@@ -146,3 +146,12 @@ def get_anime_name(name: str) -> str:
     except:
         anime = dict()
     return anime.get("name_english", None)
+
+def get_anime_cover(name: str) -> str:
+    Api = Anilist()
+    try:
+        anime = Api.get_anime(name)
+    except:
+        anime = dict()
+    return anime.get("banner_cover", None)
+
