@@ -287,10 +287,10 @@ async def dl_chapter(url, title, mode):
 	headers["Referer"] = url
 	for link in images_list:
 		filename = f"{dir}/{n}.jpg"
-		process.append(req_download(link, filename=filename, headers=headers))
+	        await req_download(link, filename=filename, headers=headers)
 		images.append(filename)
 		n += 1
-	await asyncio.gather(*process)
+
 	if mode == "pdf":
 		file = os.path.join(os.getcwd(), title)
 		try:
