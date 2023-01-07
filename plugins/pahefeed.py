@@ -133,14 +133,13 @@ async def update_feed():
 		logger.info("»PaheFeed: No Entries Found")
 		
 	else:
-		logger.info("»PaheFeed: New Entries:" + "".join("\n→" + e["anime_title"] + " - " + str(e["episode"]) for e in entries))
-		
 		for entry in entries:
 			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
 			
 			if entry_id in last_entries:
-				continue
-
+				continue 
+				
+			logger.info("»PaheFeed: New Anime Released →{entry_id}.")
 			parsed_dl = await parse_dl(entry)
 			
 			if parsed_dl:
@@ -168,4 +167,3 @@ async def autofeed():
 			logger.info(f"»Got Error While Updating PaheFeed: {exc}")
 			traceback.print_exc()
 		await asyncio.sleep(sleep_time)
-		
