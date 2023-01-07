@@ -1,16 +1,22 @@
 import random 
 import traceback
 
-from .utils.gtools import gen_video_ss, get_video_duration, get_anime_name
+from AnilistPython import Anilist
+
+from .utils.gtools import gen_video_ss, get_video_duration, get_anime_name, get_anime_cover
+from .utils.ani import get_anime_manga
 from . import *
 
+	
 ReCache = list()
 FEED_CHAT = -1001633233596
 border_stickers = [
-    'CAACAgUAAx0CXXk9AANKxGNBnX8qYFetcrtuDshld0wS8jv2AAImBgACN83hViwucrfDIJViHgQ',
-    'CAACAgUAAx0CXXk9AANKw2NBnUaNd8iGX57AlfWiXn6NBwSZAAKXBAACkS3gVn24I44fU76JHgQ', 
-    'CAADBQADywUAAjIR4Va7IL3zu24i0gI',
-    'CAADBQADMgUAAtmH4FZaVf8VJYihogI',
+    "CAACAgUAAxkBAAJlZWO5yjGyvnaYWK9Y-M3oNjelzR2ZAAIfAANDc8kSq8cUT3BtY9AeBA",
+    "CAACAgUAAxkBAAJlY2O5yigf1GFcHBRe9lUKapoXzWd2AAI4AANDc8kSqEy-nx6sFQoeBA",
+    "CAACAgUAAxkBAAJlYmO5yiP3hYRxyZ4hB0QJr3f-WQ2fAAI8AANDc8kS7jdGbja_UggeBA",
+    "CAACAgUAAxkBAAJlYGO5yiK5RixNuzUHGxk0w-Ie5_FtAAI_AANDc8kSLDGyuwP6tQ8eBA",
+    "CAACAgUAAxkBAAJlX2O5yiKlgHjADxVbC8SNxYu17cdEAAI-AANDc8kSMh37AsG_DNYeBA",
+    "CAACAgUAAxkBAAJlXmO5yh3Ns-mJ_gqQUxLj8FnhGi2EAAI6AANDc8kSXkFqoI4WW6EeBA",
 ]
 
 async def get_entries():
@@ -18,16 +24,16 @@ async def get_entries():
 		"https://animepahe.com/api?m=airing",
 		headers={"User-Agent": random.choice(agents)},
 	)
-	last_entry = get_db("Last_PaheFeed_Entry")
+
 	new_entries = list()
 	for entry in page["data"]:
 		if entry["completed"]:
 			continue 
 		entry_id = entry["anime_title"] + " - " + str(entry["episode"])
-		if entry_id == last_entry:
-			break 
 		new_entries.append(entry)
+
 	new_entries.reverse()
+	
 	return new_entries 
 
 async def parse_dl(entry: dict):
@@ -45,85 +51,112 @@ async def parse_dl(entry: dict):
 		if data.get("sources") and len(data.get("sources")) > 2:
 			return data
 			break
-	
-async def upload_entry(entry: dict):
-	dl_data = await parse_dl(entry)
-	og_name = entry["anime_title"]
-	eng_name = get_anime_name(og_name)
-	name = og_name
-	if eng_name and eng_name.lower() != og_name.lower():
-		name = f"{eng_name} | {og_name}"
+
+async def upload_entry(entry: dict, data: dict=None):
+	dl_data = data or await parse_dl(entry)
+	anime_name = entry["anime_title"]
 	ep = entry["episode"]
+	eng_name = get_anime_name(anime_name)
+	
+	try:
+		anime = get_anime_manga(anime_name, "anime_anime", author="Ongoing Anime Seasons", author_url="https://t.me/Ongoing_Anime_Seasons")
+	except:
+		anime = None 
+		
 	Process = list()
 	Files = dict()
 	for source in dl_data["sources"]:
-		quality = source["quality"] + "p"
-		filename = f"cache/{eng_name or og_name} [Ep - {ep}] [{quality}] [@Ongoing_Anime_Seasons].mp4"
 		url = source["url"]
-		Process.append(
-			run_cmd(
-				f'ffmpeg -y -headers "Referer: {dl_data["headers"]["Referer"]}" -i "{url}" -c copy -bsf:a aac_adtstoasc "{filename}"'
+		quality = source["quality"]+"p"
+		file = f"./cache/{eng_name or anime_name} - {ep} [{quality}] [@Ongoing_Anime_Seasons].mp4"
+		Process.append(run_cmd(
+			f'ffmpeg -y -headers "Referer: {dl_data["headers"]["Referer"]}" -i "{url}" -c copy -bsf:a aac_adtstoasc "{file}"'
 			)
 		)
-		Files[quality] = filename 
-		
+		Files[quality] = file 
+	
 	await asyncio.gather(*Process)
+	
+	if anime:
+		anime_caption, anime_img, _ = anime 
+		anime_id = anime_img.split("/")[-1] 
+		anime_img = f"./cache/anilist_img-{anime_id}.jpg" if os.path.exists(f"./cache/anilist_img-{anime_id}.jpg") else (await req_download(anime_img, filename=f"./cache/anilist_img-{anime_id}.jpg"))[0]
+		anime_cover = get_anime_cover(anime_name)
+		anime_cover_path = f"./cache/anilist_cover_img-{anime_id}.jpg" if anime_cover else None
+		await app.send_photo(FEED_CHAT, anime_img, caption=anime_caption)
 		
 	for quality, file in Files.items():
 		if not os.path.exists(file):
-			continue 
-		try:
-			thumb = gen_video_ss(file)
-			duration = get_video_duration(file)
-			caption = f"<b>{name}</b>\n\n<b>♤ Episode:</b> {check(ep)}\n<b>♤ Quality:</b> {quality}"
-			await app.send_video(
+			logger.info(f"»Insufficient amount of files available for {anime_name} - {ep} (Probably due to some error in download), Quiting Upload.")
+			break 
+			return
+		
+		if anime:
+			if not anime_cover_path:
+				thumb = gen_video_ss(file)
+			else:
+				thumb = (await req_download(anime_cover, filename=anime_cover_path))[0]
+			
+			await app.send_document(
 				FEED_CHAT,
 				file,
-				caption=caption,
+				caption=f"<b>Episode {ep} • {quality}</b>",
 				thumb=thumb,
+			)
+
+		else:
+			thumb = gen_video(file)
+			duration = get_video_duration(file)
+			caption = f"<b>{eng_name} | {anime_name}</b>\n\n" if eng_name else f"<b>{anime_name}</b>\n\n"
+			caption += f"<b>♤ Episode:</b> <code>{quality}</b>\n"
+			caption += f"<b>♤ Quality:</b> <code>{quality}</code>\n"
+			caption += f"<b>♤ Duation:</b> <code>{readable_time(duration)}</code>"
+			
+			await app.send_video(
+				FEED_CHAT, 
+				file,
+				caption=caption,
 				duration=duration,
 			)
-			os.remove(thumb)
-			os.remove(file)
-		except Exception as e:
-			logger.info(
-				f"»PaheFeed: Got Error while uploading files of {entry.title}: {e.__class__.__name__}: {e}",
-			)
-	await app.send_sticker(
-		FEED_CHAT, 
-		random.choice(
-			border_stickers
-		),
-	)
-			
-async def autofeed():
-	logger.info("»PaheFeed: Started!")
+		
+		os.remove(thumb)
+	
+	await app.send_cached_media(FEED_CHAT, random.choice(border_stickers))
+	
+async def update_feed():
 	entries = await get_entries()
+	last_entries = get_db("PaheFeed_Entries")
+	
 	if not entries:
 		logger.info("»PaheFeed: No Entries Found")
+		
 	else:
 		logger.info("»PaheFeed: New Entries:" + "".join("\n→" + e["anime_title"] + " - " + str(e["episode"]) for e in entries))
+		
 		for entry in entries:
 			entry_id = entry["anime_title"] + " - " + str(entry["episode"])
+			
+			if entry_id in last_entries:
+				continue
+
 			parsed_dl = await parse_dl(entry)
+			
 			if parsed_dl:
 				try:
-					await upload_entry(entry)
+					await upload_entry(entry, data=parsed_dl)
 				except Exception as e:
 					logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
 					traceback.print_exc()
+					
 			else:
 				logger.info(f"»PaheFeed: Download Urls Not Found for Entry {entry_id}, Adding it to ReCache.")
-				ReCache.append(entry)
-			add_db("Last_PaheFeed_Entry", entry_id)
+				ReCache.append(entry) 
+			
+			last_entries.append(entry_id)
 	
-	logger.info("»PaheFeed (ReCache): Started!")
-	await auto_ReCache()
-	logger.info("»PaheFee (ReCache): Ended!")
+	add_db("PaheFeed_Entries", last_entries)
 	
-	logger.info("»PaheFeed: Ended!")
-
-async def auto_ReCache():
+async def update_ReCache():
 	for entry in ReCache:
 		entry_id = entry["anime_title"] + " - " + str(entry["episode"])
 		parsed_dl = await parse_dl(entry)
@@ -140,5 +173,19 @@ def ReCache_remove(entry):
 		if e == entry:
 			ReCache.remove(e)
 			
-scheduler.add_job(autofeed, "interval", minutes=1, max_instances=1)
+async def autofeed():
+	sleep_time = 180
+	while True:
+		try:
+			logger.info("»PaheFeed: New Process Started!")
+			await update_feed()
+			logger.info("»PaheFeed: Process Completed!")
+			
+			logger.info("»PaheFeed (ReCache): New Process Started!")
+			await update_ReCache()
+			logger.info("»PaheFeed (ReCache): Process Completed!")
+		except Exception as exc:
+			logger.info(f"»Got Error While Updating PaheFeed: {exc}")
+			traceback.print_exc()
+		await asyncio.sleep(sleep_time)
 		
