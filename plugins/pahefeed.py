@@ -78,6 +78,7 @@ async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT):
 	
 	if anime:
 		anime_caption, anime_img, _ = anime 
+		anime_caption = anime_caption.replace(anime_caption.split("\n")[-2], "").replace("			", "").strip()
 		anime_id = anime_img.split("/")[-1] 
 		anime_img = f"./cache/anilist_img-{anime_id}.jpg" if os.path.exists(f"./cache/anilist_img-{anime_id}.jpg") else (await req_download(anime_img, filename=f"./cache/anilist_img-{anime_id}.jpg"))[0]
 		anime_cover = get_anime_cover(anime_name)
@@ -91,7 +92,6 @@ async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT):
 			return
 		
 		if anime:
-			anime_caption = anime_caption.replace(anime_caption.split("\n")[-2], "").replace("			", "").strip()
 			if not anime_cover_path:
 				thumb = gen_video_ss(file)
 			else:
