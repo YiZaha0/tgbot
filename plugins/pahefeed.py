@@ -91,6 +91,7 @@ async def upload_entry(entry: dict, data: dict=None):
 			return
 		
 		if anime:
+			anime_caption = anime_caption.replace(anime_caption.split("\n")[-2], "").replace("			", "").strip()
 			if not anime_cover_path:
 				thumb = gen_video_ss(file)
 			else:
