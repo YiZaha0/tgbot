@@ -465,7 +465,7 @@ def getBannerLink(mal, kitsu_search=True, anilistid=0):
     return getPosterLink(mal)
 
 
-async def get_anime_manga(search_str, search_type, _id: str=None, author="Pornhwa Hub | Manhwa 18+", author_url="https://t.me/adult_mangas):  # sourcery no-metrics
+async def get_anime_manga(search_str, search_type, _id: str=None, author="Pornhwa Hub | Manhwa 18+", author_url="https://t.me/adult_mangas"):  # sourcery no-metrics
     if search_type == "anime_anime":
         variables = {"search": search_str} if not _id else {"id": _id}
         query = anime_query
@@ -480,9 +480,9 @@ async def get_anime_manga(search_str, search_type, _id: str=None, author="Pornhw
         result = result["data"]["Media"]
         if result["trailer"]:
             trailer = f'https://www.youtube.com/watch?v={result["trailer"]["id"]}'
-            TRAILER = f"<a href='{trailer}'>🎬 Trailer</a>"
+            TRAILER = f"<a href='{trailer}'>›› Trailer</a>"
         else:
-            TRAILER = "🎬 <i>No Trailer Available</i>"
+            TRAILER = "›› <i>No Trailer Available</i>"
         studio_string = ", ".join(nodes["name"] for nodes in result["studios"]["nodes"])
     elif search_type == "anime_manga":
         variables = {"search": search_str} if not _id else {"id": _id}
