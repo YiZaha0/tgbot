@@ -7,8 +7,7 @@ from .utils.gtools import gen_video_ss, get_video_duration, get_anime_name, get_
 from .utils.ani import get_anime_manga
 from . import *
 
-	
-ReCache = list()
+
 FEED_CHAT = -1001633233596
 border_stickers = [
     "CAACAgUAAxkBAAJlZWO5yjGyvnaYWK9Y-M3oNjelzR2ZAAIfAANDc8kSq8cUT3BtY9AeBA",
@@ -127,7 +126,13 @@ async def upload_entry(entry: dict, data: dict=None):
 async def update_feed():
 	entries = await get_entries()
 	last_entries = get_db("PaheFeed_Entries")
+	ReCache = get_db("Pahe_ReCache")
 	
+	if ReCache is None:
+		add_db("Pahe_ReCache", list())
+	if last_entries is None:
+		add_db("PaheFeed_Entries", list())
+		
 	if not entries:
 		logger.info("»PaheFeed: No Entries Found")
 		
@@ -148,32 +153,14 @@ async def update_feed():
 				except Exception as e:
 					logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
 					traceback.print_exc()
-					
+				
+				last_entries.append(entry_id)
+				
 			else:
-				logger.info(f"»PaheFeed: Download Urls Not Found for Entry {entry_id}, Adding it to ReCache.")
-				ReCache.append(entry) 
-			
-			last_entries.append(entry_id)
+				logger.info(f"»PaheFeed: Download Urls Not Found for Entry {entry_id}.")
 	
 	add_db("PaheFeed_Entries", last_entries)
-	
-async def update_ReCache():
-	for entry in ReCache:
-		entry_id = entry["anime_title"] + " - " + str(entry["episode"])
-		parsed_dl = await parse_dl(entry)
-		if parsed_dl:
-			try:
-				await upload_entry(entry)
-			except Exception as e:
-				logger.info(f"»PaheFeed (ReCache): Got Error While Uploading Entry {entry_id}: {e}")
-				traceback.print_exc()
-			ReCache_remove(entry)
-			
-def ReCache_remove(entry):
-	for e in ReCache:
-		if e == entry:
-			ReCache.remove(e)
-			
+
 async def autofeed():
 	sleep_time = 180
 	while True:
@@ -181,10 +168,6 @@ async def autofeed():
 			logger.info("»PaheFeed: New Process Started!")
 			await update_feed()
 			logger.info("»PaheFeed: Process Completed!")
-			
-			logger.info("»PaheFeed (ReCache): New Process Started!")
-			await update_ReCache()
-			logger.info("»PaheFeed (ReCache): Process Completed!")
 		except Exception as exc:
 			logger.info(f"»Got Error While Updating PaheFeed: {exc}")
 			traceback.print_exc()
