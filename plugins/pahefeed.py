@@ -130,7 +130,7 @@ async def update_feed():
 		add_db("PaheFeed_Entries", list())
 		
 	if not entries:
-		logger.info("»PaheFeed: No Entries Found")
+		logger.info("»PaheFeed: No Entries Found.")
 		
 	else:
 		for entry in entries:
@@ -139,14 +139,14 @@ async def update_feed():
 			if entry_id in last_entries:
 				continue 
 				
-			logger.info("»PaheFeed: New Anime Released →{entry_id}.")
+			logger.info("»PaheFeed: New Anime Released → {entry_id}.")
 			parsed_dl = await parse_dl(entry)
 			
 			if parsed_dl:
 				try:
 					await upload_entry(entry, data=parsed_dl)
 				except Exception as e:
-					logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}")
+					logger.info(f"»PaheFeed: Got Error While Uploading Entry {entry_id}: {e}.")
 					traceback.print_exc()
 				
 				last_entries.append(entry_id)
