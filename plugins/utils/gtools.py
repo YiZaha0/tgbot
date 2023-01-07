@@ -153,5 +153,5 @@ def get_anime_cover(name: str) -> str:
         anime = Api.get_anime(name)
     except:
         anime = dict()
-    return anime.get("banner_cover", None)
+    return anime.get("banner_image", None)
 
