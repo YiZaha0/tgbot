@@ -180,7 +180,7 @@ async def req_url(url, method="GET", data=None, *args, **kwargs):
 async def req_download(download_url, filename=None, progress_callback=None, headers=None):
     await asyncio.sleep(0.1)
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=False)) as session:
-        async with session.get(download_url, headers=headers, timeout=45) as response:
+        async with session.get(download_url, headers=headers, timeout=90) as response:
             if not filename:
                 filename = unquote(download_url.rpartition("/")[-1])
             total_size = int(response.headers.get("content-length", 0)) or None
