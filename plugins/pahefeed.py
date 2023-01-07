@@ -118,7 +118,8 @@ async def upload_entry(entry: dict, data: dict=None):
 				caption=caption,
 				duration=duration,
 			)
-		
+
+		os.remove(file)
 		os.remove(thumb)
 	
 	await app.send_cached_media(FEED_CHAT, random.choice(border_stickers))
