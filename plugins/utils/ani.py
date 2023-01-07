@@ -465,7 +465,7 @@ def getBannerLink(mal, kitsu_search=True, anilistid=0):
     return getPosterLink(mal)
 
 
-async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery no-metrics
+async def get_anime_manga(search_str, search_type, _id: str=None, author="Pornhwa Hub | Manhwa 18+", author_url="https://t.me/adult_mangas):  # sourcery no-metrics
     if search_type == "anime_anime":
         variables = {"search": search_str} if not _id else {"id": _id}
         query = anime_query
@@ -631,19 +631,19 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
                 endaired += "-" + str(result["endDate"]["day"])
         caption += textwrap.dedent(
             f"""
-        🆎 <b>Type</b>: <i>{result['type']}</i>
-        🆔 <b>MAL ID</b>: <i>{result['idMal']}</i>
-        🆔 <b>AL ID</b>: <i>{result['id']}</i>
-        📡 <b>Status</b>: <i>{result['status']}</i>
-        ⏳ <b>Airing Started</b>: <i>{aired}</i>
-        ⌛️ <b>Airing Ended</b>: <i>{endaired}</i>
-        🔢 <b>Episodes</b>: <i>{result['episodes']}</i>
-        💯 <b>Score</b>: <i>{result['averageScore']}</i>
-        📊 <b>Popularity</b>: <i>{result['popularity']}</i>
-        🌐 <b>Premiered</b>: <i>{result['season'].lower()}</i>
-        ⌛ <b>Duration</b>: <i>{result['duration']}</i>
-        🎭 <b>Genres</b>: <i>{genre_string}</i>
-        🎙️ <b>Studios</b>: <i>{studio_string}</i>
+        ›› <b>Type</b>: <i>{result['type']}</i>
+        ›› <b>MAL ID</b>: <i>{result['idMal']}</i>
+        ›› <b>AL ID</b>: <i>{result['id']}</i>
+        ›› <b>Status</b>: <i>{result['status']}</i>
+        ›› <b>Airing Started</b>: <i>{aired}</i>
+        ›› <b>Airing Ended</b>: <i>{endaired}</i>
+        ›› <b>Episodes</b>: <i>{result['episodes']}</i>
+        ›› <b>Score</b>: <i>{result['averageScore']}</i>
+        ›› <b>Popularity</b>: <i>{result['popularity']}</i>
+        ›› <b>Premiered</b>: <i>{result['season'].lower()}</i>
+        ›› <b>Duration</b>: <i>{result['duration']}</i>
+        ›› <b>Genres</b>: <i>{genre_string}</i>
+        ›› <b>Studios</b>: <i>{studio_string}</i>
         """
         )
         synopsis_link = post_telegraph(
@@ -652,11 +652,11 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
             + f"<code>{caption.replace('<code>', '').replace('</code>', '')}</code>\n"
             + f"{TRAILER}\n"
             + markdown.markdown(html_pc),
-            "@Adult_Mangas",
-            "https://t.me/Adult_Mangas"
+            author,
+            author_url
         )
         caption += f"<b>{TRAILER}</b>"
-        caption += "━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        caption += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━"
         
     elif search_type == "anime_manga":
         caption += textwrap.dedent(
@@ -678,8 +678,8 @@ async def get_anime_manga(search_str, search_type, _id: str=None):  # sourcery n
             f"<img src='{title_img}' title={romaji}/>\n"
             + f"<code>{caption.replace('<code>', '').replace('</code>', '')}</code>\n"
             + markdown.markdown(html_pc),
-            "@Adult_Mangas",
-            "https://t.me/Adult_Mangas"
+            author,
+            author_url
         )
     reply_markup = []
     if synopsis_link:
