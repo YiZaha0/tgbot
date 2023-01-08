@@ -51,7 +51,7 @@ async def parse_dl(entry: dict):
 			return data
 			break
 
-async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT):
+async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT, as_video: bool = False):
 	dl_data = data or await parse_dl(entry)
 	anime_name = entry["anime_title"]
 	ep = entry["episode"]
@@ -76,7 +76,7 @@ async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT):
 	
 	await asyncio.gather(*Process)
 	
-	if anime:
+	if anime and as_video is False:
 		anime_caption, anime_img, _ = anime 
 		anime_caption = anime_caption.replace(anime_caption.split("\n")[-2]+"\n", "").strip()
 		anime_id = anime_img.split("/")[-1] 
@@ -91,7 +91,7 @@ async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT):
 			break 
 			return
 		
-		if anime:
+		if anime and as_video is False:
 			if not anime_cover_path:
 				thumb = gen_video_ss(file)
 			else:
@@ -140,7 +140,7 @@ async def update_feed():
 			if entry_id in last_entries:
 				continue 
 				
-			logger.info("»PaheFeed: New Anime Released → {entry_id}.")
+			logger.info(f"»PaheFeed: New Anime Released → {entry_id}.")
 			parsed_dl = await parse_dl(entry)
 			
 			if parsed_dl:
