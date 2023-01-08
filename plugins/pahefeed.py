@@ -107,7 +107,7 @@ async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT, as
 		else:
 			thumb = gen_video_ss(file)
 			duration = get_video_duration(file)
-			caption = f"<b>{eng_name} | {anime_name}</b>\n\n" if eng_name else f"<b>{anime_name}</b>\n\n"
+			caption = f"<b>{eng_name} | {anime_name}</b>\n\n" if eng_name and eng_name.lower() != anime_name.lower() else f"<b>{anime_name}</b>\n\n"
 			caption += f"<b>♤ Episode:</b> <code>{ep}</b>\n"
 			caption += f"<b>♤ Quality:</b> <code>{quality}</code>\n"
 			caption += f"<b>♤ Duation:</b> <code>{readable_time(duration)}</code>"
