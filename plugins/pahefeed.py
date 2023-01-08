@@ -115,6 +115,7 @@ async def upload_entry(entry: dict, data: dict = None, chat: int = FEED_CHAT, as
 			await app.send_video(
 				chat, 
 				file,
+				thumb=thumb,
 				caption=caption,
 				duration=duration,
 			)
