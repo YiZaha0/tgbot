@@ -11,13 +11,13 @@ rgroups = list(rchats.keys()) # requestGroups
 rchannels = list(rchats.values()) # requestChannels
 
 def get_request_from_text(text):
-	requestRegex = "[#!/][rR][eE][qQ][uU][eE][sS][tT] "
+	requestRegex = "(#|!|/|.)?[rR][eE][qQ][uU][eE][sS][tT] "
 	requestMatch = re.match(requestRegex, text)
 	if requestMatch:
 		text = text.replace(requestMatch.group(), "").strip()
 	return text 
 
-@app.on_message(filters.command("request", prefixes=["/", "!", "#"]) & filters.chat(rgroups))
+@app.on_message(filters.command("request", prefixes=["/", "!", "#", "."]) & filters.chat(rgroups))
 async def _requests(client, update):
 	reply = update.reply_to_message
 	if reply:
