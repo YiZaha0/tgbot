@@ -315,7 +315,7 @@ def get_ps(link):
 		return "Toonily"
 	elif "manhwa18.cc" in link:
 		return "Manhwa18"
-	elif "chapmanganato.com" in link:
+	elif "manganato" in link:
 		return "Manganato"
 	elif "mangabuddy.com" in link:
 		return "Mangabuddy"
