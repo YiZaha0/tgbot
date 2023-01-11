@@ -145,7 +145,7 @@ async def bulkmanga(bot, update):
 		except Exception as e:
 			await m.edit(f"**Something Went Wrong❗**\n\n`{e.__class__.__name__} : {e}`")
 			return
-		await asyncio.sleep(3)
+		await asyncio.sleep(1)
 
 	if thumb:
 		os.remove(thumb)
