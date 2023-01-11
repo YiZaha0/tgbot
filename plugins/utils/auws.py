@@ -163,7 +163,8 @@ async def post_ws(link, pdfname, class_="wp-manga-chapter-img", src="src", fpdf=
 		if not url:
 			continue
 		url = url.strip()
-		image_path = os.path.join(dir_name, f"{n}.jpg")
+		ext = url.split("/")[-1].split(".")[1]
+		image_path = os.path.join(dir_name, f"{n}.{ext}")
 		Process.append(req_download(url, filename=image_path, headers=headers))
 		images.append(image_path)
 		n += 1
