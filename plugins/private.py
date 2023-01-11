@@ -1,8 +1,6 @@
-#test
-
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup 
-from telethon import errors
+from pyrogram.errors import UserIsBlocked, PeerIdInvalid
 
 from . import *
 
@@ -50,28 +48,50 @@ async def pm_start(client, update):
 @app.on_message(filters.private & filters.incoming & ~filters.user(SUDOS), group=2)
 async def pm(_, update):
 	await app.resolve_peer(update.from_user.id)
-	await bot.get_entity(update.from_user.id)
-	user = db.find_one({"uid": update.from_user.id})
+	user_id = update.from_user.id
+	user_title = update.from_user.first_name + (update.from_user.last_name or "")
+	username = update.from_user.username
+	user_data = {"udb": True, "user_id": update.from_user.id, "title": user_title, "username": username}
+	user = db.find_one(user_data)
 	if not user:
-		db.insert_one({"uid": update.from_user.id})
-		await app.send_message(LOG_CHAT, f"<b>❗New User</b> - {update.from_user.mention}.")
-	await update.forward(5304356242)
+		db.insert_one(user_name)
+		await app.send_message(
+			LOG_CHAT, 
+			"<b>Someone Started Me❗</b>\n\n"
+			f"<b>›› Name →</b> <code>{user_title}</code>\n<b>›› Username →</b> <code>{'@'+username or 'N/A'}</code>\n<b>›› Profile Link →</b> [{user_title}](tg://user?id={user_id})")
+	await update.forward(OWNER)
 
-@bot.on(events.NewMessage(incoming=True, from_users=5304356242, func=lambda e: e.is_private))
-async def pm_(event):
-	reply = await event.get_reply_message()
-	if not reply or not reply.fwd_from or reply.fwd_from.channel_post:
-		return 
-	from_id = reply.fwd_from.from_id.user_id if reply.fwd_from.from_id else None
-	from_name = reply.fwd_from.from_name
-	user_mention = f"[{from_name}](tg://user?id={from_id})" if from_id else from_name
-	try:
-		await bot.send_message(from_id or from_name, event.message)
-	except errors.UserIsBlockedError:
-		await bot.send_message(LOG_CHAT, f"**❗User** - {user_mention} **has blocked me.**")
-		db.delete_one({"uid": update.from_user.id})
-	except Exception as e:
-		await bot.send_message(LOG_CHAT, f"**❗ Something Went Wrong While Sending Message To** {user_mention}\n\n`{e}`")
-		
+@app.on_message(filters.reply & filters.user(OWNER))
+async def reply_to_pms(client, update):
+	reply = update.reply_to_message
+	from_peer = None 
+	if update.forward_from:
+		from_peer = update.forward_from.username or update.forward_from.id
+	else:
+		for user in db.find({"udb": {"$exists": 1}}):
+			if not user.get("udb"):
+				continue
+			if update.forward_sender_name == user.get("title"):
+				from_peer = user.get("username") or user.get("uid")
 	
+	if not from_peer:
+		logger.error("Couldn't find user's data in pm sadly, not sending message to anyone.") 
+		return update.continue_propagation()
+	
+	try:
+		user = await app.get_users(from_peer)
+	except PeerIdInvalid:
+		logger.info("Couldn't find user's data due to PeerIdInvalide error, not sending message to anyone.")  
+		return update.continue_propagation()
+		
+	try:
+		await update.copy(from_peer, caption=update.caption.html if update.caption else None)
+	except UserIsBlocked:
+		await app.send_message(
+			LOG_CHAT,
+			f"User [user.first_name](tg://user?id={user.id}) has Blocked Me ❗")
+	except Exception as e:
+		logger.info(f"Got Error While Sending Message to User [user.first_name](tg://user?id={user.id}): {e}")
+		
+	update.continue_propagation()
 		
