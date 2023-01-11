@@ -61,7 +61,7 @@ async def pm(_, update):
 			f"<b>›› Name →</b> <code>{user_title}</code>\n<b>›› Username →</b> <code>{'@'+username or 'N/A'}</code>\n<b>›› Profile Link →</b> [{user_title}](tg://user?id={user_id})")
 	await update.forward(OWNER)
 
-@app.on_message(filters.reply & filters.user(OWNER))
+@app.on_message(filters.reply & filters.private & filters.user(OWNER))
 async def reply_to_pms(client, update):
 	reply = update.reply_to_message
 	from_peer = None 
@@ -91,7 +91,7 @@ async def reply_to_pms(client, update):
 			LOG_CHAT,
 			f"User [user.first_name](tg://user?id={user.id}) has Blocked Me ❗")
 	except Exception as e:
-		logger.info(f"Got Error While Sending Message to User [user.first_name](tg://user?id={user.id}): {e}")
+		logger.info(f"Got Error While Sending Message to User user.first_name: {e}")
 		
 	update.continue_propagation()
 		
