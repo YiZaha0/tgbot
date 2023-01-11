@@ -25,6 +25,7 @@ for sudo_id in sudo_users:
 		pass 
 	SUDOS.append(sudo_id)
 LOG_CHAT = Config.LOG_CHAT or -1001568226560
+OWNER = Config.OWNER or 5370531116
 agents = [
  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:11.0) Gecko/20100101 Firefox/11.0',
  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
